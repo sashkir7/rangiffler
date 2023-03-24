@@ -1,0 +1,17 @@
+.header {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  &__main {
+    display: flex;
+  }
+
+  &__info {
+
+  }
+
+  &__logo {
+    width: 70px;
+    height: 70px;
+  }
+}

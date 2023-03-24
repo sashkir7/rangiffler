@@ -1,0 +1,3 @@
+export const MAX_TEXT_FIELD_LENGTH = 50;
+export const MIN_REQUIRED_TEXT_FIELD_LENGTH = 3;
+export const MAX_TEXT_AREA_LENGTH = 255;

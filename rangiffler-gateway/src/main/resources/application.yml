@@ -1,0 +1,19 @@
+server:
+  port: 8080
+  error:
+    include:
+      message: true
+
+spring:
+  application:
+    name: rangiffler-gateway
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+
+rangiffler-front:
+  base-uri: 'http://127.0.0.1:3001'

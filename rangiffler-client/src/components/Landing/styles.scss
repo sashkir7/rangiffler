@@ -1,0 +1,18 @@
+.main__link {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: block;
+  padding: 6px 16px;
+  margin: 0 20px;
+  border-radius: 6px;
+  color: #ffffff;
+  background-color: #1976d2;
+  line-height: 1.75;
+}
+
+.main__link:hover,
+.main__link:active {
+  opacity: 0.8;
+}
