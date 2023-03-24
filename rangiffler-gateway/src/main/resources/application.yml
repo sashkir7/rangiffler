@@ -15,5 +15,17 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.security.oauth2: DEBUG
 
+---
+spring:
+  config:
+    activate:
+      on-profile: 'local'
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: 'http://127.0.0.1:9000'
+
 rangiffler-front:
   base-uri: 'http://127.0.0.1:3001'
+
