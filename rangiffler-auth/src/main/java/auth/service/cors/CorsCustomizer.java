@@ -12,10 +12,10 @@ import java.util.List;
 @Component
 public class CorsCustomizer {
 
-    private final String nifflerFrontUri;
+    private final String frontUri;
 
-    public CorsCustomizer(@Value("${rangiffler-front.base-uri}") String nifflerFrontUri) {
-        this.nifflerFrontUri = nifflerFrontUri;
+    public CorsCustomizer(@Value("${rangiffler-front.base-uri}") String frontUri) {
+        this.frontUri = frontUri;
     }
 
     public void corsCustomizer(@Nonnull HttpSecurity http) throws Exception {
@@ -23,7 +23,7 @@ public class CorsCustomizer {
             CorsConfigurationSource source = s -> {
                 CorsConfiguration cc = new CorsConfiguration();
                 cc.setAllowCredentials(true);
-                cc.setAllowedOrigins(List.of(nifflerFrontUri));
+                cc.setAllowedOrigins(List.of(frontUri));
                 cc.setAllowedHeaders(List.of("*"));
                 cc.setAllowedMethods(List.of("*"));
                 return cc;

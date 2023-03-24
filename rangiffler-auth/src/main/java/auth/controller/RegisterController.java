@@ -31,19 +31,19 @@ public class RegisterController {
             REG_MODEL_ERROR_BEAN_NAME = "org.springframework.validation.BindingResult.registrationModel";
 
     private final UserService userService;
-    private final String nifflerFrontUri;
+    private final String frontUri;
 
     @Autowired
     public RegisterController(UserService userService,
-                              @Value("${rangiffler-front.base-uri}") String nifflerFrontUri) {
+                              @Value("${rangiffler-front.base-uri}") String frontUri) {
         this.userService = userService;
-        this.nifflerFrontUri = nifflerFrontUri;
+        this.frontUri = frontUri;
     }
 
     @GetMapping("/register")
     public String getRegisterPage(Model model) {
         model.addAttribute(MODEL_REG_FORM_ATTR, new RegistrationModel());
-        model.addAttribute(MODEL_FRONT_URI_ATTR, nifflerFrontUri + "/redirect");
+        model.addAttribute(MODEL_FRONT_URI_ATTR, frontUri + "/redirect");
         return REGISTRATION_VIEW_NAME;
     }
 
@@ -73,7 +73,7 @@ public class RegisterController {
         } else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
-        model.addAttribute(MODEL_FRONT_URI_ATTR, nifflerFrontUri + "/redirect");
+        model.addAttribute(MODEL_FRONT_URI_ATTR, frontUri + "/redirect");
         return REGISTRATION_VIEW_NAME;
     }
 
