@@ -13,14 +13,20 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+//    implementation project(':niffler-grpc-common')
+
     implementation "org.springframework:spring-webflux"
     implementation "org.springframework.boot:spring-boot-starter-validation"
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    compileOnly 'org.projectlombok:lombok:1.18.26'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation 'net.devh:grpc-client-spring-boot-starter:2.14.0.RELEASE'
+    implementation "org.springframework:spring-webflux"
+    implementation "io.projectreactor.netty:reactor-netty"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {

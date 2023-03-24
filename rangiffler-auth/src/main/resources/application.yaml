@@ -9,7 +9,7 @@ server:
 
 spring:
   application:
-    name: niffler-auth
+    name: rangiffler-auth
   mvc:
     log-request-details: true
   datasource:
@@ -53,7 +53,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-niffler-front:
+rangiffler-front:
   base-uri: 'http://127.0.0.1:3000'
-niffler-auth:
+rangiffler-auth:
   base-uri: 'http://127.0.0.1:9000'

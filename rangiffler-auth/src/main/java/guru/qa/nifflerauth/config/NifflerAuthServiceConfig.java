@@ -45,8 +45,8 @@ public class NifflerAuthServiceConfig {
 
     @Autowired
     public NifflerAuthServiceConfig(KeyManager keyManager,
-                                    @Value("${niffler-front.base-uri}") String nifflerFrontUri,
-                                    @Value("${niffler-auth.base-uri}") String nifflerAuthUri, CorsCustomizer corsCustomizer) {
+                                    @Value("${rangiffler-front.base-uri}") String nifflerFrontUri,
+                                    @Value("${rangiffler-auth.base-uri}") String nifflerAuthUri, CorsCustomizer corsCustomizer) {
         this.keyManager = keyManager;
         this.nifflerFrontUri = nifflerFrontUri;
         this.nifflerAuthUri = nifflerAuthUri;

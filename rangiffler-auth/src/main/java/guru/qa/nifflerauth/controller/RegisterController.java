@@ -35,7 +35,7 @@ public class RegisterController {
 
     @Autowired
     public RegisterController(UserService userService,
-                              @Value("${niffler-front.base-uri}") String nifflerFrontUri) {
+                              @Value("${rangiffler-front.base-uri}") String nifflerFrontUri) {
         this.userService = userService;
         this.nifflerFrontUri = nifflerFrontUri;
     }
