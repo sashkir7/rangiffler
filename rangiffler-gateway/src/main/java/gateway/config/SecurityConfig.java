@@ -1,6 +1,6 @@
-package org.rangiffler.config;
+package gateway.config;
 
-import org.rangiffler.cors.CorsCustomizer;
+import gateway.cors.CorsCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
