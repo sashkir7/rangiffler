@@ -1,4 +1,4 @@
-package guru.qa.nifflerauth.service.cors;
+package auth.service.cors;
 
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,10 +1,10 @@
-package guru.qa.nifflerauth.config;
+package auth.config;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import guru.qa.nifflerauth.config.keys.KeyManager;
-import guru.qa.nifflerauth.service.cors.CorsCustomizer;
+import auth.config.keys.KeyManager;
+import auth.service.cors.CorsCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -36,21 +36,21 @@ import java.time.Duration;
 import java.util.UUID;
 
 @Configuration
-public class NifflerAuthServiceConfig {
+public class AuthServiceConfig {
 
     private final KeyManager keyManager;
-    private final String nifflerFrontUri;
-    private final String nifflerAuthUri;
     private final CorsCustomizer corsCustomizer;
+    private final String frontUri, authUri;
 
     @Autowired
-    public NifflerAuthServiceConfig(KeyManager keyManager,
-                                    @Value("${rangiffler-front.base-uri}") String nifflerFrontUri,
-                                    @Value("${rangiffler-auth.base-uri}") String nifflerAuthUri, CorsCustomizer corsCustomizer) {
+    public AuthServiceConfig(KeyManager keyManager,
+                             CorsCustomizer corsCustomizer,
+                             @Value("${rangiffler-front.base-uri}") String frontUri,
+                             @Value("${rangiffler-auth.base-uri}") String authUri) {
         this.keyManager = keyManager;
-        this.nifflerFrontUri = nifflerFrontUri;
-        this.nifflerAuthUri = nifflerAuthUri;
         this.corsCustomizer = corsCustomizer;
+        this.frontUri = frontUri;
+        this.authUri = authUri;
     }
 
     @Bean
@@ -62,8 +62,7 @@ public class NifflerAuthServiceConfig {
 
         http.exceptionHandling(exceptions ->
                         exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-                )
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+                ).oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 
         corsCustomizer.corsCustomizer(http);
         return http.formLogin().and().build();
@@ -77,7 +76,7 @@ public class NifflerAuthServiceConfig {
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri(nifflerFrontUri + "/authorized")
+                .redirectUri(frontUri + "/authorized")
                 .scope(OidcScopes.OPENID)
                 .clientSettings(ClientSettings.builder()
                         .requireAuthorizationConsent(true).build())
@@ -98,7 +97,7 @@ public class NifflerAuthServiceConfig {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-                .issuer(nifflerAuthUri)
+                .issuer(authUri)
                 .build();
     }
 
@@ -112,4 +111,5 @@ public class NifflerAuthServiceConfig {
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
+
 }

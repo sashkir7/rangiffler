@@ -1,7 +1,7 @@
-package guru.qa.nifflerauth.controller;
+package auth.controller;
 
-import guru.qa.nifflerauth.model.RegistrationModel;
-import guru.qa.nifflerauth.service.UserService;
+import auth.model.RegistrationModel;
+import auth.service.UserService;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -24,11 +24,11 @@ public class RegisterController {
 
     private static final Logger LOG = LoggerFactory.getLogger(RegisterController.class);
 
-    private static final String REGISTRATION_VIEW_NAME = "register";
-    private static final String MODEL_USERNAME_ATTR = "username";
-    private static final String MODEL_REG_FORM_ATTR = "registrationModel";
-    private static final String MODEL_FRONT_URI_ATTR = "frontUri";
-    private static final String REG_MODEL_ERROR_BEAN_NAME = "org.springframework.validation.BindingResult.registrationModel";
+    private static final String REGISTRATION_VIEW_NAME = "register",
+            MODEL_USERNAME_ATTR = "username",
+            MODEL_REG_FORM_ATTR = "registrationModel",
+            MODEL_FRONT_URI_ATTR = "frontUri",
+            REG_MODEL_ERROR_BEAN_NAME = "org.springframework.validation.BindingResult.registrationModel";
 
     private final UserService userService;
     private final String nifflerFrontUri;
@@ -87,4 +87,5 @@ public class RegisterController {
         }
         errorResult.addError(new FieldError("registrationModel", fieldName, error));
     }
+
 }

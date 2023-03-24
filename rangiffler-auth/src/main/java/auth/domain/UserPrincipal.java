@@ -1,6 +1,6 @@
-package guru.qa.nifflerauth.domain;
+package auth.domain;
 
-import guru.qa.nifflerauth.data.UserEntity;
+import auth.data.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,11 +8,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class NifflerUserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails {
 
     private final UserEntity user;
 
-    public NifflerUserPrincipal(UserEntity user) {
+    public UserPrincipal(UserEntity user) {
         this.user = user;
     }
 
@@ -52,4 +52,5 @@ public class NifflerUserPrincipal implements UserDetails {
     public boolean isEnabled() {
         return user.getEnabled();
     }
+
 }

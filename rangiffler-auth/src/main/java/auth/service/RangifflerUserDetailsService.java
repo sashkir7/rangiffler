@@ -1,8 +1,8 @@
-package guru.qa.nifflerauth.service;
+package auth.service;
 
-import guru.qa.nifflerauth.data.UserEntity;
-import guru.qa.nifflerauth.data.repository.UserRepository;
-import guru.qa.nifflerauth.domain.NifflerUserPrincipal;
+import auth.data.UserEntity;
+import auth.data.repository.UserRepository;
+import auth.domain.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,12 +10,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NifflerUserDetailsService implements UserDetailsService {
+public class RangifflerUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public NifflerUserDetailsService(UserRepository userRepository) {
+    public RangifflerUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -25,6 +25,7 @@ public class NifflerUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        return new NifflerUserPrincipal(user);
+        return new UserPrincipal(user);
     }
+
 }

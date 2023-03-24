@@ -1,4 +1,4 @@
-package guru.qa.nifflerauth.service.cors;
+package auth.service.cors;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,4 +27,5 @@ public class CookieCsrfFilter extends OncePerRequestFilter {
         response.setHeader(csrfToken.getHeaderName(), csrfToken.getToken());
         filterChain.doFilter(request, response);
     }
+
 }

@@ -1,4 +1,4 @@
-package guru.qa.nifflerauth.config.keys;
+package auth.config.keys;
 
 import com.nimbusds.jose.jwk.RSAKey;
 import jakarta.annotation.Nonnull;
@@ -26,4 +26,5 @@ public class KeyManager {
                 .keyID(UUID.randomUUID().toString())
                 .build();
     }
+
 }

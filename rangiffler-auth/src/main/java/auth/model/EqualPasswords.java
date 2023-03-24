@@ -1,6 +1,6 @@
-package guru.qa.nifflerauth.model;
+package auth.model;
 
-import guru.qa.nifflerauth.service.EqualPasswordsValidator;
+import auth.service.EqualPasswordsValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -18,4 +18,5 @@ public @interface EqualPasswords {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
 }

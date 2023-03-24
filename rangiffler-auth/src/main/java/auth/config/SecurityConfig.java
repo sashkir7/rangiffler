@@ -1,7 +1,7 @@
-package guru.qa.nifflerauth.config;
+package auth.config;
 
-import guru.qa.nifflerauth.service.cors.CookieCsrfFilter;
-import guru.qa.nifflerauth.service.cors.CorsCustomizer;
+import auth.service.cors.CookieCsrfFilter;
+import auth.service.cors.CorsCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,4 +55,5 @@ public class SecurityConfig {
 
         return http.formLogin().and().build();
     }
+
 }

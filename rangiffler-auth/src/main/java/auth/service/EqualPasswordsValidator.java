@@ -1,11 +1,12 @@
-package guru.qa.nifflerauth.service;
+package auth.service;
 
-import guru.qa.nifflerauth.model.EqualPasswords;
-import guru.qa.nifflerauth.model.RegistrationModel;
+import auth.model.EqualPasswords;
+import auth.model.RegistrationModel;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 public class EqualPasswordsValidator implements ConstraintValidator<EqualPasswords, RegistrationModel> {
+
     @Override
     public boolean isValid(RegistrationModel form, ConstraintValidatorContext context) {
         boolean isValid = form.getPassword().equals(form.getPasswordSubmit());
@@ -17,4 +18,5 @@ public class EqualPasswordsValidator implements ConstraintValidator<EqualPasswor
         }
         return isValid;
     }
+
 }
