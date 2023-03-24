@@ -1,7 +1,5 @@
 package auth.service;
 
-import auth.data.Authority;
-import auth.data.AuthorityEntity;
 import auth.data.UserEntity;
 import auth.data.repository.UserRepository;
 import jakarta.annotation.Nonnull;
@@ -23,22 +21,15 @@ public class UserService {
 
     public @Nonnull
     String registerUser(@Nonnull String username, @Nonnull String password) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEnabled(true);
-        userEntity.setAccountNonExpired(true);
-        userEntity.setCredentialsNonExpired(true);
-        userEntity.setAccountNonLocked(true);
-        userEntity.setUsername(username);
-        userEntity.setPassword(passwordEncoder.encode(password));
+        UserEntity userEntity = UserEntity.builder()
+                .username(username)
+                .password(passwordEncoder.encode(password))
+                .enabled(true)
+                .accountNonExpired(true)
+                .credentialsNonExpired(true)
+                .accountNonLocked(true)
+                .build();
 
-        AuthorityEntity readAuthorityEntity = new AuthorityEntity();
-        readAuthorityEntity.setAuthority(Authority.read);
-        readAuthorityEntity.setUser(userEntity);
-        AuthorityEntity writeAuthorityEntity = new AuthorityEntity();
-        writeAuthorityEntity.setAuthority(Authority.write);
-        writeAuthorityEntity.setUser(userEntity);
-
-        userEntity.addAuthorities(readAuthorityEntity, writeAuthorityEntity);
         return userRepository.save(userEntity).getUsername();
     }
 }

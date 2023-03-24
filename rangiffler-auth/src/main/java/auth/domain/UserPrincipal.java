@@ -6,9 +6,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
 public class UserPrincipal implements UserDetails {
+
+    private enum Authority {
+        ADMIN
+    }
 
     private final UserEntity user;
 
@@ -18,9 +22,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getAuthorities().stream()
-                .map(a -> new SimpleGrantedAuthority(a.getAuthority().name()))
-                .collect(Collectors.toList());
+        return Collections.singletonList(new SimpleGrantedAuthority(Authority.ADMIN.toString()));
     }
 
     @Override
