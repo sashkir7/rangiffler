@@ -28,8 +28,8 @@ export const Profile: FC<ProfileInterface> = ({onClose}) => {
 
   const [profileData, setProfileData] = useState<Partial<User>>(user);
   const initialFieldErrorsState = {
-    firstName: null,
-    lastName: null,
+    firstname: null,
+    lastname: null,
   };
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string | null }>(initialFieldErrorsState);
 
@@ -156,10 +156,10 @@ export const Profile: FC<ProfileInterface> = ({onClose}) => {
                             }}
                             label="First name"
                             size="small"
-                            name="firstName"
-                            value={profileData?.firstName}
-                            helperText={fieldErrors["firstName"]}
-                            error={fieldErrors["firstName"] !== null}
+                            name="firstname"
+                            value={profileData?.firstname}
+                            helperText={fieldErrors["firstname"]}
+                            error={fieldErrors["firstname"] !== null}
                             onChange={event => {
                               checkTextLengthValid(event.target.name, false, event.target.value);
                               handleFieldChange(event)
@@ -177,10 +177,10 @@ export const Profile: FC<ProfileInterface> = ({onClose}) => {
                             }}
                             label="Last name"
                             size="small"
-                            name="lastName"
-                            value={profileData?.lastName}
-                            helperText={fieldErrors["lastName"]}
-                            error={fieldErrors["lastName"] !== null}
+                            name="lastname"
+                            value={profileData?.lastname}
+                            helperText={fieldErrors["lastname"]}
+                            error={fieldErrors["lastname"] !== null}
                             onChange={event => {
                               checkTextLengthValid(event.target.name, false, event.target.value);
                               handleFieldChange(event)
