@@ -63,7 +63,7 @@ public class RegisterController {
                         registrationModel.getUsername(),
                         registrationModel.getPassword()
                 );
-                rabbitMqService.sendToUserdataQueue(registeredUserName);
+                rabbitMqService.sendToUserdata(registrationModel);
                 response.setStatus(HttpServletResponse.SC_CREATED);
                 model.addAttribute(MODEL_USERNAME_ATTR, registeredUserName);
             } catch (DataIntegrityViolationException e) {

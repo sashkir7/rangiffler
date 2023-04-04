@@ -1,13 +1,11 @@
 package auth.service;
 
+import auth.model.RegistrationModel;
 import jakarta.annotation.Nonnull;
-import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Component
 public class RabbitMqService {
@@ -22,9 +20,8 @@ public class RabbitMqService {
         this.queueName = queueName;
     }
 
-    public @Nonnull void sendToUserdataQueue(@Nonnull String username) {
-        Message message = new Message(username.getBytes(UTF_8));
-        rabbitTemplate.send("", queueName, message);
+    public @Nonnull void sendToUserdata(@Nonnull RegistrationModel model) {
+        rabbitTemplate.convertAndSend("", queueName, model.toJson());
     }
 
 }
