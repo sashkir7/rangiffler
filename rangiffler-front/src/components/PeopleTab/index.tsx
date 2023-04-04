@@ -147,7 +147,7 @@ export const PeopleTab: FC = () => {
                     />
                   </TableCell>
                   <TableCell>{user.username}</TableCell>
-                  <TableCell>{user.firstName} {user.lastName}</TableCell>
+                  <TableCell>{user.firstname} {user.lastname}</TableCell>
                   <TableCell>{getUserControls(user)}</TableCell>
                 </TableRow>
             ))}
