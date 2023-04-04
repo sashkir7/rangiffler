@@ -5,12 +5,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Getter
-@Setter
+@Data
 @EqualPasswords
+@EqualsAndHashCode(callSuper = false)
 public class RegistrationModel extends BaseModel {
 
     @NotNull(message = "Username can not be null")
@@ -40,7 +40,7 @@ public class RegistrationModel extends BaseModel {
     @Override
     public String toJson() {
         try {
-            return objectMapper.writeValueAsString(this);
+            return OBJECT_MAPPER.writeValueAsString(this);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
