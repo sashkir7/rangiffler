@@ -8,6 +8,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 
@@ -37,6 +38,15 @@ public class RestUserdataClient {
 
         return webClient.get()
                 .uri(uri)
+                .retrieve()
+                .bodyToMono(UserJson.class)
+                .block();
+    }
+
+    public @Nonnull UserJson updateUserInfo(@Nonnull UserJson user) {
+        return webClient.post()
+                .uri("http://localhost:9001/currentUser")
+                .body(Mono.just(user), UserJson.class)
                 .retrieve()
                 .bodyToMono(UserJson.class)
                 .block();

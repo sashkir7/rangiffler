@@ -26,6 +26,12 @@ public class UserService {
         return UserDto.fromEntity(entity);
     }
 
+    public @Nonnull UserDto updateCurrentUser(@Nonnull UserDto userDto) {
+        // ToDo Также добавить обработку исключений
+        UserEntity entity = userRepository.save(UserEntity.fromDto(userDto));
+        return UserDto.fromEntity(entity);
+    }
+
     @RabbitListener(queues = {"q.userdata-registration"})
     public void saveRegistrationUser(@Nonnull String userJson) throws InstanceAlreadyExistsException {
         // ToDo Если возникает ошибка, то сообщение перекладывается в эту же самую очередь

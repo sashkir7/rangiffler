@@ -1,8 +1,7 @@
 package userdata.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import userdata.model.UserDto;
 import userdata.service.UserService;
 
@@ -20,6 +19,11 @@ public class UserController {
     public UserDto getCurrentUser(String username) {
         // ToDo Обработать исключения: пользователь не найден или query не передали
         return userService.getCurrentUser(username);
+    }
+
+    @PostMapping("/currentUser")
+    public UserDto updateCurrentUser(@RequestBody UserDto user) {
+        return userService.updateCurrentUser(user);
     }
 
 }
