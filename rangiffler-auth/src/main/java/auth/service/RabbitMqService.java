@@ -15,7 +15,7 @@ public class RabbitMqService {
 
     @Autowired
     public RabbitMqService(RabbitTemplate rabbitTemplate,
-                           @Value("${rabbit-mq.userdata-queue}") String queueName) {
+                           @Value("${rabbit-mq.userdata-registration}") String queueName) {
         this.rabbitTemplate = rabbitTemplate;
         this.queueName = queueName;
     }

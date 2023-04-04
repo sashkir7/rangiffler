@@ -63,4 +63,4 @@ rangiffler-front:
 rangiffler-auth:
   base-uri: 'http://127.0.0.1:9000'
 rabbit-mq:
-  userdata-queue: 'userdata-queue'
+  userdata-registration: 'q.userdata-registration'
