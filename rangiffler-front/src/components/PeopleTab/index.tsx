@@ -26,11 +26,16 @@ export const PeopleTab: FC = () => {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const {initSubmitPopupAndOpen} = useOutletContext<LayoutContext>();
 
-
   useEffect(() => {
     apiClient().get("/users")
     .then((res) => {
-      setAllUsers(res.data);
+        let users: object = res.data;
+        var sortedUsers: User[] = []
+            .concat(users["INVITATION_SENT"])
+            .concat(users["INVITATION_RECEIVED"])
+            .concat(users["FRIEND"])
+            .concat(users["NOT_FRIEND"]);
+      setAllUsers(sortedUsers);
     });
   }, []);
 
