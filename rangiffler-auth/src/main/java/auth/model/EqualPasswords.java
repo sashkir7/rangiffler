@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {EqualPasswordsValidator.class})
 public @interface EqualPasswords {
+
     String message() default "Passwords should be equal";
 
     Class<?>[] groups() default {};
