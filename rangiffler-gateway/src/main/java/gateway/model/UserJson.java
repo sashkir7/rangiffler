@@ -1,33 +1,23 @@
 package gateway.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true, allowGetters = true)
 public class UserJson {
 
-    @JsonProperty("id")
     private UUID id;
-
-    @JsonProperty("username")
-    private String username;
-
-    @JsonProperty("firstName")
-    private String firstName;
-
-    @JsonProperty("lastName")
-    private String lastLame;
-
-    @JsonProperty("avatar")
-    private String avatar;
-
-    @JsonProperty("friendStatus")
-    private FriendStatus friendStatus;
+    private String username, firstname, lastname, avatar;
 
 }
 
