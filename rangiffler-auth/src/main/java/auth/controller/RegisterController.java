@@ -1,6 +1,7 @@
 package auth.controller;
 
 import auth.model.RegistrationModel;
+import auth.service.RabbitMqService;
 import auth.service.UserService;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,12 +32,15 @@ public class RegisterController {
             REG_MODEL_ERROR_BEAN_NAME = "org.springframework.validation.BindingResult.registrationModel";
 
     private final UserService userService;
+    private final RabbitMqService rabbitMqService;
     private final String frontUri;
 
     @Autowired
     public RegisterController(UserService userService,
+                              RabbitMqService rabbitMqService,
                               @Value("${rangiffler-front.base-uri}") String frontUri) {
         this.userService = userService;
+        this.rabbitMqService = rabbitMqService;
         this.frontUri = frontUri;
     }
 
@@ -59,6 +63,7 @@ public class RegisterController {
                         registrationModel.getUsername(),
                         registrationModel.getPassword()
                 );
+                rabbitMqService.sendRegisteredUsername(registeredUserName);
                 response.setStatus(HttpServletResponse.SC_CREATED);
                 model.addAttribute(MODEL_USERNAME_ATTR, registeredUserName);
             } catch (DataIntegrityViolationException e) {
