@@ -17,12 +17,12 @@ public class RabbitMqService {
 
     @Autowired
     public RabbitMqService(RabbitTemplate rabbitTemplate,
-                           @Value("${rabbit-mq.register-queue}") String queueName) {
+                           @Value("${rabbit-mq.userdata-queue}") String queueName) {
         this.rabbitTemplate = rabbitTemplate;
         this.queueName = queueName;
     }
 
-    public @Nonnull void sendRegisteredUsername(@Nonnull String username) {
+    public @Nonnull void sendToUserdataQueue(@Nonnull String username) {
         Message message = new Message(username.getBytes(UTF_8));
         rabbitTemplate.send("", queueName, message);
     }
