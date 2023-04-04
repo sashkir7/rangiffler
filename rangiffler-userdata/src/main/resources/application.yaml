@@ -1,17 +1,12 @@
 server:
   port: 9001
-# ONLY FOR TESTING
-  servlet:
-    session:
-      cookie:
-        http-only: false
-        secure: false
+  error:
+    include:
+      message: true
 
 spring:
   application:
     name: rangiffler-userdata
-  mvc:
-    log-request-details: true
   datasource:
     hikari:
       connection-timeout: 20000
@@ -44,9 +39,6 @@ logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.security.oauth2: DEBUG
-#    org.springframework.boot.autoconfigure: DEBUG
 
 ---
 spring:
@@ -58,9 +50,5 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-rangiffler-front:
-  base-uri: 'http://127.0.0.1:3001'
-rangiffler-auth:
-  base-uri: 'http://127.0.0.1:9000'
 rabbit-mq:
   userdata-queue: 'userdata-queue'
