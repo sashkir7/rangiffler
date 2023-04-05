@@ -29,12 +29,15 @@ export const PeopleTab: FC = () => {
   useEffect(() => {
     apiClient().get("/users")
     .then((res) => {
-        let users: object = res.data;
-        var sortedUsers: User[] = []
-            .concat(users["INVITATION_SENT"])
-            .concat(users["INVITATION_RECEIVED"])
-            .concat(users["FRIEND"])
-            .concat(users["NOT_FRIEND"]);
+        var sortedUsers: User[] = [];
+        let statuses = ["INVITATION_SENT", "INVITATION_RECEIVED", "FRIEND", "NOT_FRIEND"];
+        statuses.forEach(function(status) {
+            let usersByStatus = res.data[status];
+            usersByStatus.forEach(function(user) {
+                user.friendStatus = status;
+            });
+            sortedUsers = sortedUsers.concat(usersByStatus);
+        });
       setAllUsers(sortedUsers);
     });
   }, []);
