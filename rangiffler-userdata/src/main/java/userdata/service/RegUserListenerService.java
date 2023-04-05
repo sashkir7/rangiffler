@@ -9,12 +9,12 @@ import userdata.data.repository.UserRepository;
 import userdata.model.UserDto;
 
 @Component
-public class RegisterUserService {
+public class RegUserListenerService {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public RegisterUserService(UserRepository userRepository) {
+    public RegUserListenerService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
