@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true, allowGetters = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserJson {
 
     private UUID id;

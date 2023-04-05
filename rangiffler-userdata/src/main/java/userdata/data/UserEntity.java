@@ -2,6 +2,7 @@ package userdata.data;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 import userdata.model.UserDto;
 
 import java.util.*;
@@ -15,18 +16,18 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
+@Accessors(chain = true)
 @ToString(exclude = {"avatar", "relationshipUsers"})
 @EqualsAndHashCode(exclude = {"avatar", "relationshipUsers"})
 public class UserEntity {
 
     public static UserEntity fromDto(UserDto userDto) {
-        String photo = userDto.getAvatar();
         return UserEntity.builder()
                 .id(userDto.getId())
                 .username(userDto.getUsername())
                 .firstname(userDto.getFirstname())
                 .lastname(userDto.getLastname())
-                .avatar(photo != null ? photo.getBytes(UTF_8) : null)
+                .avatar(userDto.getAvatarAsBytes())
                 .build();
     }
 
@@ -60,6 +61,10 @@ public class UserEntity {
                 .filter(user -> user.getRelationship() == status)
                 .map(UsersRelationshipEntity::getFriend)
                 .collect(Collectors.toSet());
+    }
+
+    public String getAvatarAsString() {
+        return avatar != null && avatar.length > 0 ? new String(avatar, UTF_8) : null;
     }
 
 }

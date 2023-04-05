@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     @Nullable
     UserEntity findByUsername(@Nonnull String username);
 
-    @Nullable
+    @Nonnull
     Set<UserEntity> findAllByUsernameNot(@Nonnull String username);
 
 }

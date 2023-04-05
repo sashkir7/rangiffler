@@ -21,14 +21,12 @@ public class UserController {
 
     @GetMapping("/allUsers")
     public Map<FriendStatus, Set<UserDto>> getAllUsers(@RequestParam String username) {
-        // ToDo Также добавить обработку исключений...
         return userService.getAllUsers(username);
     }
 
     @GetMapping("/currentUser")
     public UserDto getCurrentUser(@RequestParam String username) {
-        // ToDo Обработать исключения: пользователь не найден или query не передали
-        return userService.getByUsername(username);
+        return userService.getByUsernameAsDto(username);
     }
 
     @PostMapping("/currentUser")

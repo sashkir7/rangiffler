@@ -8,6 +8,7 @@ import userdata.data.FriendStatus;
 import userdata.data.UserEntity;
 import userdata.data.UsersRelationshipEntity;
 import userdata.data.repository.UserRepository;
+import userdata.exception.UserByUsernameNotFoundException;
 import userdata.model.UserDto;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -26,17 +27,63 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public @Nonnull UserDto getByUsername(@Nonnull String username) {
-        // ToDo Обработать исключение, когда пользователь не найден
-        UserEntity entity = userRepository.findByUsername(username);
-        return UserDto.fromEntity(entity);
+    public @Nonnull UserEntity getByUsername(@Nonnull String username) {
+        UserEntity userEntity = userRepository.findByUsername(username);
+        if (userEntity == null) {
+            throw new UserByUsernameNotFoundException(username);
+        }
+        return userEntity;
+    }
+
+    public @Nonnull UserDto getByUsernameAsDto(@Nonnull String username) {
+        return UserDto.fromEntity(getByUsername(username));
     }
 
     public @Nonnull UserDto updateCurrentUser(@Nonnull UserDto userDto) {
-        // ToDo Также добавить обработку исключений
-        UserEntity entity = userRepository.save(UserEntity.fromDto(userDto));
-        return UserDto.fromEntity(entity);
+        UserEntity userEntity = getByUsername(userDto.getUsername())
+                .setFirstname(userDto.getFirstname())
+                .setLastname(userDto.getLastname())
+                .setAvatar(userDto.getAvatarAsBytes());
+        return UserDto.fromEntity(userRepository.save(userEntity));
     }
+
+    public @Nonnull Map<FriendStatus, Set<UserDto>> getAllUsers(@Nonnull String username) {
+        UserEntity currentUser = getByUsername(username);
+        Set<UserEntity> allUsersWithoutCurrentUser = userRepository.findAllByUsernameNot(username);
+
+        Map<FriendStatus, Set<UserDto>> allUsers = new HashMap<>();
+        for (FriendStatus status : FriendStatus.values()) {
+            Set<UserEntity> entities = currentUser.getRelationshipUsersByStatus(status);
+            allUsersWithoutCurrentUser.removeAll(entities);
+            allUsers.put(status, convertUserEntitiesToDtos(entities));
+        }
+
+        allUsers.put(NOT_FRIEND, convertUserEntitiesToDtos(allUsersWithoutCurrentUser));
+        return allUsers;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @RabbitListener(queues = {"q.userdata-registration"})
     public void saveRegistrationUser(@Nonnull String userJson) throws InstanceAlreadyExistsException {
@@ -57,24 +104,27 @@ public class UserService {
         userRepository.save(entity);
     }
 
-    public @Nonnull Map<FriendStatus, Set<UserDto>> getAllUsers(@Nonnull String username) {
-        UserEntity currentUser = userRepository.findByUsername(username);
-        Set<UserEntity> allUsersWithoutCurrentUser = userRepository.findAllByUsernameNot(username);
 
-        Map<FriendStatus, Set<UserDto>> allUsers = new HashMap<>();
-        for (FriendStatus status : FriendStatus.values()) {
-            Set<UserEntity> entities = currentUser.getRelationshipUsersByStatus(status);
-            allUsersWithoutCurrentUser.removeAll(entities);
-            allUsers.put(status, convertUserEntitiesToDtos(entities));
-        }
 
-        allUsers.put(NOT_FRIEND, convertUserEntitiesToDtos(allUsersWithoutCurrentUser));
-        return allUsers;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void inviteToFriends(@Nonnull String ownUsername, @Nonnull String friendUsername) {
-        UserEntity ownUser = userRepository.findByUsername(ownUsername);
-        UserEntity friendUser = userRepository.findByUsername(friendUsername);
+        UserEntity ownUser = getByUsername(ownUsername);
+        UserEntity friendUser = getByUsername(friendUsername);
 
         UsersRelationshipEntity build = UsersRelationshipEntity.builder()
                 .user(ownUser)
@@ -95,8 +145,8 @@ public class UserService {
     }
 
     public void submitFriend(String username, UserDto friend) {
-        UserEntity currentUser = userRepository.findByUsername(username);
-        UserEntity friendUser = userRepository.findByUsername(friend.getUsername());
+        UserEntity currentUser = getByUsername(username);
+        UserEntity friendUser = getByUsername(friend.getUsername());
 
         UsersRelationshipEntity relationship = currentUser.getRelationshipUsers()
                 .stream()
@@ -116,8 +166,8 @@ public class UserService {
     }
 
     public void declineFriend(String username, UserDto friend) {
-        UserEntity currentUser = userRepository.findByUsername(username);
-        UserEntity friendUser = userRepository.findByUsername(friend.getUsername());
+        UserEntity currentUser = getByUsername(username);
+        UserEntity friendUser = getByUsername(friend.getUsername());
 
         UsersRelationshipEntity relationship = currentUser.getRelationshipUsers()
                 .stream()
@@ -137,8 +187,8 @@ public class UserService {
     }
 
     public void removeFriend(String username, UserDto friend) {
-        UserEntity currentUser = userRepository.findByUsername(username);
-        UserEntity friendUser = userRepository.findByUsername(friend.getUsername());
+        UserEntity currentUser = getByUsername(username);
+        UserEntity friendUser = getByUsername(friend.getUsername());
 
         UsersRelationshipEntity relationship = currentUser.getRelationshipUsers()
                 .stream()
