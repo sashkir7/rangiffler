@@ -28,7 +28,7 @@ public class UserController {
     @GetMapping("/currentUser")
     public UserDto getCurrentUser(@RequestParam String username) {
         // ToDo Обработать исключения: пользователь не найден или query не передали
-        return userService.getCurrentUser(username);
+        return userService.getByUsername(username);
     }
 
     @PostMapping("/currentUser")

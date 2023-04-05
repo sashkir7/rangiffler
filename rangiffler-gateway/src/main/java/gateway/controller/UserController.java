@@ -61,23 +61,31 @@ public class UserController {
     }
 
     @PostMapping("users/invite/")
-    public UserJson sendInvitation(@RequestBody UserJson user) {
-        return userService.sendInvitation(user);
+    public void sendInvitation(@AuthenticationPrincipal Jwt principal,
+                               @RequestBody UserJson user) {
+        String username = principal.getClaim("sub");
+        restUserdataClient.inviteToFriends(username, user);
     }
 
     @PostMapping("friends/remove")
-    public UserJson removeFriendFromUser(@RequestBody UserJson friend) {
-        return userService.removeUserFromFriends(friend);
+    public void removeFriendFromUser(@AuthenticationPrincipal Jwt principal,
+                                         @RequestBody UserJson friend) {
+        String username = principal.getClaim("sub");
+        restUserdataClient.removeFriend(username, friend);
     }
 
     @PostMapping("friends/submit")
-    public UserJson submitFriend(@RequestBody UserJson friend) {
-        return userService.acceptInvitation(friend);
+    public void submitFriend(@AuthenticationPrincipal Jwt principal,
+                             @RequestBody UserJson friend) {
+        String username = principal.getClaim("sub");
+        restUserdataClient.submitFriend(username, friend);
     }
 
     @PostMapping("friends/decline")
-    public UserJson declineFriend(@RequestBody UserJson friend) {
-        return userService.declineInvitation(friend);
+    public void declineFriend(@AuthenticationPrincipal Jwt principal,
+                              @RequestBody UserJson friend) {
+        String username = principal.getClaim("sub");
+        restUserdataClient.declineFriend(username, friend);
     }
 
 }

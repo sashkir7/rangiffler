@@ -42,11 +42,12 @@ export const PeopleTab: FC = () => {
     });
   }, []);
 
-  const handleApiResponse = (res: AxiosResponse, user: User) => {
+  const updateFriendsStatus = (user: User, friendStatus: string) => {
     const newArr = [...allUsers];
     const u = newArr.find(u => u.id === user.id);
     if (u) {
-      newArr[newArr.indexOf(u)] = res.data;
+      u.friendStatus = friendStatus;
+      newArr[newArr.indexOf(u)] = u;
       setAllUsers(newArr);
     }
   };
@@ -55,7 +56,7 @@ export const PeopleTab: FC = () => {
     apiClient().post("users/invite/", {
       ...user
     }).then((res) => {
-      handleApiResponse(res, user);
+      updateFriendsStatus(user, "INVITATION_SENT");
     });
   };
 
@@ -63,7 +64,7 @@ export const PeopleTab: FC = () => {
     apiClient().post("friends/submit", {
       ...user
     }).then((res) => {
-      handleApiResponse(res, user);
+      updateFriendsStatus(user, "FRIEND");
     });
   };
 
@@ -72,7 +73,7 @@ export const PeopleTab: FC = () => {
       apiClient().post("friends/decline", {
         ...user
       }).then(res => {
-        handleApiResponse(res, user);
+        updateFriendsStatus(user, "NOT_FRIEND");
       });
     });
   };
@@ -82,7 +83,7 @@ export const PeopleTab: FC = () => {
       apiClient().post("friends/remove", {
         ...user
       }).then(res => {
-        handleApiResponse(res, user);
+        updateFriendsStatus(user, "NOT_FRIEND");
       });
     });
   };

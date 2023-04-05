@@ -10,6 +10,7 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@IdClass(UsersRelationshipId.class)
 @Table(name = "users_relationship")
 public class UsersRelationshipEntity {
 
@@ -26,20 +27,5 @@ public class UsersRelationshipEntity {
     @Column(name = "relationship", nullable = false)
     @Enumerated(EnumType.STRING)
     private FriendStatus relationship;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UsersRelationshipEntity that = (UsersRelationshipEntity) o;
-        return Objects.equals(user.getId(), that.user.getId())
-                && Objects.equals(friend.getId(), that.friend.getId())
-                && relationship == that.relationship;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(user.getId(), friend.getId(), relationship);
-    }
 
 }

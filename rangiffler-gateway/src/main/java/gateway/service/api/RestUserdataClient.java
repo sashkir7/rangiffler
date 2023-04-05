@@ -69,4 +69,60 @@ public class RestUserdataClient {
                 .block();
     }
 
+    public void inviteToFriends(@Nonnull String username,
+                                @Nonnull UserJson friend) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("username", username);
+        URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9001/users/invite").queryParams(params).build().toUri();
+
+        webClient.post()
+                .uri(uri)
+                .body(Mono.just(friend), UserJson.class)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void submitFriend(@Nonnull String username,
+                             @Nonnull UserJson friend) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("username", username);
+        URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9001/friends/submit").queryParams(params).build().toUri();
+
+        webClient.post()
+                .uri(uri)
+                .body(Mono.just(friend), UserJson.class)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void declineFriend(@Nonnull String username,
+                              @Nonnull UserJson friend) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("username", username);
+        URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9001/friends/decline").queryParams(params).build().toUri();
+
+        webClient.post()
+                .uri(uri)
+                .body(Mono.just(friend), UserJson.class)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void removeFriend(@Nonnull String username,
+                             @Nonnull UserJson friend) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("username", username);
+        URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9001/friends/remove").queryParams(params).build().toUri();
+
+        webClient.post()
+                .uri(uri)
+                .body(Mono.just(friend), UserJson.class)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
 }

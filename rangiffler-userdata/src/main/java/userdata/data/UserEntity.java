@@ -51,6 +51,10 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UsersRelationshipEntity> relationshipUsers = new HashSet<>();
 
+    public void addUserRelationship(UsersRelationshipEntity relationshipEntity) {
+        relationshipUsers.add(relationshipEntity);
+    }
+
     public Set<UserEntity> getRelationshipUsersByStatus(FriendStatus status) {
         return relationshipUsers.stream()
                 .filter(user -> user.getRelationship() == status)
