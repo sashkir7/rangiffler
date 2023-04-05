@@ -1,13 +1,11 @@
 package userdata.data;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import userdata.model.UserDto;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -17,6 +15,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
+@ToString(exclude = {"avatar", "relationshipUsers"})
+@EqualsAndHashCode(exclude = {"avatar", "relationshipUsers"})
 public class UserEntity {
 
     public static UserEntity fromDto(UserDto userDto) {
@@ -46,5 +46,16 @@ public class UserEntity {
 
     @Column(name = "avatar", columnDefinition = "bytea")
     private byte[] avatar;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UsersRelationshipEntity> relationshipUsers = new HashSet<>();
+
+    public Set<UserEntity> getRelationshipUsersByStatus(FriendStatus status) {
+        return relationshipUsers.stream()
+                .filter(user -> user.getRelationship() == status)
+                .map(UsersRelationshipEntity::getFriend)
+                .collect(Collectors.toSet());
+    }
 
 }

@@ -1,8 +1,10 @@
 package gateway.service.api;
 
+import gateway.model.FriendStatus;
 import gateway.model.UserJson;
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -11,6 +13,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 public class RestUserdataClient {
@@ -25,6 +29,19 @@ public class RestUserdataClient {
         this.webClient = webClient;
         // ToDo Из конфига
         this.userdataBaseUri = "http://127.0.0.1:9001";
+    }
+
+    public @Nonnull Map<FriendStatus, Set<UserJson>> getAllUsers(@Nonnull String username) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("username", username);
+        URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9001/allUsers").queryParams(params).build().toUri();
+
+        return webClient.get()
+                .uri(uri)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<Map<FriendStatus, Set<UserJson>>>() {
+                })
+                .block();
     }
 
     public @Nonnull UserJson currentUser(@Nonnull String username) {

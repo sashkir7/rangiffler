@@ -4,11 +4,16 @@ import jakarta.annotation.Nonnull;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import userdata.data.FriendStatus;
 import userdata.data.UserEntity;
 import userdata.data.repository.UserRepository;
 import userdata.model.UserDto;
 
 import javax.management.InstanceAlreadyExistsException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static userdata.data.FriendStatus.*;
 
 @Component
 public class UserService {
@@ -49,6 +54,25 @@ public class UserService {
                 .lastname(userDto.getLastname())
                 .build();
         userRepository.save(entity);
+    }
+
+    public @Nonnull Map<FriendStatus, Set<UserDto>> getAllUsers(String username) {
+        UserEntity currentUser = userRepository.findByUsername(username);
+        Set<UserEntity> allUsersWithoutCurrentUser = userRepository.findAllByUsernameNot(username);
+
+        Map<FriendStatus, Set<UserDto>> allUsers = new HashMap<>();
+        for (FriendStatus status : FriendStatus.values()) {
+            Set<UserEntity> entities = currentUser.getRelationshipUsersByStatus(status);
+            allUsersWithoutCurrentUser.removeAll(entities);
+            allUsers.put(status, convertUserEntitiesToDtos(entities));
+        }
+
+        allUsers.put(NOT_FRIEND, convertUserEntitiesToDtos(allUsersWithoutCurrentUser));
+        return allUsers;
+    }
+
+    private Set<UserDto> convertUserEntitiesToDtos(Set<UserEntity> entities) {
+        return entities.stream().map(UserDto::fromEntity).collect(Collectors.toSet());
     }
 
 }

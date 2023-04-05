@@ -2,6 +2,7 @@ package gateway.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import gateway.model.FriendStatus;
 import gateway.model.UserJson;
@@ -30,8 +31,9 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public Map<FriendStatus, List<UserJson>> getAllUsers() {
-        return userService.getAllUsers();
+    public Map<FriendStatus, Set<UserJson>> getAllUsers(@AuthenticationPrincipal Jwt principal) {
+        String username = principal.getClaim("sub");
+        return restUserdataClient.getAllUsers(username);
     }
 
     @GetMapping("/currentUser")
