@@ -44,21 +44,22 @@ export const PeopleTab: FC = () => {
     });
   }, []);
 
-  const handleApiResponse = (res: AxiosResponse, user: User) => {
+  const updateFriendsStatus = (user: User, friendStatus: string) => {
     const newArr = [...allUsers];
     const u = newArr.find(u => u.id === user.id);
     if (u) {
-      newArr[newArr.indexOf(u)] = res.data;
+      u.friendStatus = friendStatus;
+      newArr[newArr.indexOf(u)] = u;
       setAllUsers(newArr);
     }
   };
 
   const handleSendInvitation = (user: User) => {
-    apiClient().post("users/invite/", {
+    apiClient().post("friends/invite", {
       ...user
     }).then((res) => {
-      handleApiResponse(res, user);
-      addMessage(`Invitation to user ${user.username} is sent`);
+      updateFriendsStatus(user, "INVITATION_SENT");
+//       addMessage(`Invitation to user ${user.username} is sent`);
     }).catch((err) => {
       console.error(err);
       addError(`Invitation is not sent. Reason: ${err.message}`);
@@ -69,8 +70,8 @@ export const PeopleTab: FC = () => {
     apiClient().post("friends/submit", {
       ...user
     }).then((res) => {
-      handleApiResponse(res, user);
-      addMessage(`User ${user.username} added to your friends`);
+      updateFriendsStatus(user, "FRIEND");
+//       addMessage(`User ${user.username} added to your friends`);
     }).catch((err) => {
       console.error(err);
       addError(`Invitation is not accepted. Reason: ${err.message}`);
@@ -82,9 +83,9 @@ export const PeopleTab: FC = () => {
       apiClient().post("friends/decline", {
         ...user
       }).then(res => {
-        handleApiResponse(res, user);
+        updateFriendsStatus(user, "NOT_FRIEND");
         handleClosePopup();
-        addMessage(`You declined invitation from user ${user.username}`);
+//         addMessage(`You declined invitation from user ${user.username}`);
       }).catch((err) => {
         console.error(err);
         addError(`Invitation is not declined. Reason: ${err.message}`);
@@ -97,9 +98,9 @@ export const PeopleTab: FC = () => {
       apiClient().post("friends/remove", {
         ...user
       }).then(res => {
-        handleApiResponse(res, user);
+        updateFriendsStatus(user, "NOT_FRIEND");
         handleClosePopup();
-        addMessage(`You're not friends with user ${user.username} anymore`);
+//         addMessage(`You're not friends with user ${user.username} anymore`);
       }).catch((err) => {
         console.error(err);
         addError(`Friend is not deleted. Reason: ${err.message}`);
