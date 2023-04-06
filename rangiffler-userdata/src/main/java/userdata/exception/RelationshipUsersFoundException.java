@@ -17,7 +17,7 @@ public class RelationshipUsersFoundException extends RuntimeException {
     }
 
     public RelationshipUsersFoundException(UsersRelationshipEntity entity) {
-        this(entity.getUser().getUsername(), entity.getFriend().getUsername(), entity.getStatus());
+        this(entity.getUser().getUsername(), entity.getPartner().getUsername(), entity.getStatus());
     }
 
     @Override

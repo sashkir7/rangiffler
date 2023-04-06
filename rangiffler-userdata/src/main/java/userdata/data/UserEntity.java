@@ -63,13 +63,13 @@ public class UserEntity {
     public Set<UserEntity> getRelationshipUsersByStatus(PartnerStatus status) {
         return relationshipUsers.stream()
                 .filter(user -> user.getStatus() == status)
-                .map(UsersRelationshipEntity::getFriend)
+                .map(UsersRelationshipEntity::getPartner)
                 .collect(Collectors.toSet());
     }
 
     public Optional<UsersRelationshipEntity> findRelationship(UserEntity partner, PartnerStatus status) {
         return relationshipUsers.stream()
-                .filter(rel -> rel.getFriend().getUsername().equals(partner.getUsername()))
+                .filter(rel -> rel.getPartner().getUsername().equals(partner.getUsername()))
                 .filter(rel -> status == null || rel.getStatus().equals(status))
                 .findFirst();
     }

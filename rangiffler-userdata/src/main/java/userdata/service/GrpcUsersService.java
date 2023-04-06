@@ -160,7 +160,7 @@ public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBas
                                                             PartnerStatus relationship) {
         return UsersRelationshipEntity.builder()
                 .user(currentUser)
-                .friend(partner)
+                .partner(partner)
                 .status(relationship)
                 .build();
     }
@@ -169,7 +169,7 @@ public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBas
         List<RelationshipResponse> relationships = Arrays.stream(entities)
                 .map(rel -> RelationshipResponse.newBuilder()
                         .setUser(convertToUserFromEntity(rel.getUser()))
-                        .setPartner(convertToUserFromEntity(rel.getFriend()))
+                        .setPartner(convertToUserFromEntity(rel.getPartner()))
                         .setRelationship(rel.getStatus().toString())
                         .build())
                 .toList();
