@@ -1,12 +1,13 @@
 package userdata.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import userdata.data.UserEntity;
 import userdata.data.repository.UserRepository;
-import userdata.model.UserDto;
 
 @Component
 public class RegUserListenerService {
@@ -23,8 +24,15 @@ public class RegUserListenerService {
     //  ---> Реализовать, чтобы в случае ошибки сообщение перекладывалось в ошибочную очередь
     @RabbitListener(queues = {"q.userdata-registration"})
     public void registerUser(@Nonnull String json) {
-        UserDto userDto = UserDto.fromJson(json);
-        userRepository.save(UserEntity.fromDto(userDto));
+        userRepository.save(fromJson(json));
+    }
+
+    private UserEntity fromJson(String json) {
+        try {
+            return new ObjectMapper().readValue(json, UserEntity.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

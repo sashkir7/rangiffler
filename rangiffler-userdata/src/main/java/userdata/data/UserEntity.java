@@ -3,7 +3,6 @@ package userdata.data;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
-import userdata.model.UserDto;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,16 +19,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @ToString(exclude = {"avatar", "relationshipUsers"})
 @EqualsAndHashCode(exclude = {"avatar", "relationshipUsers"})
 public class UserEntity {
-
-    public static UserEntity fromDto(UserDto userDto) {
-        return UserEntity.builder()
-                .id(userDto.getId())
-                .username(userDto.getUsername())
-                .firstname(userDto.getFirstname())
-                .lastname(userDto.getLastname())
-                .avatar(userDto.getAvatarAsBytes())
-                .build();
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
