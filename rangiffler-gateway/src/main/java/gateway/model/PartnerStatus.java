@@ -1,5 +1,5 @@
 package gateway.model;
 
-public enum FriendStatus {
+public enum PartnerStatus {
     NOT_FRIEND, INVITATION_SENT, INVITATION_RECEIVED, FRIEND
 }

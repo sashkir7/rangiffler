@@ -3,7 +3,7 @@ package gateway.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import gateway.model.FriendStatus;
+import gateway.model.PartnerStatus;
 import gateway.model.UserDto;
 import org.springframework.stereotype.Service;
 
@@ -57,9 +57,9 @@ public class UserService {
                     .build()
     ));
 
-    public Map<FriendStatus, List<UserDto>> getAllUsers() {
-        Map<FriendStatus, List<UserDto>> friends = new HashMap<>();
-        Arrays.stream(FriendStatus.values()).forEach(status -> friends.put(status, new ArrayList<>()));
+    public Map<PartnerStatus, List<UserDto>> getAllUsers() {
+        Map<PartnerStatus, List<UserDto>> friends = new HashMap<>();
+        Arrays.stream(PartnerStatus.values()).forEach(status -> friends.put(status, new ArrayList<>()));
 
 //        for (UserJson friend : allUsers) {
 //            friends.get(friend.getFriendStatus()).add(friend);
