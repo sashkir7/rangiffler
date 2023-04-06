@@ -63,6 +63,17 @@ public class UserEntity {
                 .collect(Collectors.toSet());
     }
 
+    public Optional<UsersRelationshipEntity> findRelationship(UserEntity partner, FriendStatus status) {
+        return relationshipUsers.stream()
+                .filter(rel -> rel.getFriend().getUsername().equals(partner.getUsername()))
+                .filter(rel -> status == null || rel.getRelationship().equals(status))
+                .findFirst();
+    }
+
+    public Optional<UsersRelationshipEntity> findRelationship(UserEntity partner) {
+        return findRelationship(partner, null);
+    }
+
     public String getAvatarAsString() {
         return avatar != null && avatar.length > 0 ? new String(avatar, UTF_8) : null;
     }

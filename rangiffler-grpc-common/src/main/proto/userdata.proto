@@ -12,6 +12,8 @@ service UserdataService {
   rpc GetCurrentUser (UsernameRequest) returns (User) {}
   rpc UpdateCurrentUser (User) returns (User) {}
   rpc GetAllUsers (UsernameRequest) returns (GetAllUsersResponse) {}
+
+  rpc InviteToFriends (RelationshipUsersRequest) returns (RelationshipsResponse) {}
 }
 
 message UsernameRequest {
@@ -32,4 +34,19 @@ message Users {
 
 message GetAllUsersResponse {
   map<string, Users> users = 1;
+}
+
+message RelationshipUsersRequest {
+  string username = 1;
+  User partner = 2;
+}
+
+message RelationshipResponse {
+  User user = 1;
+  User partner = 2;
+  string relationship = 3;
+}
+
+message RelationshipsResponse {
+  repeated RelationshipResponse relationships = 1;
 }
