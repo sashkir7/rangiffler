@@ -121,6 +121,23 @@ public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBas
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void removeFriend(RelationshipUsersRequest request,
+                             StreamObserver<Empty> responseObserver) {
+        checkThatUserHaveNotRelationshipWithMyself(request.getUsername(), request.getPartner());
+        UserEntity currentUser = userRepository.findByUsername(request.getUsername());
+        UserEntity partnerUser = userRepository.findByUsername(request.getPartner().getUsername());
+
+        currentUser.removeRelationship(checkThatUserHaveRelationship(currentUser, partnerUser, FRIEND));
+        partnerUser.removeRelationship(checkThatUserHaveRelationship(partnerUser, currentUser, FRIEND));
+
+        userRepository.save(currentUser);
+        userRepository.save(partnerUser);
+
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
     private User convertToUserFromEntity(UserEntity entity) {
         User.Builder builder = User.newBuilder()
                 .setId(entity.getId().toString())
