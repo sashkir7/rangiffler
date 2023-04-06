@@ -56,6 +56,10 @@ public class UserEntity {
         relationshipUsers.add(relationshipEntity);
     }
 
+    public void removeRelationship(UsersRelationshipEntity relationshipEntity) {
+        relationshipUsers.remove(relationshipEntity);
+    }
+
     public Set<UserEntity> getRelationshipUsersByStatus(FriendStatus status) {
         return relationshipUsers.stream()
                 .filter(user -> user.getRelationship() == status)

@@ -15,6 +15,7 @@ service UserdataService {
 
   rpc InviteToFriends (RelationshipUsersRequest) returns (RelationshipsResponse) {}
   rpc SubmitFriends (RelationshipUsersRequest) returns (RelationshipsResponse) {}
+  rpc DeclineFriend (RelationshipUsersRequest) returns (google.protobuf.Empty) {}
 }
 
 message UsernameRequest {

@@ -1,5 +1,6 @@
 package userdata.service;
 
+import com.google.protobuf.Empty;
 import guru.qa.grpc.niffler.grpc.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -100,6 +101,23 @@ public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBas
         userRepository.save(partnerUser);
 
         responseObserver.onNext(convertToRelationshipsFromEntities(currentUserRelationship, partnerUserRelationship));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void declineFriend(RelationshipUsersRequest request,
+                              StreamObserver<Empty> responseObserver) {
+        checkThatUserHaveNotRelationshipWithMyself(request.getUsername(), request.getPartner());
+        UserEntity currentUser = userRepository.findByUsername(request.getUsername());
+        UserEntity partnerUser = userRepository.findByUsername(request.getPartner().getUsername());
+
+        currentUser.removeRelationship(checkThatUserHaveRelationship(currentUser, partnerUser, INVITATION_RECEIVED));
+        partnerUser.removeRelationship(checkThatUserHaveRelationship(partnerUser, currentUser, INVITATION_SENT));
+
+        userRepository.save(currentUser);
+        userRepository.save(partnerUser);
+
+        responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
