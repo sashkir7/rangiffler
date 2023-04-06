@@ -4,6 +4,10 @@ server:
     include:
       message: true
 
+grpc:
+  server:
+    port: 9009
+
 spring:
   application:
     name: rangiffler-userdata

@@ -21,4 +21,6 @@ dependencies {
     implementation 'org.springframework.amqp:spring-rabbit:3.0.3'
 
     runtimeOnly 'org.postgresql:postgresql'
+    implementation project(':rangiffler-grpc-common')
+    implementation 'net.devh:grpc-server-spring-boot-starter:2.14.0.RELEASE'
 }
