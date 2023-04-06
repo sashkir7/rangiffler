@@ -8,7 +8,8 @@ import userdata.data.FriendStatus;
 import userdata.data.UserEntity;
 import userdata.data.UsersRelationshipEntity;
 import userdata.data.repository.UserRepository;
-import userdata.exception.InviteToFriendsRelationshipException;
+import userdata.exception.RelationshipUsersFoundException;
+import userdata.exception.RelationshipUsersNotFoundException;
 import userdata.exception.RelationshipWithMyselfException;
 
 import java.util.*;
@@ -64,17 +65,36 @@ public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBas
     public void inviteToFriends(RelationshipUsersRequest request,
                                 StreamObserver<RelationshipsResponse> responseObserver) {
         checkThatUserHaveNotRelationshipWithMyself(request.getUsername(), request.getPartner());
-
         UserEntity currentUser = userRepository.findByUsername(request.getUsername());
         UserEntity partnerUser = userRepository.findByUsername(request.getPartner().getUsername());
 
-        checkStatementForInviteToFriends(currentUser, partnerUser);
-        checkStatementForInviteToFriends(partnerUser, currentUser);
+        checkThatUserHaveNotRelationship(currentUser, partnerUser);
+        checkThatUserHaveNotRelationship(partnerUser, currentUser);
 
         UsersRelationshipEntity currentUserRelationship = createUsersRelationship(currentUser, partnerUser, INVITATION_SENT);
         currentUser.addUserRelationship(currentUserRelationship);
         UsersRelationshipEntity partnerUserRelationship = createUsersRelationship(partnerUser, currentUser, INVITATION_RECEIVED);
         partnerUser.addUserRelationship(partnerUserRelationship);
+
+        userRepository.save(currentUser);
+        userRepository.save(partnerUser);
+
+        responseObserver.onNext(convertToRelationshipsFromEntities(currentUserRelationship, partnerUserRelationship));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void submitFriends(RelationshipUsersRequest request,
+                              StreamObserver<RelationshipsResponse> responseObserver) {
+        checkThatUserHaveNotRelationshipWithMyself(request.getUsername(), request.getPartner());
+        UserEntity currentUser = userRepository.findByUsername(request.getUsername());
+        UserEntity partnerUser = userRepository.findByUsername(request.getPartner().getUsername());
+
+        UsersRelationshipEntity currentUserRelationship = checkThatUserHaveRelationship(currentUser, partnerUser, INVITATION_RECEIVED);
+        UsersRelationshipEntity partnerUserRelationship = checkThatUserHaveRelationship(partnerUser, currentUser, INVITATION_SENT);
+
+        currentUserRelationship.setRelationship(FRIEND);
+        partnerUserRelationship.setRelationship(FRIEND);
 
         userRepository.save(currentUser);
         userRepository.save(partnerUser);
@@ -127,11 +147,19 @@ public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBas
         }
     }
 
-    private void checkStatementForInviteToFriends(UserEntity currentUser, UserEntity partnerUser) {
+    private void checkThatUserHaveNotRelationship(UserEntity currentUser, UserEntity partnerUser) {
         Optional<UsersRelationshipEntity> relationship = currentUser.findRelationship(partnerUser);
         if (relationship.isPresent()) {
-            throw new InviteToFriendsRelationshipException(relationship.get());
+            throw new RelationshipUsersFoundException(relationship.get());
         }
+    }
+
+    public UsersRelationshipEntity checkThatUserHaveRelationship(UserEntity currentUser, UserEntity partnerUser, FriendStatus status) {
+        Optional<UsersRelationshipEntity> relationship = currentUser.findRelationship(partnerUser, status);
+        if (relationship.isEmpty()) {
+            throw new RelationshipUsersNotFoundException(currentUser.getUsername(), partnerUser.getUsername(), status);
+        }
+        return relationship.get();
     }
 
 }
