@@ -177,7 +177,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
                 .map(rel -> RelationshipResponse.newBuilder()
                         .setUser(convertToUserFromEntity(rel.getUser()))
                         .setPartner(convertToUserFromEntity(rel.getPartner()))
-                        .setRelationship(rel.getStatus().toString())
+                        .setStatus(rel.getStatus().toString())
                         .build())
                 .toList();
         return RelationshipsResponse.newBuilder().addAllRelationships(relationships).build();

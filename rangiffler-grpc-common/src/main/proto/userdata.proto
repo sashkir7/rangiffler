@@ -48,7 +48,7 @@ message RelationshipUsersRequest {
 message RelationshipResponse {
   User user = 1;
   User partner = 2;
-  string relationship = 3;
+  string status = 3;
 }
 
 message RelationshipsResponse {
