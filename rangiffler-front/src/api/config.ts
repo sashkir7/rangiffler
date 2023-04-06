@@ -1,5 +1,5 @@
-export const FRONT_URL = "http://127.0.0.1:3001"
-export const GATEWAY_URL = "http://127.0.0.1:8080";
-export const AUTH_URL = "http://127.0.0.1:9000";
+export const FRONT_URL = process.env.REACT_APP_FRONT_URL;
+export const GATEWAY_URL = process.env.REACT_APP_GATEWAY_URL;
+export const AUTH_URL = process.env.REACT_APP_AUTH_URL;
 export const CLIENT = "client";
 export const SECRET = "secret";

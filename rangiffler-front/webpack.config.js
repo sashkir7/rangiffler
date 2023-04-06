@@ -7,9 +7,11 @@ const ReactRefreshWebpackPlugin = require(
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const Dotenv = require('dotenv-webpack');
 
 const IS_DEV = process.env.NODE_ENV === "development";
 const IS_PROD = !IS_DEV;
+
 const filename = (ext) => IS_DEV ? `[name].${ext}` : `[hash].${ext}`;
 
 module.exports = {
@@ -43,6 +45,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new Dotenv({
+      path: `./.env.${process.env.NODE_ENV === "development" ? "dev" : process.env.NODE_ENV === "production" ? "docker" : "test"}`,
+    }),
     new HTMLWebpackPlugin({
       template: "./index.html",
       minify: {
