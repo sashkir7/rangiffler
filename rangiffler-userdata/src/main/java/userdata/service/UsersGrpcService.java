@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 import static userdata.data.PartnerStatus.*;
 
 @GrpcService
-public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBase {
+public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBase {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public GrpcUsersService(UserRepository userRepository) {
+    public UsersGrpcService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
