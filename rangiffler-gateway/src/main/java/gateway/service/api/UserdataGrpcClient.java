@@ -2,6 +2,7 @@ package gateway.service.api;
 
 import gateway.model.PartnerStatus;
 import gateway.model.UserDto;
+import gateway.model.UsersRelationshipDto;
 import guru.qa.grpc.niffler.grpc.*;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Component;
@@ -41,6 +42,26 @@ public class UserdataGrpcClient {
         return convertToUserDtos(userdataServiceBlockingStub.getFriends(request));
     }
 
+    public List<UsersRelationshipDto> inviteToFriends(String username, UserDto partnerDto) {
+        RelationshipUsersRequest request = getRelationshipRequest(username, partnerDto);
+        return convertToUsersRelationshipDtos(userdataServiceBlockingStub.inviteToFriends(request));
+    }
+
+    public List<UsersRelationshipDto> submitFriends(String username, UserDto partnerDto) {
+        RelationshipUsersRequest request = getRelationshipRequest(username, partnerDto);
+        return convertToUsersRelationshipDtos(userdataServiceBlockingStub.submitFriends(request));
+    }
+
+    public void declineFriend(String username, UserDto partnerDto) {
+        RelationshipUsersRequest request = getRelationshipRequest(username, partnerDto);
+        userdataServiceBlockingStub.declineFriend(request);
+    }
+
+    public void removeFriend(String username, UserDto partnerDto) {
+        RelationshipUsersRequest request = getRelationshipRequest(username, partnerDto);
+        userdataServiceBlockingStub.removeFriend(request);
+    }
+
     private User convertToUserGrpc(UserDto userDto) {
         return User.newBuilder()
                 .setId(userDto.getId().toString())
@@ -65,6 +86,27 @@ public class UserdataGrpcClient {
         return users.getUsersList().stream()
                 .map(this::convertToUserDto)
                 .collect(Collectors.toSet());
+    }
+
+    private UsersRelationshipDto convertToUsersRelationshipDto(RelationshipResponse relationshipResponse) {
+        return UsersRelationshipDto.builder()
+                .user(convertToUserDto(relationshipResponse.getUser()))
+                .partner(convertToUserDto(relationshipResponse.getPartner()))
+                .status(PartnerStatus.valueOf(relationshipResponse.getStatus()))
+                .build();
+    }
+
+    private List<UsersRelationshipDto> convertToUsersRelationshipDtos(RelationshipsResponse relationshipsResponse) {
+        return relationshipsResponse.getRelationshipsList().stream()
+                .map(this::convertToUsersRelationshipDto)
+                .toList();
+    }
+
+    private RelationshipUsersRequest getRelationshipRequest(String username, UserDto partnerDto) {
+        return RelationshipUsersRequest.newBuilder()
+                .setUsername(username)
+                .setPartner(convertToUserGrpc(partnerDto))
+                .build();
     }
 
 }
