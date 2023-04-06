@@ -63,6 +63,15 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
     }
 
     @Override
+    public void getFriends(UsernameRequest request, StreamObserver<Users> responseObserver) {
+        UserEntity userEntity = userRepository.findByUsername(request.getUsername());
+        Set<UserEntity> friends = userEntity.getRelationshipUsersByStatus(FRIEND);
+
+        responseObserver.onNext(convertToUsersFromEntities(friends));
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void inviteToFriends(RelationshipUsersRequest request,
                                 StreamObserver<RelationshipsResponse> responseObserver) {
         checkThatUserHaveNotRelationshipWithMyself(request.getUsername(), request.getPartner());

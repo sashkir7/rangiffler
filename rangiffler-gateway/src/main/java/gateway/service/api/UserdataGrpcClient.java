@@ -31,13 +31,15 @@ public class UserdataGrpcClient {
         Map<PartnerStatus, Set<UserDto>> allUsers = new HashMap<>();
         for (String partnerStatus : allGrpcUsers.keySet()) {
             Users users = allGrpcUsers.get(partnerStatus);
-            allUsers.put(PartnerStatus.valueOf(partnerStatus), convertToUserDtos(users.getUsersList()));
+            allUsers.put(PartnerStatus.valueOf(partnerStatus), convertToUserDtos(users));
         }
         return allUsers;
     }
 
-
-
+    public Set<UserDto> getFriends(String username) {
+        UsernameRequest request = UsernameRequest.newBuilder().setUsername(username).build();
+        return convertToUserDtos(userdataServiceBlockingStub.getFriends(request));
+    }
 
     private User convertToUserGrpc(UserDto userDto) {
         return User.newBuilder()
@@ -59,8 +61,8 @@ public class UserdataGrpcClient {
                 .build();
     }
 
-    private Set<UserDto> convertToUserDtos(Collection<User> users) {
-        return users.stream()
+    private Set<UserDto> convertToUserDtos(Users users) {
+        return users.getUsersList().stream()
                 .map(this::convertToUserDto)
                 .collect(Collectors.toSet());
     }

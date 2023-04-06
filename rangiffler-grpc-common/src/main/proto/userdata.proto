@@ -12,6 +12,7 @@ service UserdataService {
   rpc GetCurrentUser (UsernameRequest) returns (User) {}
   rpc UpdateCurrentUser (User) returns (User) {}
   rpc GetAllUsers (UsernameRequest) returns (GetAllUsersResponse) {}
+  rpc GetFriends (UsernameRequest) returns (Users) {}
 
   rpc InviteToFriends (RelationshipUsersRequest) returns (RelationshipsResponse) {}
   rpc SubmitFriends (RelationshipUsersRequest) returns (RelationshipsResponse) {}

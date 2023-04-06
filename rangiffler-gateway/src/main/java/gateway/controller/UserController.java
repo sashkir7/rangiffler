@@ -1,6 +1,5 @@
 package gateway.controller;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,20 +54,18 @@ public class UserController {
         return userdataGrpcClient.updateCurrentUser(userDto);
     }
 
-
-
-
-    // -----------------
-
     @GetMapping("/friends")
-    public List<UserDto> getFriendsByUserId() {
-        return userService.getFriends();
+    public Set<UserDto> getFriends(@AuthenticationPrincipal Jwt principal) {
+        String username = principal.getClaim("sub");
+        return userdataGrpcClient.getFriends(username);
     }
 
-    @GetMapping("invitations")
-    public List<UserDto> getInvitations() {
-        return userService.getInvitations();
-    }
+
+
+
+
+
+
 
     @PostMapping("users/invite/")
     public void sendInvitation(@AuthenticationPrincipal Jwt principal,
