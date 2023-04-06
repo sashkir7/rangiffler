@@ -28,8 +28,8 @@ export const Profile: FC<ProfileInterface> = ({onClose}) => {
 
   const [profileData, setProfileData] = useState<Partial<User>>(user);
   const initialFieldErrorsState = {
-    firstname: null,
-    lastname: null,
+    firstName: null,
+    lastName: null,
   };
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string | null }>(initialFieldErrorsState);
 
@@ -156,12 +156,12 @@ export const Profile: FC<ProfileInterface> = ({onClose}) => {
                             }}
                             label="First name"
                             size="small"
-                            name="firstname"
-                            value={profileData?.firstname}
-                            helperText={fieldErrors["firstname"]}
-                            error={fieldErrors["firstname"] !== null}
+                            name="firstName"
+                            value={profileData?.firstName}
+                            helperText={fieldErrors["firstName"]}
+                            error={fieldErrors["firstName"] !== null}
                             onChange={event => {
-                              checkTextLengthValid(event.target.name, true, event.target.value);
+                              checkTextLengthValid(event.target.name, false, event.target.value);
                               handleFieldChange(event)
                             }}
                         />
@@ -177,12 +177,12 @@ export const Profile: FC<ProfileInterface> = ({onClose}) => {
                             }}
                             label="Last name"
                             size="small"
-                            name="lastname"
-                            value={profileData?.lastname}
-                            helperText={fieldErrors["lastname"]}
-                            error={fieldErrors["lastname"] !== null}
+                            name="lastName"
+                            value={profileData?.lastName}
+                            helperText={fieldErrors["lastName"]}
+                            error={fieldErrors["lastName"] !== null}
                             onChange={event => {
-                              checkTextLengthValid(event.target.name, true, event.target.value);
+                              checkTextLengthValid(event.target.name, false, event.target.value);
                               handleFieldChange(event)
                             }}
                         />

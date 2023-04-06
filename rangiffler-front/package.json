@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --mode development",
-    "build": "cross-env NODE_ENV=production webpack --mode production",
+    "build:docker": "cross-env NODE_ENV=production webpack --mode production",
+    "build:test": "cross-env NODE_ENV=test webpack --mode production",
     "start": "cross-env NODE_ENV=development webpack serve --mode development --open",
     "lint": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx,json}\"",
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
@@ -67,6 +68,7 @@
     "axios": "^1.3.4",
     "buffer": "^6.0.3",
     "crypto-js": "^4.1.1",
+    "dotenv-webpack": "^8.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.1",

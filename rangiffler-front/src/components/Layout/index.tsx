@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from "react";
+import { Alert } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
 import {Outlet} from "react-router-dom";
 import {apiClient} from "../../api/apiClient";
-import {CountryContext} from "../../context/CountryContext/index";
-import {PhotoContext} from "../../context/PhotoContext/index";
-import {ApiCountry, Photo, User} from "../../types/types";
+import { AlertMessageContext } from "../../context/AlertMessageContext/index";
+import { CountryContext } from "../../context/CountryContext/index";
+import { PhotoContext } from "../../context/PhotoContext/index";
+import { ApiCountry, Photo, User } from "../../types/types";
 import {FriendsPopup} from "../FriendsPopup/index";
 import {Header} from "../Header/index";
 import {PhotoCard} from "../PhoroCard/index";
@@ -14,9 +16,12 @@ import {Profile} from "../Profile/index";
 export type LayoutContext = {
   handlePhotoClick: (item: Photo) => void;
   initSubmitPopupAndOpen: (text: string, buttonText: string, onSubmit: () => void) => void;
+  handleClosePopup: () => {};
 };
 
 export const Layout = () => {
+
+  const {error, message, addMessage, addError} = useContext(AlertMessageContext);
   //countries data
   const [countries, setCountries] = useState<Array<ApiCountry>>([]);
 
@@ -32,11 +37,13 @@ export const Layout = () => {
     if (ph) {
       newArr[newArr.indexOf(ph)] = photo;
       setUserPhotos(newArr);
+      addMessage("Changes saved");
     }
   };
 
   const handleDeletePhoto = (photoId: string) => {
     setUserPhotos(userPhotos.filter(ph => ph.id !== photoId));
+    addMessage("Photo deleted");
   };
 
 
@@ -58,29 +65,29 @@ export const Layout = () => {
 
   useEffect(() => {
     apiClient().get("/countries")
-    .then((res) => {
-      if (res.data) {
-        setCountries(res.data);
-      }
-    });
+        .then((res) => {
+          if (res.data) {
+            setCountries(res.data);
+          }
+        });
 
     apiClient().get("/friends")
-    .then((res) => {
-      setFriendsData(res.data);
-    });
+      .then((res) => {
+        setFriendsData(res.data);
+      });
 
     apiClient().get("/photos")
-    .then((res) => {
-      if (res.data) {
-        setUserPhotos(res.data.map((photo: any) => ({
-          id: photo.id,
-          src: photo.photo,
-          description: photo.description,
-          countryCode: photo.country.code,
-          username: photo.username,
-        } as Photo)));
-      }
-    });
+      .then((res) => {
+        if (res.data) {
+          setUserPhotos(res.data.map((photo: any) => ({
+            id: photo.id,
+            src: photo.photo,
+            description: photo.description,
+            countryCode: photo.country.code,
+            username: photo.username,
+          } as Photo)));
+        }
+      });
   }, []);
 
   const initSubmitPopupAndOpen = (text: string, buttonText: string, onSubmit: () => void) => {
@@ -98,6 +105,11 @@ export const Layout = () => {
         ...user
       }).then(() => {
         setFriendsData(friendsData.filter(f => f.id !== user.id));
+        handleClosePopup();
+        addMessage(`You're not friends with user ${user.username} anymore`);
+      }).catch((err) => {
+        console.error(err);
+        addError(`Friends is not deleted. Reason: ${err.message}`);
       });
     });
   };
@@ -139,7 +151,9 @@ export const Layout = () => {
   };
 
   return (
-      <div className="App">
+      <div className="App" style={{
+        position: "relative"
+      }}>
         <CountryContext.Provider value={{
           countries
         }}
@@ -152,6 +166,8 @@ export const Layout = () => {
           }}>
             <Header handleAvatarClick={handleAvatarClick} handleAddPhotoClick={handleAddPhotoClick}
                     handleFriendsIconClick={handleFriendsIconClick} friends={friendsData}/>
+            {error && (<Alert sx={{ position: "sticky"}} color="error" severity="warning">{error}</Alert>)}
+            {message && (<Alert sx={{position: "sticky"}} color="info" severity="info">{message}</Alert>)}
             <main className="content">
               {photoCardOpen &&
                   <PhotoCard key={selectedItem?.src} photo={selectedItem} onClose={handleClosePopup}
@@ -164,7 +180,7 @@ export const Layout = () => {
               />}
               {friendsPopupOpen && <FriendsPopup friends={friendsData} onClose={handleClosePopup}
                                                  handleRemoveFriend={handleDeleteFriend}/>}
-              <Outlet context={{handlePhotoClick, initSubmitPopupAndOpen}}/>
+              <Outlet context={{handlePhotoClick, initSubmitPopupAndOpen, handleClosePopup}}/>
             </main>
           </PhotoContext.Provider>
         </CountryContext.Provider>

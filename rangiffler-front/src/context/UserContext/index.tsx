@@ -10,7 +10,7 @@ const defaultState = {
   user: {
     username: "",
     firstname: "",
-    lastname: "",
+    lastName: "",
   },
   handleChangeUser: () => {
   },

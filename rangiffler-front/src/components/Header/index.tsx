@@ -50,8 +50,8 @@ export const Header: FC<HeaderInterface> = ({
       sessionStorage.clear();
       handleChangeUser({
         username: "",
-        firstname: "",
-        lastname: "",
+        firstName: "",
+        lastName: "",
       } as User);
       location.pathname = "/landing";
     }).catch((err) => {
