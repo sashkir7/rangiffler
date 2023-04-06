@@ -1,7 +1,7 @@
 package gateway.service.api;
 
-import gateway.model.FriendStatus;
-import gateway.model.UserJson;
+import gateway.model.PartnerStatus;
+import gateway.model.UserDto;
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -31,95 +31,57 @@ public class RestUserdataClient {
         this.userdataBaseUri = "http://127.0.0.1:9001";
     }
 
-    public @Nonnull Map<FriendStatus, Set<UserJson>> getAllUsers(@Nonnull String username) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("username", username);
-        URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9001/allUsers").queryParams(params).build().toUri();
-
-        return webClient.get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<FriendStatus, Set<UserJson>>>() {
-                })
-                .block();
-    }
-
-    public @Nonnull UserJson currentUser(@Nonnull String username) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("username", username);
-        // ToDo Из конфига
-        URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9001/currentUser")
-                .queryParams(params)
-                .build()
-                .toUri();
-
-        return webClient.get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(UserJson.class)
-                .block();
-    }
-
-    public @Nonnull UserJson updateUserInfo(@Nonnull UserJson user) {
-        return webClient.post()
-                .uri("http://localhost:9001/currentUser")
-                .body(Mono.just(user), UserJson.class)
-                .retrieve()
-                .bodyToMono(UserJson.class)
-                .block();
-    }
-
     public void inviteToFriends(@Nonnull String username,
-                                @Nonnull UserJson friend) {
+                                @Nonnull UserDto friend) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("username", username);
         URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9001/users/invite").queryParams(params).build().toUri();
 
         webClient.post()
                 .uri(uri)
-                .body(Mono.just(friend), UserJson.class)
+                .body(Mono.just(friend), UserDto.class)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
     }
 
     public void submitFriend(@Nonnull String username,
-                             @Nonnull UserJson friend) {
+                             @Nonnull UserDto friend) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("username", username);
         URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9001/friends/submit").queryParams(params).build().toUri();
 
         webClient.post()
                 .uri(uri)
-                .body(Mono.just(friend), UserJson.class)
+                .body(Mono.just(friend), UserDto.class)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
     }
 
     public void declineFriend(@Nonnull String username,
-                              @Nonnull UserJson friend) {
+                              @Nonnull UserDto friend) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("username", username);
         URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9001/friends/decline").queryParams(params).build().toUri();
 
         webClient.post()
                 .uri(uri)
-                .body(Mono.just(friend), UserJson.class)
+                .body(Mono.just(friend), UserDto.class)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
     }
 
     public void removeFriend(@Nonnull String username,
-                             @Nonnull UserJson friend) {
+                             @Nonnull UserDto friend) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("username", username);
         URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9001/friends/remove").queryParams(params).build().toUri();
 
         webClient.post()
                 .uri(uri)
-                .body(Mono.just(friend), UserJson.class)
+                .body(Mono.just(friend), UserDto.class)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();

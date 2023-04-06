@@ -4,93 +4,78 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import gateway.model.FriendStatus;
-import gateway.model.UserJson;
-import gateway.service.UserService;
-import gateway.service.api.GrpcFfasfasfAClient;
-import gateway.service.api.RestUserdataClient;
+import gateway.model.PartnerStatus;
+import gateway.model.UserDto;
+import gateway.model.UsersRelationshipDto;
+import gateway.service.api.UserdataGrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
 
-    private final UserService userService;
-    private final RestUserdataClient restUserdataClient;
-
-    private final GrpcFfasfasfAClient grpcFfasfasfAClient;
+    private final UserdataGrpcClient userdataGrpcClient;
 
     @Autowired
-    public UserController(UserService userService, RestUserdataClient restUserdataClient,
-                          GrpcFfasfasfAClient grpcFfasfasfAClient) {
-        this.userService = userService;
-        this.restUserdataClient = restUserdataClient;
-        this.grpcFfasfasfAClient = grpcFfasfasfAClient;
+    public UserController(UserdataGrpcClient userdataGrpcClient) {
+        this.userdataGrpcClient = userdataGrpcClient;
     }
 
     @GetMapping("/users")
-    public Map<FriendStatus, Set<UserJson>> getAllUsers(@AuthenticationPrincipal Jwt principal) {
+    public Map<PartnerStatus, Set<UserDto>> getAllUsers(@AuthenticationPrincipal Jwt principal) {
         String username = principal.getClaim("sub");
-        return restUserdataClient.getAllUsers(username);
+        return userdataGrpcClient.getAllUsers(username);
     }
 
     @GetMapping("/currentUser")
-    public UserJson getCurrentUser(@AuthenticationPrincipal Jwt principal) {
+    public UserDto getCurrentUser(@AuthenticationPrincipal Jwt principal) {
         String username = principal.getClaim("sub");
-        return grpcFfasfasfAClient.getCurrentUser(username);
+        return userdataGrpcClient.getCurrentUser(username);
     }
 
     @PatchMapping("/currentUser")
-    public UserJson updateCurrentUser(@AuthenticationPrincipal Jwt principal,
-                                      @Validated @RequestBody UserJson user) {
+    public UserDto updateCurrentUser(@AuthenticationPrincipal Jwt principal,
+                                     @Validated @RequestBody UserDto userDto) {
         String username = principal.getClaim("sub");
-        user.setUsername(username);
-        return restUserdataClient.updateUserInfo(user);
+        userDto.setUsername(username);
+        return userdataGrpcClient.updateCurrentUser(userDto);
     }
 
     @GetMapping("/friends")
-    public List<UserJson> getFriendsByUserId() {
-        return userService.getFriends();
-    }
-
-    @GetMapping("invitations")
-    public List<UserJson> getInvitations() {
-        return userService.getInvitations();
-    }
-
-    @PostMapping("users/invite/")
-    public void sendInvitation(@AuthenticationPrincipal Jwt principal,
-                               @RequestBody UserJson user) {
+    public Set<UserDto> getFriends(@AuthenticationPrincipal Jwt principal) {
         String username = principal.getClaim("sub");
-        restUserdataClient.inviteToFriends(username, user);
+        return userdataGrpcClient.getFriends(username);
     }
 
-    @PostMapping("friends/remove")
-    public void removeFriendFromUser(@AuthenticationPrincipal Jwt principal,
-                                         @RequestBody UserJson friend) {
+    @PostMapping("friends/invite")
+    public List<UsersRelationshipDto> sendInvitation(@AuthenticationPrincipal Jwt principal,
+                                                     @RequestBody UserDto partnerDto) {
         String username = principal.getClaim("sub");
-        restUserdataClient.removeFriend(username, friend);
+        return userdataGrpcClient.inviteToFriends(username, partnerDto);
     }
 
     @PostMapping("friends/submit")
-    public void submitFriend(@AuthenticationPrincipal Jwt principal,
-                             @RequestBody UserJson friend) {
+    public List<UsersRelationshipDto> submitFriend(@AuthenticationPrincipal Jwt principal,
+                                                   @RequestBody UserDto partnerDto) {
         String username = principal.getClaim("sub");
-        restUserdataClient.submitFriend(username, friend);
+        return userdataGrpcClient.submitFriends(username, partnerDto);
     }
 
     @PostMapping("friends/decline")
     public void declineFriend(@AuthenticationPrincipal Jwt principal,
-                              @RequestBody UserJson friend) {
+                              @RequestBody UserDto partnerDto) {
         String username = principal.getClaim("sub");
-        restUserdataClient.declineFriend(username, friend);
+        userdataGrpcClient.declineFriend(username, partnerDto);
+    }
+
+    @PostMapping("friends/remove")
+    public void removeFriendFromUser(@AuthenticationPrincipal Jwt principal,
+                                     @RequestBody UserDto partnerDto) {
+        String username = principal.getClaim("sub");
+        userdataGrpcClient.removeFriend(username, partnerDto);
     }
 
 }

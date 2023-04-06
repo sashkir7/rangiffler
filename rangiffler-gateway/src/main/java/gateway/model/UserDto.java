@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserJson {
+public class UserDto {
 
     private UUID id;
     private String username, firstname, lastname, avatar;

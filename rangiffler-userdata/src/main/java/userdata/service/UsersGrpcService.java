@@ -63,6 +63,15 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
     }
 
     @Override
+    public void getFriends(UsernameRequest request, StreamObserver<Users> responseObserver) {
+        UserEntity userEntity = userRepository.findByUsername(request.getUsername());
+        Set<UserEntity> friends = userEntity.getRelationshipUsersByStatus(FRIEND);
+
+        responseObserver.onNext(convertToUsersFromEntities(friends));
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void inviteToFriends(RelationshipUsersRequest request,
                                 StreamObserver<RelationshipsResponse> responseObserver) {
         checkThatUserHaveNotRelationshipWithMyself(request.getUsername(), request.getPartner());
@@ -139,15 +148,13 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
     }
 
     private User convertToUserFromEntity(UserEntity entity) {
-        User.Builder builder = User.newBuilder()
+        return User.newBuilder()
                 .setId(entity.getId().toString())
                 .setUsername(entity.getUsername())
                 .setFirstname(entity.getFirstname())
-                .setLastname(entity.getLastname());
-        if (entity.getAvatarAsString() != null) {
-            builder.setAvatar(entity.getAvatarAsString());
-        }
-        return builder.build();
+                .setLastname(entity.getLastname())
+                .setAvatar(entity.getAvatarAsString() == null ? "" : entity.getAvatarAsString())
+                .build();
     }
 
     private Users convertToUsersFromEntities(Collection<UserEntity> entities) {
@@ -170,7 +177,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
                 .map(rel -> RelationshipResponse.newBuilder()
                         .setUser(convertToUserFromEntity(rel.getUser()))
                         .setPartner(convertToUserFromEntity(rel.getPartner()))
-                        .setRelationship(rel.getStatus().toString())
+                        .setStatus(rel.getStatus().toString())
                         .build())
                 .toList();
         return RelationshipsResponse.newBuilder().addAllRelationships(relationships).build();
