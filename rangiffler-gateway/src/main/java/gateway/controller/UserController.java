@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import gateway.model.FriendStatus;
+import gateway.model.PartnerStatus;
 import gateway.model.UserDto;
 import gateway.service.UserService;
 import gateway.service.api.UserdataGrpcClient;
@@ -36,9 +36,9 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public Map<FriendStatus, Set<UserDto>> getAllUsers(@AuthenticationPrincipal Jwt principal) {
+    public Map<PartnerStatus, Set<UserDto>> getAllUsers(@AuthenticationPrincipal Jwt principal) {
         String username = principal.getClaim("sub");
-        return restUserdataClient.getAllUsers(username);
+        return userdataGrpcClient.getAllUsers(username);
     }
 
     @GetMapping("/currentUser")
@@ -54,6 +54,11 @@ public class UserController {
         userDto.setUsername(username);
         return userdataGrpcClient.updateCurrentUser(userDto);
     }
+
+
+
+
+    // -----------------
 
     @GetMapping("/friends")
     public List<UserDto> getFriendsByUserId() {

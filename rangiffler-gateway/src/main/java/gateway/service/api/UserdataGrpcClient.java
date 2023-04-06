@@ -1,22 +1,16 @@
 package gateway.service.api;
 
-import com.google.protobuf.Empty;
+import gateway.model.PartnerStatus;
 import gateway.model.UserDto;
-import guru.qa.grpc.niffler.grpc.User;
-import guru.qa.grpc.niffler.grpc.UserdataServiceGrpc;
-import guru.qa.grpc.niffler.grpc.UsernameRequest;
+import guru.qa.grpc.niffler.grpc.*;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class UserdataGrpcClient {
-
-    private static final Logger LOG = LoggerFactory.getLogger(UserdataGrpcClient.class);
-    private static final Empty EMPTY = Empty.getDefaultInstance();
 
     @GrpcClient("grpcCurrencyClient")
     private UserdataServiceGrpc.UserdataServiceBlockingStub userdataServiceBlockingStub;
@@ -29,6 +23,21 @@ public class UserdataGrpcClient {
     public UserDto updateCurrentUser(UserDto userDto) {
         return convertToUserDto(userdataServiceBlockingStub.updateCurrentUser(convertToUserGrpc(userDto)));
     }
+
+    public Map<PartnerStatus, Set<UserDto>> getAllUsers(String username) {
+        UsernameRequest request = UsernameRequest.newBuilder().setUsername(username).build();
+        Map<String, Users> allGrpcUsers = userdataServiceBlockingStub.getAllUsers(request).getUsersMap();
+
+        Map<PartnerStatus, Set<UserDto>> allUsers = new HashMap<>();
+        for (String partnerStatus : allGrpcUsers.keySet()) {
+            Users users = allGrpcUsers.get(partnerStatus);
+            allUsers.put(PartnerStatus.valueOf(partnerStatus), convertToUserDtos(users.getUsersList()));
+        }
+        return allUsers;
+    }
+
+
+
 
     private User convertToUserGrpc(UserDto userDto) {
         return User.newBuilder()
@@ -48,6 +57,12 @@ public class UserdataGrpcClient {
                 .lastname(user.getLastname())
                 .avatar(user.getAvatar())
                 .build();
+    }
+
+    private Set<UserDto> convertToUserDtos(Collection<User> users) {
+        return users.stream()
+                .map(this::convertToUserDto)
+                .collect(Collectors.toSet());
     }
 
 }
