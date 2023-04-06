@@ -7,6 +7,7 @@ import java.util.Set;
 import gateway.model.FriendStatus;
 import gateway.model.UserJson;
 import gateway.service.UserService;
+import gateway.service.api.GrpcFfasfasfAClient;
 import gateway.service.api.RestUserdataClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,10 +25,14 @@ public class UserController {
     private final UserService userService;
     private final RestUserdataClient restUserdataClient;
 
+    private final GrpcFfasfasfAClient grpcFfasfasfAClient;
+
     @Autowired
-    public UserController(UserService userService, RestUserdataClient restUserdataClient) {
+    public UserController(UserService userService, RestUserdataClient restUserdataClient,
+                          GrpcFfasfasfAClient grpcFfasfasfAClient) {
         this.userService = userService;
         this.restUserdataClient = restUserdataClient;
+        this.grpcFfasfasfAClient = grpcFfasfasfAClient;
     }
 
     @GetMapping("/users")
@@ -39,7 +44,7 @@ public class UserController {
     @GetMapping("/currentUser")
     public UserJson getCurrentUser(@AuthenticationPrincipal Jwt principal) {
         String username = principal.getClaim("sub");
-        return restUserdataClient.currentUser(username);
+        return grpcFfasfasfAClient.getCurrentUser(username);
     }
 
     @PatchMapping("/currentUser")
