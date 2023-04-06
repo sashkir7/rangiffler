@@ -49,7 +49,7 @@ public class UserEntity {
     private byte[] avatar;
 
     @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UsersRelationshipEntity> relationshipUsers = new HashSet<>();
 
     public void addUserRelationship(UsersRelationshipEntity relationshipEntity) {
