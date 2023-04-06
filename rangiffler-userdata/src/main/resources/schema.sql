@@ -18,11 +18,11 @@ alter table users
 create table if not exists users_relationship
 (
     user_id                 UUID not null,
-    friend_id               UUID not null,
-    relationship            varchar(20) not null,
-    primary key (user_id, friend_id),
+    partner_id              UUID not null,
+    status                  varchar(20) not null,
+    primary key (user_id, partner_id),
     constraint fk_user_id foreign key (user_id) references users (id),
-    constraint fk_friend_id foreign key (friend_id) references users (id)
+    constraint fk_friend_id foreign key (partner_id) references users (id)
 );
 
 alter table users_relationship

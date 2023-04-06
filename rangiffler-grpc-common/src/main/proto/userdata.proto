@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package guru.qa.grpc.niffler;
+
+option java_multiple_files = true;
+option java_package = "guru.qa.grpc.niffler.grpc";
+option java_outer_classname = "NifflerCurrencyProto";
+
+service UserdataService {
+  rpc GetCurrentUser (UsernameRequest) returns (User) {}
+  rpc UpdateCurrentUser (User) returns (User) {}
+  rpc GetAllUsers (UsernameRequest) returns (GetAllUsersResponse) {}
+
+  rpc InviteToFriends (RelationshipUsersRequest) returns (RelationshipsResponse) {}
+  rpc SubmitFriends (RelationshipUsersRequest) returns (RelationshipsResponse) {}
+  rpc DeclineFriend (RelationshipUsersRequest) returns (google.protobuf.Empty) {}
+  rpc RemoveFriend (RelationshipUsersRequest) returns (google.protobuf.Empty) {}
+}
+
+message UsernameRequest {
+  string username = 1;
+}
+
+message User {
+  string id = 1;
+  string username = 2;
+  string firstname = 3;
+  string lastname = 4;
+  string avatar = 5;
+}
+
+message Users {
+  repeated User users = 1;
+}
+
+message GetAllUsersResponse {
+  map<string, Users> users = 1;
+}
+
+message RelationshipUsersRequest {
+  string username = 1;
+  User partner = 2;
+}
+
+message RelationshipResponse {
+  User user = 1;
+  User partner = 2;
+  string relationship = 3;
+}
+
+message RelationshipsResponse {
+  repeated RelationshipResponse relationships = 1;
+}

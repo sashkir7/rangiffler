@@ -3,8 +3,6 @@ package userdata.data;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Objects;
-
 @Data
 @Entity
 @Builder
@@ -21,11 +19,11 @@ public class UsersRelationshipEntity {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "friend_id", referencedColumnName = "id", nullable = false)
-    private UserEntity friend;
+    @JoinColumn(name = "partner_id", referencedColumnName = "id", nullable = false)
+    private UserEntity partner;
 
-    @Column(name = "relationship", nullable = false)
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private FriendStatus relationship;
+    private PartnerStatus status;
 
 }

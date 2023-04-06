@@ -26,6 +26,12 @@ spring:
         jwt:
           issuer-uri: 'http://127.0.0.1:9000'
 
+grpc:
+  client:
+    grpcCurrencyClient:
+      address: 'static://localhost:9009'
+      negotiationType: PLAINTEXT
+
 rangiffler-front:
   base-uri: 'http://127.0.0.1:3001'
 

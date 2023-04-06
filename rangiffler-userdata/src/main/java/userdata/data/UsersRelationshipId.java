@@ -8,6 +8,6 @@ import java.util.UUID;
 @Data
 public class UsersRelationshipId implements Serializable {
 
-    private UUID user, friend;
+    private UUID user, partner;
 
 }
