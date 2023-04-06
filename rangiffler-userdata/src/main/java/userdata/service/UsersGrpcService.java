@@ -139,15 +139,13 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
     }
 
     private User convertToUserFromEntity(UserEntity entity) {
-        User.Builder builder = User.newBuilder()
+        return User.newBuilder()
                 .setId(entity.getId().toString())
                 .setUsername(entity.getUsername())
                 .setFirstname(entity.getFirstname())
-                .setLastname(entity.getLastname());
-        if (entity.getAvatarAsString() != null) {
-            builder.setAvatar(entity.getAvatarAsString());
-        }
-        return builder.build();
+                .setLastname(entity.getLastname())
+                .setAvatar(entity.getAvatarAsString() == null ? "" : entity.getAvatarAsString())
+                .build();
     }
 
     private Users convertToUsersFromEntities(Collection<UserEntity> entities) {
