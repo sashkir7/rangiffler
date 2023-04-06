@@ -5,7 +5,7 @@ import guru.qa.grpc.niffler.grpc.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
-import userdata.data.FriendStatus;
+import userdata.data.PartnerStatus;
 import userdata.data.UserEntity;
 import userdata.data.UsersRelationshipEntity;
 import userdata.data.repository.UserRepository;
@@ -16,7 +16,7 @@ import userdata.exception.RelationshipWithMyselfException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static userdata.data.FriendStatus.*;
+import static userdata.data.PartnerStatus.*;
 
 @GrpcService
 public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBase {
@@ -51,7 +51,7 @@ public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBas
         Set<UserEntity> allUsersWithoutCurrentUser = userRepository.findAllByUsernameNot(request.getUsername());
 
         GetAllUsersResponse.Builder responseBuilder = GetAllUsersResponse.newBuilder();
-        for (FriendStatus status : FriendStatus.values()) {
+        for (PartnerStatus status : PartnerStatus.values()) {
             Set<UserEntity> usersByStatus = userEntity.getRelationshipUsersByStatus(status);
             allUsersWithoutCurrentUser.removeAll(usersByStatus);
             responseBuilder.putUsers(status.toString(), convertToUsersFromEntities(usersByStatus));
@@ -94,8 +94,8 @@ public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBas
         UsersRelationshipEntity currentUserRelationship = checkThatUserHaveRelationship(currentUser, partnerUser, INVITATION_RECEIVED);
         UsersRelationshipEntity partnerUserRelationship = checkThatUserHaveRelationship(partnerUser, currentUser, INVITATION_SENT);
 
-        currentUserRelationship.setRelationship(FRIEND);
-        partnerUserRelationship.setRelationship(FRIEND);
+        currentUserRelationship.setStatus(FRIEND);
+        partnerUserRelationship.setStatus(FRIEND);
 
         userRepository.save(currentUser);
         userRepository.save(partnerUser);
@@ -157,11 +157,11 @@ public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBas
 
     private UsersRelationshipEntity createUsersRelationship(UserEntity currentUser,
                                                             UserEntity partner,
-                                                            FriendStatus relationship) {
+                                                            PartnerStatus relationship) {
         return UsersRelationshipEntity.builder()
                 .user(currentUser)
                 .friend(partner)
-                .relationship(relationship)
+                .status(relationship)
                 .build();
     }
 
@@ -170,7 +170,7 @@ public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBas
                 .map(rel -> RelationshipResponse.newBuilder()
                         .setUser(convertToUserFromEntity(rel.getUser()))
                         .setPartner(convertToUserFromEntity(rel.getFriend()))
-                        .setRelationship(rel.getRelationship().toString())
+                        .setRelationship(rel.getStatus().toString())
                         .build())
                 .toList();
         return RelationshipsResponse.newBuilder().addAllRelationships(relationships).build();
@@ -189,7 +189,7 @@ public class GrpcUsersService extends UserdataServiceGrpc.UserdataServiceImplBas
         }
     }
 
-    public UsersRelationshipEntity checkThatUserHaveRelationship(UserEntity currentUser, UserEntity partnerUser, FriendStatus status) {
+    public UsersRelationshipEntity checkThatUserHaveRelationship(UserEntity currentUser, UserEntity partnerUser, PartnerStatus status) {
         Optional<UsersRelationshipEntity> relationship = currentUser.findRelationship(partnerUser, status);
         if (relationship.isEmpty()) {
             throw new RelationshipUsersNotFoundException(currentUser.getUsername(), partnerUser.getUsername(), status);

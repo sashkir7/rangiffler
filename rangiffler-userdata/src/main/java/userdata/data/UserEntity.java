@@ -60,17 +60,17 @@ public class UserEntity {
         relationshipUsers.remove(relationshipEntity);
     }
 
-    public Set<UserEntity> getRelationshipUsersByStatus(FriendStatus status) {
+    public Set<UserEntity> getRelationshipUsersByStatus(PartnerStatus status) {
         return relationshipUsers.stream()
-                .filter(user -> user.getRelationship() == status)
+                .filter(user -> user.getStatus() == status)
                 .map(UsersRelationshipEntity::getFriend)
                 .collect(Collectors.toSet());
     }
 
-    public Optional<UsersRelationshipEntity> findRelationship(UserEntity partner, FriendStatus status) {
+    public Optional<UsersRelationshipEntity> findRelationship(UserEntity partner, PartnerStatus status) {
         return relationshipUsers.stream()
                 .filter(rel -> rel.getFriend().getUsername().equals(partner.getUsername()))
-                .filter(rel -> status == null || rel.getRelationship().equals(status))
+                .filter(rel -> status == null || rel.getStatus().equals(status))
                 .findFirst();
     }
 

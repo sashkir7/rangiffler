@@ -24,6 +24,6 @@ public class UsersRelationshipEntity {
 
     @Column(name = "relationship", nullable = false)
     @Enumerated(EnumType.STRING)
-    private FriendStatus relationship;
+    private PartnerStatus status;
 
 }

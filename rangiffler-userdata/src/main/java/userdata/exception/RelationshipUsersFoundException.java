@@ -1,29 +1,29 @@
 package userdata.exception;
 
-import userdata.data.FriendStatus;
+import userdata.data.PartnerStatus;
 import userdata.data.UsersRelationshipEntity;
 
 public class RelationshipUsersFoundException extends RuntimeException {
 
     private final String currentUsername, partnerUsername;
-    private final FriendStatus friendStatus;
+    private final PartnerStatus status;
 
     public RelationshipUsersFoundException(String currentUsername,
                                            String partnerUsername,
-                                           FriendStatus friendStatus) {
+                                           PartnerStatus status) {
         this.currentUsername = currentUsername;
         this.partnerUsername = partnerUsername;
-        this.friendStatus = friendStatus;
+        this.status = status;
     }
 
     public RelationshipUsersFoundException(UsersRelationshipEntity entity) {
-        this(entity.getUser().getUsername(), entity.getFriend().getUsername(), entity.getRelationship());
+        this(entity.getUser().getUsername(), entity.getFriend().getUsername(), entity.getStatus());
     }
 
     @Override
     public String getMessage() {
         return String.format("User '%s' found relationship '%s' with user '%s'",
-                currentUsername, friendStatus, partnerUsername);
+                currentUsername, status, partnerUsername);
     }
 
 }
