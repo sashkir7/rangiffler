@@ -4,11 +4,11 @@ import "google/protobuf/empty.proto";
 import "geo.proto";
 import "userdata.proto";
 
-package guru.qa.grpc.niffler;
+package sashkir7.grpc;
 
 option java_multiple_files = true;
-option java_package = "guru.qa.grpc.niffler.grpc";
-option java_outer_classname = "NifflerPhotoProto";
+option java_package = "sashkir7.grpc";
+option java_outer_classname = "PhotoProto";
 
 service PhotoService {
   rpc GetUserPhotos(UsernameRequest) returns (Photos) {}
