@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package guru.qa.grpc.niffler;
+
+option java_multiple_files = true;
+option java_package = "guru.qa.grpc.niffler.grpc";
+option java_outer_classname = "NifflerGeoProto";
+
+service GeoService {
+  rpc GetAllCountries (google.protobuf.Empty) returns (Countries) {}
+  rpc GetCountryByCode (CodeRequest) returns (Country) {}
+}
+
+message CodeRequest {
+  string code = 1;
+}
+
+message Country {
+  string id = 1;
+  string code = 2;
+  string name = 3;
+}
+
+message Countries {
+  repeated Country countries = 1;
+}
