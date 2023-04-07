@@ -1,6 +1,12 @@
+server:
+  port: 9004
+  error:
+    include:
+      message: true
+
 grpc:
   server:
-    port: 9012
+    port: 9005
 
 spring:
   application:
@@ -47,8 +53,8 @@ spring:
 grpc:
   client:
     grpcUserdataClient:
-      address: 'static://localhost:9009'
+      address: 'static://localhost:9001'
       negotiationType: PLAINTEXT
     grpcGeoClient:
-      address: 'static://localhost:9010'
+      address: 'static://localhost:9003'
       negotiationType: PLAINTEXT
