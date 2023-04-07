@@ -41,7 +41,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
                 .setFirstname(request.getFirstname())
                 .setLastname(request.getLastname())
                 .setAvatar(request.getAvatarBytes().toByteArray());
-        responseObserver.onNext(userEntity.toGrpc());
+        responseObserver.onNext(userRepository.save(userEntity).toGrpc());
         responseObserver.onCompleted();
     }
 
