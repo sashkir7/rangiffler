@@ -3,12 +3,16 @@ package geo.service;
 import com.google.protobuf.Empty;
 import geo.data.CountryEntity;
 import geo.data.repository.CountryRepository;
-import guru.qa.grpc.niffler.grpc.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
+import sashkir7.grpc.CodeRequest;
+import sashkir7.grpc.Countries;
+import sashkir7.grpc.Country;
+import sashkir7.grpc.GeoServiceGrpc;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @GrpcService
 public class GeoGrpcService extends GeoServiceGrpc.GeoServiceImplBase {
@@ -22,29 +26,21 @@ public class GeoGrpcService extends GeoServiceGrpc.GeoServiceImplBase {
 
     @Override
     public void getAllCountries(Empty request, StreamObserver<Countries> responseObserver) {
-        responseObserver.onNext(convertToGrpcCountriesFromEntities(countryRepository.findAll()));
+        responseObserver.onNext(convertToCountries(countryRepository.findAll()));
         responseObserver.onCompleted();
     }
 
     @Override
     public void getCountryByCode(CodeRequest request, StreamObserver<Country> responseObserver) {
-        responseObserver.onNext(convertToGrpcCountryFromEntity(countryRepository.findByCode(request.getCode())));
+        responseObserver.onNext(countryRepository.findByCode(request.getCode()).toGrpc());
         responseObserver.onCompleted();
     }
 
-    private Country convertToGrpcCountryFromEntity(CountryEntity entity) {
-        return Country.newBuilder()
-                .setId(entity.getId().toString())
-                .setCode(entity.getCode())
-                .setName(entity.getName())
-                .build();
-    }
-
-    private Countries convertToGrpcCountriesFromEntities(Collection<CountryEntity> entities) {
+    private Countries convertToCountries(Collection<CountryEntity> entities) {
         return Countries.newBuilder()
                 .addAllCountries(entities.stream()
-                        .map(this::convertToGrpcCountryFromEntity)
-                        .toList()
+                        .map(CountryEntity::toGrpc)
+                        .collect(Collectors.toSet())
                 ).build();
     }
 
