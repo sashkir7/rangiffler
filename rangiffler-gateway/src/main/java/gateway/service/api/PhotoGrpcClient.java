@@ -2,9 +2,9 @@ package gateway.service.api;
 
 import gateway.model.CountryDto;
 import gateway.model.PhotoDto;
-import guru.qa.grpc.niffler.grpc.*;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Component;
+import sashkir7.grpc.*;
 
 import java.util.Set;
 import java.util.UUID;

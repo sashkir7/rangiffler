@@ -3,9 +3,9 @@ package gateway.service.api;
 import gateway.model.PartnerStatus;
 import gateway.model.UserDto;
 import gateway.model.UsersRelationshipDto;
-import guru.qa.grpc.niffler.grpc.*;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Component;
+import sashkir7.grpc.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Component
 public class UserdataGrpcClient {
 
-    @GrpcClient("grpcCurrencyClient")
+    @GrpcClient("grpcUserdataClient")
     private UserdataServiceGrpc.UserdataServiceBlockingStub userdataServiceBlockingStub;
 
     public UserDto getCurrentUser(String username) {

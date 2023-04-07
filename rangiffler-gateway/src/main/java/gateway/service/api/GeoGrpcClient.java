@@ -2,12 +2,12 @@ package gateway.service.api;
 
 import com.google.protobuf.Empty;
 import gateway.model.CountryDto;
-import guru.qa.grpc.niffler.grpc.CodeRequest;
-import guru.qa.grpc.niffler.grpc.Countries;
-import guru.qa.grpc.niffler.grpc.Country;
-import guru.qa.grpc.niffler.grpc.GeoServiceGrpc;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Component;
+import sashkir7.grpc.CodeRequest;
+import sashkir7.grpc.Countries;
+import sashkir7.grpc.Country;
+import sashkir7.grpc.GeoServiceGrpc;
 
 import java.util.Set;
 import java.util.UUID;
