@@ -31,6 +31,9 @@ grpc:
     grpcCurrencyClient:
       address: 'static://localhost:9009'
       negotiationType: PLAINTEXT
+    grpcGeoClient:
+      address: 'static://localhost:9010'
+      negotiationType: PLAINTEXT
 
 rangiffler-front:
   base-uri: 'http://127.0.0.1:3001'
