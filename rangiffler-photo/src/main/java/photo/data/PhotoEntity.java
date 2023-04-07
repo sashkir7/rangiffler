@@ -17,14 +17,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Table(name = "photo")
 public class PhotoEntity {
 
-    public static PhotoEntity fromGrpc(Photo grpcPhoto) {
+    public static PhotoEntity fromGrpc(Photo photo) {
         PhotoEntityBuilder builder = PhotoEntity.builder()
-                .username(grpcPhoto.getUsername())
-                .description(grpcPhoto.getDescription())
-                .photo(grpcPhoto.getPhoto().getBytes(UTF_8))
-                .countryCode(grpcPhoto.getCountry().getCode());
-        if (!grpcPhoto.getId().isBlank()) {
-            builder.id(UUID.fromString(grpcPhoto.getId()));
+                .username(photo.getUsername())
+                .description(photo.getDescription())
+                .photo(photo.getPhoto().getBytes(UTF_8))
+                .countryCode(photo.getCountry().getCode());
+        if (!photo.getId().isBlank()) {
+            builder.id(UUID.fromString(photo.getId()));
         }
         return builder.build();
     }

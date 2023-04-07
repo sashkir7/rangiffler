@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "geo.proto";
+import "userdata.proto";
+
+package guru.qa.grpc.niffler;
+
+option java_multiple_files = true;
+option java_package = "guru.qa.grpc.niffler.grpc";
+option java_outer_classname = "NifflerPhotoProto";
+
+service PhotoService {
+  rpc GetUserPhotos(UsernameRequest) returns (Photos) {}
+  rpc GetAllFriendsPhotos(UsernameRequest) returns (Photos) {}
+  rpc AddPhoto(Photo) returns (Photo) {}
+  rpc EditPhoto(Photo) returns (Photo) {}
+  rpc DeletePhoto(Photo) returns (google.protobuf.Empty) {}
+}
+
+message Photo {
+  string id = 1;
+  string username = 2;
+  string description = 3;
+  string photo = 4;
+  Country country = 5;
+}
+
+message Photos {
+  repeated Photo photos = 1;
+}
