@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PhotoJson {
+public class PhotoDto {
 
     @JsonProperty("id")
     private UUID id;

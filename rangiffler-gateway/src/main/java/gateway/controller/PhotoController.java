@@ -3,9 +3,12 @@ package gateway.controller;
 import java.util.List;
 import java.util.UUID;
 
-import gateway.model.PhotoJson;
+import gateway.model.PhotoDto;
 import gateway.service.PhotoService;
+import gateway.service.api.PhotoGrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,30 +21,35 @@ import org.springframework.web.bind.annotation.RestController;
 public class PhotoController {
 
     private final PhotoService photoService;
+    private final PhotoGrpcClient photoGrpcClient;
 
     @Autowired
-    public PhotoController(PhotoService photoService) {
+    public PhotoController(PhotoService photoService, PhotoGrpcClient photoGrpcClient) {
         this.photoService = photoService;
+        this.photoGrpcClient = photoGrpcClient;
     }
 
     @GetMapping("/photos")
-    public List<PhotoJson> getPhotosForUser() {
+    public List<PhotoDto> getPhotosForUser() {
         return photoService.getAllUserPhotos();
     }
 
     @GetMapping("/friends/photos")
-    public List<PhotoJson> getAllFriendsPhotos() {
+    public List<PhotoDto> getAllFriendsPhotos() {
         return photoService.getAllFriendsPhotos();
     }
 
     @PostMapping("/photos")
-    public PhotoJson addPhoto(@RequestBody PhotoJson photoJson) {
-        return photoService.addPhoto(photoJson);
+    public PhotoDto addPhoto(@AuthenticationPrincipal Jwt principal,
+                             @RequestBody PhotoDto photoDto) {
+        String username = principal.getClaim("sub");
+        photoDto.setUsername(username);
+        return photoGrpcClient.addPhoto(photoDto);
     }
 
     @PatchMapping("/photos/{id}")
-    public PhotoJson editPhoto(@RequestBody PhotoJson photoJson) {
-        return photoService.editPhoto(photoJson);
+    public PhotoDto editPhoto(@RequestBody PhotoDto photoDto) {
+        return photoService.editPhoto(photoDto);
     }
 
     @DeleteMapping("/photos")
