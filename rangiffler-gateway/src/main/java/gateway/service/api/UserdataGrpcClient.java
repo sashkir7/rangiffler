@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import sashkir7.grpc.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class UserdataGrpcClient {
@@ -17,95 +16,58 @@ public class UserdataGrpcClient {
     private UserdataServiceGrpc.UserdataServiceBlockingStub userdataServiceBlockingStub;
 
     public UserDto getCurrentUser(String username) {
-        UsernameRequest request = UsernameRequest.newBuilder().setUsername(username).build();
-        return convertToUserDto(userdataServiceBlockingStub.getCurrentUser(request));
+        User user = userdataServiceBlockingStub.getCurrentUser(getUsernameRequest(username));
+        return UserDto.fromGrpc(user);
     }
 
     public UserDto updateCurrentUser(UserDto userDto) {
-        return convertToUserDto(userdataServiceBlockingStub.updateCurrentUser(convertToUserGrpc(userDto)));
+        User user = userdataServiceBlockingStub.updateCurrentUser(userDto.toGrpc());
+        return UserDto.fromGrpc(user);
     }
 
     public Map<PartnerStatus, Set<UserDto>> getAllUsers(String username) {
-        UsernameRequest request = UsernameRequest.newBuilder().setUsername(username).build();
-        Map<String, Users> allGrpcUsers = userdataServiceBlockingStub.getAllUsers(request).getUsersMap();
-
+        Map<String, Users> grpcUsers = userdataServiceBlockingStub.getAllUsers(getUsernameRequest(username)).getUsersMap();
         Map<PartnerStatus, Set<UserDto>> allUsers = new HashMap<>();
-        for (String partnerStatus : allGrpcUsers.keySet()) {
-            Users users = allGrpcUsers.get(partnerStatus);
-            allUsers.put(PartnerStatus.valueOf(partnerStatus), convertToUserDtos(users));
+        for (String partnerStatus : grpcUsers.keySet()) {
+            Users users = grpcUsers.get(partnerStatus);
+            allUsers.put(PartnerStatus.valueOf(partnerStatus), UserDto.fromGrpc(users));
         }
         return allUsers;
     }
 
     public Set<UserDto> getFriends(String username) {
-        UsernameRequest request = UsernameRequest.newBuilder().setUsername(username).build();
-        return convertToUserDtos(userdataServiceBlockingStub.getFriends(request));
+        Users users = userdataServiceBlockingStub.getFriends(getUsernameRequest(username));
+        return UserDto.fromGrpc(users);
     }
 
     public List<UsersRelationshipDto> inviteToFriends(String username, UserDto partnerDto) {
-        RelationshipUsersRequest request = getRelationshipRequest(username, partnerDto);
-        return convertToUsersRelationshipDtos(userdataServiceBlockingStub.inviteToFriends(request));
+        RelationshipsResponse relationships = userdataServiceBlockingStub.inviteToFriends(
+                getRelationshipRequest(username, partnerDto));
+        return UsersRelationshipDto.fromGrpc(relationships);
     }
 
     public List<UsersRelationshipDto> submitFriends(String username, UserDto partnerDto) {
-        RelationshipUsersRequest request = getRelationshipRequest(username, partnerDto);
-        return convertToUsersRelationshipDtos(userdataServiceBlockingStub.submitFriends(request));
+        RelationshipsResponse relationships = userdataServiceBlockingStub.submitFriends(
+                getRelationshipRequest(username, partnerDto));
+        return UsersRelationshipDto.fromGrpc(relationships);
     }
 
     public void declineFriend(String username, UserDto partnerDto) {
-        RelationshipUsersRequest request = getRelationshipRequest(username, partnerDto);
-        userdataServiceBlockingStub.declineFriend(request);
+        userdataServiceBlockingStub.declineFriend(getRelationshipRequest(username, partnerDto));
     }
 
     public void removeFriend(String username, UserDto partnerDto) {
-        RelationshipUsersRequest request = getRelationshipRequest(username, partnerDto);
-        userdataServiceBlockingStub.removeFriend(request);
+        userdataServiceBlockingStub.removeFriend(getRelationshipRequest(username, partnerDto));
     }
 
-    private User convertToUserGrpc(UserDto userDto) {
-        return User.newBuilder()
-                .setId(userDto.getId().toString())
-                .setUsername(userDto.getUsername())
-                .setFirstname(userDto.getFirstname())
-                .setLastname(userDto.getLastname())
-                .setAvatar(userDto.getAvatar() == null ? "" : userDto.getAvatar())
-                .build();
-    }
-
-    private UserDto convertToUserDto(User user) {
-        return UserDto.builder()
-                .id(UUID.fromString(user.getId()))
-                .username(user.getUsername())
-                .firstname(user.getFirstname())
-                .lastname(user.getLastname())
-                .avatar(user.getAvatar())
-                .build();
-    }
-
-    private Set<UserDto> convertToUserDtos(Users users) {
-        return users.getUsersList().stream()
-                .map(this::convertToUserDto)
-                .collect(Collectors.toSet());
-    }
-
-    private UsersRelationshipDto convertToUsersRelationshipDto(RelationshipResponse relationshipResponse) {
-        return UsersRelationshipDto.builder()
-                .user(convertToUserDto(relationshipResponse.getUser()))
-                .partner(convertToUserDto(relationshipResponse.getPartner()))
-                .status(PartnerStatus.valueOf(relationshipResponse.getStatus()))
-                .build();
-    }
-
-    private List<UsersRelationshipDto> convertToUsersRelationshipDtos(RelationshipsResponse relationshipsResponse) {
-        return relationshipsResponse.getRelationshipsList().stream()
-                .map(this::convertToUsersRelationshipDto)
-                .toList();
+    private UsernameRequest getUsernameRequest(String username) {
+        return UsernameRequest.newBuilder().setUsername(username).build();
     }
 
     private RelationshipUsersRequest getRelationshipRequest(String username, UserDto partnerDto) {
         return RelationshipUsersRequest.newBuilder()
                 .setUsername(username)
-                .setPartner(convertToUserGrpc(partnerDto))
+                .setPartner(partnerDto.toGrpc())
                 .build();
     }
 

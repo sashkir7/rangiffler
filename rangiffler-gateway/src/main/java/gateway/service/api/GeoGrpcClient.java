@@ -4,14 +4,9 @@ import com.google.protobuf.Empty;
 import gateway.model.CountryDto;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Component;
-import sashkir7.grpc.CodeRequest;
-import sashkir7.grpc.Countries;
-import sashkir7.grpc.Country;
 import sashkir7.grpc.GeoServiceGrpc;
 
 import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class GeoGrpcClient {
@@ -20,26 +15,7 @@ public class GeoGrpcClient {
     private GeoServiceGrpc.GeoServiceBlockingStub geoServiceBlockingStub;
 
     public Set<CountryDto> getAllCountries() {
-        return convertToCountryDtos(geoServiceBlockingStub.getAllCountries(Empty.getDefaultInstance()));
-    }
-
-    public CountryDto getCountryByCode(String code) {
-        CodeRequest request = CodeRequest.newBuilder().setCode(code).build();
-        return convertToCountryDto(geoServiceBlockingStub.getCountryByCode(request));
-    }
-
-    private CountryDto convertToCountryDto(Country country) {
-        return CountryDto.builder()
-                .id(UUID.fromString(country.getId()))
-                .code(country.getCode())
-                .name(country.getName())
-                .build();
-    }
-
-    private Set<CountryDto> convertToCountryDtos(Countries countries) {
-        return countries.getCountriesList().stream()
-                .map(this::convertToCountryDto)
-                .collect(Collectors.toSet());
+        return CountryDto.fromGrpc(geoServiceBlockingStub.getAllCountries(Empty.getDefaultInstance()));
     }
 
 }
