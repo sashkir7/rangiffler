@@ -13,8 +13,11 @@ public class GeoGrpcClient {
     private GeoServiceGrpc.GeoServiceBlockingStub geoServiceBlockingStub;
 
     public Country getCountryByCode(String code) {
-        CodeRequest request = CodeRequest.newBuilder().setCode(code).build();
-        return geoServiceBlockingStub.getCountryByCode(request);
+        return geoServiceBlockingStub.getCountryByCode(getCodeRequest(code));
+    }
+
+    private CodeRequest getCodeRequest(String code) {
+        return CodeRequest.newBuilder().setCode(code).build();
     }
 
 }

@@ -66,13 +66,11 @@ public class PhotoGrpcService extends PhotoServiceGrpc.PhotoServiceImplBase {
 
     @Override
     public void getAllFriendsPhotos(UsernameRequest request, StreamObserver<Photos> responseObserver) {
-        Users friends = userdataGrpcClient.getFriends(request);
-        Set<String> collect = friends.getUsersList().stream().map(User::getUsername).collect(Collectors.toSet());
-
-
-        Set<PhotoEntity> allByUsernameIn = photoRepository.findAllByUsernameIn(collect);
-
-        responseObserver.onNext(convertToPhotos(allByUsernameIn));
+        Set<String> friends = userdataGrpcClient.getFriends(request).getUsersList()
+                .stream()
+                .map(User::getUsername)
+                .collect(Collectors.toSet());
+        responseObserver.onNext(convertToPhotos(photoRepository.findAllByUsernameIn(friends)));
         responseObserver.onCompleted();
     }
 
