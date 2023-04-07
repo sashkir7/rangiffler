@@ -2,6 +2,7 @@ package userdata.data;
 
 import jakarta.persistence.*;
 import lombok.*;
+import sashkir7.grpc.RelationshipResponse;
 
 @Data
 @Entity
@@ -25,5 +26,13 @@ public class UsersRelationshipEntity {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private PartnerStatus status;
+
+    public RelationshipResponse toGrpc() {
+        return RelationshipResponse.newBuilder()
+                .setUser(user.toGrpc())
+                .setPartner(partner.toGrpc())
+                .setStatus(status.toString())
+                .build();
+    }
 
 }

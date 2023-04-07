@@ -3,6 +3,7 @@ package userdata.data;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import sashkir7.grpc.User;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -67,8 +68,18 @@ public class UserEntity {
         return findRelationship(partner, null);
     }
 
-    public String getAvatarAsString() {
-        return avatar != null && avatar.length > 0 ? new String(avatar, UTF_8) : null;
+    public User toGrpc() {
+        User.Builder builder = User.newBuilder()
+                .setUsername(username)
+                .setFirstname(firstname)
+                .setLastname(lastname);
+        if (id != null) {
+            builder.setId(id.toString());
+        }
+        if (avatar != null && avatar.length > 0) {
+            builder.setAvatar(new String(avatar, UTF_8));
+        }
+        return builder.build();
     }
 
 }

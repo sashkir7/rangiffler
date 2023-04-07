@@ -1,9 +1,3 @@
-server:
-  port: 9001
-  error:
-    include:
-      message: true
-
 grpc:
   server:
     port: 9009
@@ -54,5 +48,3 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-rabbit-mq:
-  userdata-queue: 'userdata-queue'

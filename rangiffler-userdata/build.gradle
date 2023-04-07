@@ -5,22 +5,17 @@ plugins {
     id "io.freefair.lombok" version '6.4.2'
 }
 
-group = 'guru.qa'
-version = '0.0.2-SNAPSHOT'
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
-    implementation "org.springframework.boot:spring-boot-starter-validation"
-    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation project(':rangiffler-grpc-common')
     implementation 'org.springframework.amqp:spring-rabbit:3.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'net.devh:grpc-server-spring-boot-starter:2.14.0.RELEASE'
 
     runtimeOnly 'org.postgresql:postgresql'
-    implementation project(':rangiffler-grpc-common')
-    implementation 'net.devh:grpc-server-spring-boot-starter:2.14.0.RELEASE'
 }
