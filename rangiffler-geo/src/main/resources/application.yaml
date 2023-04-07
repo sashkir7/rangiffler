@@ -1,12 +1,12 @@
 server:
-  port: 9002
+  port: 9003
   error:
     include:
       message: true
 
 grpc:
   server:
-    port: 9003
+    port: 9004
 
 spring:
   application:
