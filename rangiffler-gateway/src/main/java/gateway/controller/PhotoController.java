@@ -1,10 +1,9 @@
 package gateway.controller;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import gateway.model.PhotoDto;
-import gateway.service.PhotoService;
 import gateway.service.api.PhotoGrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,23 +19,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PhotoController {
 
-    private final PhotoService photoService;
     private final PhotoGrpcClient photoGrpcClient;
 
     @Autowired
-    public PhotoController(PhotoService photoService, PhotoGrpcClient photoGrpcClient) {
-        this.photoService = photoService;
+    public PhotoController(PhotoGrpcClient photoGrpcClient) {
         this.photoGrpcClient = photoGrpcClient;
     }
 
     @GetMapping("/photos")
-    public List<PhotoDto> getPhotosForUser() {
-        return photoService.getAllUserPhotos();
+    public Set<PhotoDto> getPhotosForUser(@AuthenticationPrincipal Jwt principal) {
+        String username = principal.getClaim("sub");
+        return photoGrpcClient.getUserPhotos(username);
     }
 
     @GetMapping("/friends/photos")
-    public List<PhotoDto> getAllFriendsPhotos() {
-        return photoService.getAllFriendsPhotos();
+    public Set<PhotoDto> getAllFriendsPhotos(@AuthenticationPrincipal Jwt principal) {
+        String username = principal.getClaim("sub");
+        return photoGrpcClient.getaAllFriendsPhotos(username);
     }
 
     @PostMapping("/photos")
@@ -49,12 +48,12 @@ public class PhotoController {
 
     @PatchMapping("/photos/{id}")
     public PhotoDto editPhoto(@RequestBody PhotoDto photoDto) {
-        return photoService.editPhoto(photoDto);
+        return photoGrpcClient.editPhoto(photoDto);
     }
 
     @DeleteMapping("/photos")
     public void deletePhoto(@RequestParam UUID photoId) {
-        photoService.deletePhoto(photoId);
+        photoGrpcClient.deletePhoto(photoId.toString());
     }
 
 }

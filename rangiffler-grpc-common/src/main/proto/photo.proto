@@ -15,7 +15,11 @@ service PhotoService {
   rpc GetAllFriendsPhotos(UsernameRequest) returns (Photos) {}
   rpc AddPhoto(Photo) returns (Photo) {}
   rpc EditPhoto(Photo) returns (Photo) {}
-  rpc DeletePhoto(Photo) returns (google.protobuf.Empty) {}
+  rpc DeletePhoto(PhotoIdRequest) returns (google.protobuf.Empty) {}
+}
+
+message PhotoIdRequest {
+  string id = 1;
 }
 
 message Photo {

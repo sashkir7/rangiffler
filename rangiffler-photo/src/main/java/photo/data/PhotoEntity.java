@@ -4,6 +4,7 @@ import guru.qa.grpc.niffler.grpc.Country;
 import guru.qa.grpc.niffler.grpc.Photo;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "photo")
+@Accessors(chain = true)
 public class PhotoEntity {
 
     public static PhotoEntity fromGrpc(Photo photo) {

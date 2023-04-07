@@ -2,13 +2,13 @@ package gateway.service.api;
 
 import gateway.model.CountryDto;
 import gateway.model.PhotoDto;
-import guru.qa.grpc.niffler.grpc.Country;
-import guru.qa.grpc.niffler.grpc.Photo;
-import guru.qa.grpc.niffler.grpc.PhotoServiceGrpc;
+import guru.qa.grpc.niffler.grpc.*;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class PhotoGrpcClient {
@@ -19,6 +19,28 @@ public class PhotoGrpcClient {
     public PhotoDto addPhoto(PhotoDto photoDto) {
         Photo photo = photoServiceBlockingStub.addPhoto(convertPhotoDtoToGrpc(photoDto));
         return convertGrpcPhotoToDto(photo);
+    }
+
+    public PhotoDto editPhoto(PhotoDto photoDto) {
+        Photo photo = photoServiceBlockingStub.editPhoto(convertPhotoDtoToGrpc(photoDto));
+        return convertGrpcPhotoToDto(photo);
+    }
+
+    public void deletePhoto(String id) {
+        PhotoIdRequest request = PhotoIdRequest.newBuilder().setId(id).build();
+        photoServiceBlockingStub.deletePhoto(request);
+    }
+
+    public Set<PhotoDto> getUserPhotos(String username) {
+        UsernameRequest request = UsernameRequest.newBuilder().setUsername(username).build();
+        Photos userPhotos = photoServiceBlockingStub.getUserPhotos(request);
+        return userPhotos.getPhotosList().stream().map(this::convertGrpcPhotoToDto).collect(Collectors.toSet());
+    }
+
+    public Set<PhotoDto> getaAllFriendsPhotos(String username) {
+        UsernameRequest request = UsernameRequest.newBuilder().setUsername(username).build();
+        Photos userPhotos = photoServiceBlockingStub.getAllFriendsPhotos(request);
+        return userPhotos.getPhotosList().stream().map(this::convertGrpcPhotoToDto).collect(Collectors.toSet());
     }
 
     private PhotoDto convertGrpcPhotoToDto(Photo photo) {
