@@ -1,6 +1,12 @@
+server:
+  port: 9000
+  error:
+    include:
+      message: true
+
 grpc:
   server:
-    port: 9009
+    port: 9001
 
 spring:
   application:
