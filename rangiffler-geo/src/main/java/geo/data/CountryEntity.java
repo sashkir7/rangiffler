@@ -2,6 +2,7 @@ package geo.data;
 
 import jakarta.persistence.*;
 import lombok.*;
+import sashkir7.grpc.Country;
 
 import java.util.UUID;
 
@@ -23,5 +24,13 @@ public class CountryEntity {
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    public Country toGrpc() {
+        return Country.newBuilder()
+                .setId(id.toString())
+                .setCode(code)
+                .setName(name)
+                .build();
+    }
 
 }

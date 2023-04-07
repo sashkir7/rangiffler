@@ -1,7 +1,6 @@
 package photo.service;
 
 import com.google.protobuf.Empty;
-import guru.qa.grpc.niffler.grpc.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import photo.data.repository.PhotoRepository;
 import photo.exception.PhotoNotFoundException;
 import photo.service.api.GeoGrpcClient;
 import photo.service.api.UserdataGrpcClient;
+import sashkir7.grpc.*;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -66,13 +66,11 @@ public class PhotoGrpcService extends PhotoServiceGrpc.PhotoServiceImplBase {
 
     @Override
     public void getAllFriendsPhotos(UsernameRequest request, StreamObserver<Photos> responseObserver) {
-        Users friends = userdataGrpcClient.getFriends(request);
-        Set<String> collect = friends.getUsersList().stream().map(User::getUsername).collect(Collectors.toSet());
-
-
-        Set<PhotoEntity> allByUsernameIn = photoRepository.findAllByUsernameIn(collect);
-
-        responseObserver.onNext(convertToPhotos(allByUsernameIn));
+        Set<String> friends = userdataGrpcClient.getFriends(request).getUsersList()
+                .stream()
+                .map(User::getUsername)
+                .collect(Collectors.toSet());
+        responseObserver.onNext(convertToPhotos(photoRepository.findAllByUsernameIn(friends)));
         responseObserver.onCompleted();
     }
 

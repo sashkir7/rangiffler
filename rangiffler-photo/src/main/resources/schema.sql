@@ -1,5 +1,3 @@
--- create database "niffler-userdata" with owner postgres;
-
 create extension if not exists "uuid-ossp";
 
 create table if not exists photo

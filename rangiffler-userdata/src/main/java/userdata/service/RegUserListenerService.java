@@ -2,7 +2,6 @@ package userdata.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Nonnull;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,11 +22,11 @@ public class RegUserListenerService {
     //  ---> Тем самым получаем бесконечный цикл и кабзду на выходе.
     //  ---> Реализовать, чтобы в случае ошибки сообщение перекладывалось в ошибочную очередь
     @RabbitListener(queues = {"q.userdata-registration"})
-    public void registerUser(@Nonnull String json) {
+    public void registerUser(String json) {
         userRepository.save(fromJson(json));
     }
 
-    private UserEntity fromJson(String json) {
+    private static UserEntity fromJson(String json) {
         try {
             return new ObjectMapper().readValue(json, UserEntity.class);
         } catch (JsonProcessingException e) {

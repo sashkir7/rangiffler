@@ -1,16 +1,17 @@
 server:
-  port: 9003
-  error:
-    include:
-      message: true
-
-grpc:
-  server:
-    port: 9010
+  port: 9000
+# ONLY FOR TESTING
+  servlet:
+    session:
+      cookie:
+        http-only: false
+        secure: false
 
 spring:
   application:
-    name: rangiffler-geo
+    name: rangiffler-auth
+  mvc:
+    log-request-details: true
   datasource:
     hikari:
       connection-timeout: 20000
@@ -33,11 +34,18 @@ spring:
   sql:
     init:
       mode: always
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
 
 ---
 spring:
@@ -45,7 +53,11 @@ spring:
     activate:
       on-profile: 'local'
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/geo'
+    url: 'jdbc:postgresql://localhost:5432/auth'
   jpa:
     hibernate:
       ddl-auto: validate
+rangiffler-front:
+  base-uri: 'http://127.0.0.1:3001'
+rangiffler-auth:
+  base-uri: 'http://127.0.0.1:9000'

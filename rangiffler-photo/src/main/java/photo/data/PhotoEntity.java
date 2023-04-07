@@ -1,10 +1,10 @@
 package photo.data;
 
-import guru.qa.grpc.niffler.grpc.Country;
-import guru.qa.grpc.niffler.grpc.Photo;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import sashkir7.grpc.Country;
+import sashkir7.grpc.Photo;
 
 import java.util.UUID;
 

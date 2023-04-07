@@ -1,10 +1,10 @@
 package userdata.service;
 
 import com.google.protobuf.Empty;
-import guru.qa.grpc.niffler.grpc.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
+import sashkir7.grpc.*;
 import userdata.data.PartnerStatus;
 import userdata.data.UserEntity;
 import userdata.data.UsersRelationshipEntity;
@@ -31,7 +31,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
     @Override
     public void getCurrentUser(UsernameRequest request, StreamObserver<User> responseObserver) {
         UserEntity userEntity = userRepository.findByUsername(request.getUsername());
-        responseObserver.onNext(convertToUserFromEntity(userEntity));
+        responseObserver.onNext(userEntity.toGrpc());
         responseObserver.onCompleted();
     }
 
@@ -41,7 +41,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
                 .setFirstname(request.getFirstname())
                 .setLastname(request.getLastname())
                 .setAvatar(request.getAvatarBytes().toByteArray());
-        responseObserver.onNext(convertToUserFromEntity(userRepository.save(userEntity)));
+        responseObserver.onNext(userRepository.save(userEntity).toGrpc());
         responseObserver.onCompleted();
     }
 
@@ -54,10 +54,10 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         for (PartnerStatus status : PartnerStatus.values()) {
             Set<UserEntity> usersByStatus = userEntity.getRelationshipUsersByStatus(status);
             allUsersWithoutCurrentUser.removeAll(usersByStatus);
-            responseBuilder.putUsers(status.toString(), convertToUsersFromEntities(usersByStatus));
+            responseBuilder.putUsers(status.toString(), convertToUsers(usersByStatus));
         }
 
-        responseBuilder.putUsers(NOT_FRIEND.toString(), convertToUsersFromEntities(allUsersWithoutCurrentUser));
+        responseBuilder.putUsers(NOT_FRIEND.toString(), convertToUsers(allUsersWithoutCurrentUser));
         responseObserver.onNext(responseBuilder.build());
         responseObserver.onCompleted();
     }
@@ -65,9 +65,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
     @Override
     public void getFriends(UsernameRequest request, StreamObserver<Users> responseObserver) {
         UserEntity userEntity = userRepository.findByUsername(request.getUsername());
-        Set<UserEntity> friends = userEntity.getRelationshipUsersByStatus(FRIEND);
-
-        responseObserver.onNext(convertToUsersFromEntities(friends));
+        responseObserver.onNext(convertToUsers(userEntity.getRelationshipUsersByStatus(FRIEND)));
         responseObserver.onCompleted();
     }
 
@@ -89,7 +87,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         userRepository.save(currentUser);
         userRepository.save(partnerUser);
 
-        responseObserver.onNext(convertToRelationshipsFromEntities(currentUserRelationship, partnerUserRelationship));
+        responseObserver.onNext(convertToRelationships(currentUserRelationship, partnerUserRelationship));
         responseObserver.onCompleted();
     }
 
@@ -109,7 +107,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         userRepository.save(currentUser);
         userRepository.save(partnerUser);
 
-        responseObserver.onNext(convertToRelationshipsFromEntities(currentUserRelationship, partnerUserRelationship));
+        responseObserver.onNext(convertToRelationships(currentUserRelationship, partnerUserRelationship));
         responseObserver.onCompleted();
     }
 
@@ -147,21 +145,6 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         responseObserver.onCompleted();
     }
 
-    private User convertToUserFromEntity(UserEntity entity) {
-        return User.newBuilder()
-                .setId(entity.getId().toString())
-                .setUsername(entity.getUsername())
-                .setFirstname(entity.getFirstname())
-                .setLastname(entity.getLastname())
-                .setAvatar(entity.getAvatarAsString() == null ? "" : entity.getAvatarAsString())
-                .build();
-    }
-
-    private Users convertToUsersFromEntities(Collection<UserEntity> entities) {
-        Set<User> users = entities.stream().map(this::convertToUserFromEntity).collect(Collectors.toSet());
-        return Users.newBuilder().addAllUsers(users).build();
-    }
-
     private UsersRelationshipEntity createUsersRelationship(UserEntity currentUser,
                                                             UserEntity partner,
                                                             PartnerStatus relationship) {
@@ -170,17 +153,6 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
                 .partner(partner)
                 .status(relationship)
                 .build();
-    }
-
-    public RelationshipsResponse convertToRelationshipsFromEntities(UsersRelationshipEntity... entities) {
-        List<RelationshipResponse> relationships = Arrays.stream(entities)
-                .map(rel -> RelationshipResponse.newBuilder()
-                        .setUser(convertToUserFromEntity(rel.getUser()))
-                        .setPartner(convertToUserFromEntity(rel.getPartner()))
-                        .setStatus(rel.getStatus().toString())
-                        .build())
-                .toList();
-        return RelationshipsResponse.newBuilder().addAllRelationships(relationships).build();
     }
 
     private void checkThatUserHaveNotRelationshipWithMyself(String username, User partner) {
@@ -202,6 +174,22 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
             throw new RelationshipUsersNotFoundException(currentUser.getUsername(), partnerUser.getUsername(), status);
         }
         return relationship.get();
+    }
+
+    private Users convertToUsers(Collection<UserEntity> entities) {
+        return Users.newBuilder()
+                .addAllUsers(entities.stream()
+                        .map(UserEntity::toGrpc)
+                        .collect(Collectors.toSet())
+                ).build();
+    }
+
+    public RelationshipsResponse convertToRelationships(UsersRelationshipEntity... entities) {
+        return RelationshipsResponse.newBuilder()
+                .addAllRelationships(Arrays.stream(entities)
+                        .map(UsersRelationshipEntity::toGrpc)
+                        .collect(Collectors.toSet())
+                ).build();
     }
 
 }

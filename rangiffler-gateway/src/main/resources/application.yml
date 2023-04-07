@@ -28,14 +28,14 @@ spring:
 
 grpc:
   client:
-    grpcCurrencyClient:
-      address: 'static://localhost:9009'
+    grpcUserdataClient:
+      address: 'static://localhost:9002'
       negotiationType: PLAINTEXT
     grpcGeoClient:
-      address: 'static://localhost:9010'
+      address: 'static://localhost:9004'
       negotiationType: PLAINTEXT
     grpcPhotoClient:
-      address: 'static://localhost:9012'
+      address: 'static://localhost:9006'
       negotiationType: PLAINTEXT
       max-inbound-message-size: 10485760 # 10 MB
 

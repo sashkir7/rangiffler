@@ -1,16 +1,16 @@
 server:
-  port: 9001
+  port: 9003
   error:
     include:
       message: true
 
 grpc:
   server:
-    port: 9009
+    port: 9004
 
 spring:
   application:
-    name: rangiffler-userdata
+    name: rangiffler-geo
   datasource:
     hikari:
       connection-timeout: 20000
@@ -33,11 +33,6 @@ spring:
   sql:
     init:
       mode: always
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
 
 logging:
   level:
@@ -50,9 +45,7 @@ spring:
     activate:
       on-profile: 'local'
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/userdata'
+    url: 'jdbc:postgresql://localhost:5432/geo'
   jpa:
     hibernate:
       ddl-auto: validate
-rabbit-mq:
-  userdata-queue: 'userdata-queue'
