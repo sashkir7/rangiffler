@@ -1,7 +1,6 @@
 package photo.service;
 
 import com.google.protobuf.Empty;
-import guru.qa.grpc.niffler.grpc.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import photo.data.repository.PhotoRepository;
 import photo.exception.PhotoNotFoundException;
 import photo.service.api.GeoGrpcClient;
 import photo.service.api.UserdataGrpcClient;
+import sashkir7.grpc.*;
 
 import java.util.Collection;
 import java.util.Optional;

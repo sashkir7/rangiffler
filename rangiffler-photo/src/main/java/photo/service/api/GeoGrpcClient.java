@@ -1,10 +1,10 @@
 package photo.service.api;
 
-import guru.qa.grpc.niffler.grpc.CodeRequest;
-import guru.qa.grpc.niffler.grpc.Country;
-import guru.qa.grpc.niffler.grpc.GeoServiceGrpc;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Component;
+import sashkir7.grpc.CodeRequest;
+import sashkir7.grpc.Country;
+import sashkir7.grpc.GeoServiceGrpc;
 
 @Component
 public class GeoGrpcClient {
