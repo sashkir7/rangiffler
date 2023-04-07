@@ -1,9 +1,9 @@
 package gateway.controller;
 
-import java.util.List;
+import java.util.Set;
 
-import gateway.model.CountryJson;
-import gateway.service.CountryService;
+import gateway.model.CountryDto;
+import gateway.service.api.GeoGrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CountryController {
 
-    private final CountryService countryService;
+    private final GeoGrpcClient geoGrpcClient;
 
     @Autowired
-    public CountryController(CountryService countryService) {
-        this.countryService = countryService;
+    public CountryController(GeoGrpcClient geoGrpcClient) {
+        this.geoGrpcClient = geoGrpcClient;
     }
 
     @GetMapping("/countries")
-    public List<CountryJson> getAllCountries() {
-        return countryService.getAllCountries();
+    public Set<CountryDto> getAllCountries() {
+        return geoGrpcClient.getAllCountries();
     }
 
 }
