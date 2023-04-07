@@ -15,7 +15,7 @@ public class PhotoJson {
     private UUID id;
 
     @JsonProperty("country")
-    private CountryJson countryJson;
+    private CountryDto countryDto;
 
     @JsonProperty("photo")
     private String photo;
