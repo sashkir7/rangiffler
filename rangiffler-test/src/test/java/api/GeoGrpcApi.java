@@ -7,19 +7,19 @@ import sashkir7.grpc.GeoServiceGrpc;
 
 public final class GeoGrpcApi extends BaseGrpcApi {
 
-    private final GeoServiceGrpc.GeoServiceBlockingStub geoServiceBlockingStub;
+    private final GeoServiceGrpc.GeoServiceBlockingStub blockingStub;
 
     public GeoGrpcApi() {
         super("localhost", 9004);
-        geoServiceBlockingStub = GeoServiceGrpc.newBlockingStub(channel);
+        blockingStub = GeoServiceGrpc.newBlockingStub(channel);
     }
 
     public Countries getAllCountries() {
-        return geoServiceBlockingStub.getAllCountries(defaultEmptyInstance);
+        return blockingStub.getAllCountries(defaultEmptyInstance);
     }
 
     public Country getCountryByCode(String code) {
-        return geoServiceBlockingStub.getCountryByCode(getCodeRequest(code));
+        return blockingStub.getCountryByCode(getCodeRequest(code));
     }
 
     private CodeRequest getCodeRequest(String code) {
