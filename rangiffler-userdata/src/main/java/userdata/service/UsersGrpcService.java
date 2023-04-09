@@ -36,6 +36,13 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
     }
 
     @Override
+    public void addUser(User request, StreamObserver<User> responseObserver) {
+        UserEntity userEntity = UserEntity.fromGrpc(request);
+        responseObserver.onNext(userRepository.save(userEntity).toGrpc());
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void updateCurrentUser(User request, StreamObserver<User> responseObserver) {
         UserEntity userEntity = userRepository.findByUsername(request.getUsername())
                 .setFirstname(request.getFirstname())
