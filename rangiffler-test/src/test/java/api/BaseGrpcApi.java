@@ -4,6 +4,7 @@ import com.google.protobuf.Empty;
 import io.grpc.Channel;
 import io.grpc.ManagedChannelBuilder;
 import io.qameta.allure.grpc.AllureGrpc;
+import sashkir7.grpc.UsernameRequest;
 
 abstract class BaseGrpcApi {
 
@@ -15,6 +16,10 @@ abstract class BaseGrpcApi {
                 .intercept(new AllureGrpc())
                 .usePlaintext()
                 .build();
+    }
+
+    protected UsernameRequest getUsernameRequest(String username) {
+        return UsernameRequest.newBuilder().setUsername(username).build();
     }
 
 }
