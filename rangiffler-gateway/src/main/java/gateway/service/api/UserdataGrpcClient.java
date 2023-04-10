@@ -40,16 +40,16 @@ public class UserdataGrpcClient {
         return UserDto.fromGrpc(users);
     }
 
-    public List<UsersRelationshipDto> inviteToFriends(String username, UserDto partnerDto) {
-        RelationshipsResponse relationships = userdataServiceBlockingStub.inviteToFriends(
+    public UsersRelationshipDto inviteToFriends(String username, UserDto partnerDto) {
+        RelationshipResponse relationship = userdataServiceBlockingStub.inviteToFriends(
                 getRelationshipRequest(username, partnerDto));
-        return UsersRelationshipDto.fromGrpc(relationships);
+        return UsersRelationshipDto.fromGrpc(relationship);
     }
 
-    public List<UsersRelationshipDto> submitFriends(String username, UserDto partnerDto) {
-        RelationshipsResponse relationships = userdataServiceBlockingStub.submitFriends(
+    public UsersRelationshipDto submitFriends(String username, UserDto partnerDto) {
+        RelationshipResponse relationship = userdataServiceBlockingStub.submitFriends(
                 getRelationshipRequest(username, partnerDto));
-        return UsersRelationshipDto.fromGrpc(relationships);
+        return UsersRelationshipDto.fromGrpc(relationship);
     }
 
     public void declineFriend(String username, UserDto partnerDto) {

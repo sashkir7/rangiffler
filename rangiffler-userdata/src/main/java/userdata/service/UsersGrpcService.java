@@ -78,7 +78,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
 
     @Override
     public void inviteToFriends(RelationshipUsersRequest request,
-                                StreamObserver<RelationshipsResponse> responseObserver) {
+                                StreamObserver<RelationshipResponse> responseObserver) {
         checkThatUserHaveNotRelationshipWithMyself(request.getUsername(), request.getPartner());
         UserEntity currentUser = userRepository.findByUsername(request.getUsername());
         UserEntity partnerUser = userRepository.findByUsername(request.getPartner().getUsername());
@@ -94,13 +94,13 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         userRepository.save(currentUser);
         userRepository.save(partnerUser);
 
-        responseObserver.onNext(convertToRelationships(currentUserRelationship, partnerUserRelationship));
+        responseObserver.onNext(currentUserRelationship.toGrpc());
         responseObserver.onCompleted();
     }
 
     @Override
     public void submitFriends(RelationshipUsersRequest request,
-                              StreamObserver<RelationshipsResponse> responseObserver) {
+                              StreamObserver<RelationshipResponse> responseObserver) {
         checkThatUserHaveNotRelationshipWithMyself(request.getUsername(), request.getPartner());
         UserEntity currentUser = userRepository.findByUsername(request.getUsername());
         UserEntity partnerUser = userRepository.findByUsername(request.getPartner().getUsername());
@@ -114,7 +114,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         userRepository.save(currentUser);
         userRepository.save(partnerUser);
 
-        responseObserver.onNext(convertToRelationships(currentUserRelationship, partnerUserRelationship));
+        responseObserver.onNext(currentUserRelationship.toGrpc());
         responseObserver.onCompleted();
     }
 
@@ -187,14 +187,6 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         return Users.newBuilder()
                 .addAllUsers(entities.stream()
                         .map(UserEntity::toGrpc)
-                        .collect(Collectors.toSet())
-                ).build();
-    }
-
-    public RelationshipsResponse convertToRelationships(UsersRelationshipEntity... entities) {
-        return RelationshipsResponse.newBuilder()
-                .addAllRelationships(Arrays.stream(entities)
-                        .map(UsersRelationshipEntity::toGrpc)
                         .collect(Collectors.toSet())
                 ).build();
     }
