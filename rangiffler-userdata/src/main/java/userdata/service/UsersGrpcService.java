@@ -2,7 +2,6 @@ package userdata.service;
 
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
-import jakarta.transaction.Transactional;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import sashkir7.grpc.*;
@@ -56,11 +55,9 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
     }
 
     @Override
-    @Transactional
     public void deleteUser(UsernameRequest request, StreamObserver<Empty> responseObserver) {
         UserEntity entity = userRepository.findByUsername(request.getUsername());
-        userRepository.save(entity.removeAllRelationships());
-        userRepository.deleteAllWherePartnerId(entity.getId());
+        userRepository.deleteAllByRelationshipsUsersWherePartnerId(entity.getId());
         userRepository.delete(entity);
         responseObserver.onNext(defaultEmptyInstance);
         responseObserver.onCompleted();

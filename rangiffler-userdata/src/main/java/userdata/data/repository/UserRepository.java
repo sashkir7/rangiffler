@@ -2,6 +2,7 @@ package userdata.data.repository;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +21,8 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Set<UserEntity> findAllByUsernameNot(@Nonnull String username);
 
     @Modifying
+    @Transactional
     @Query("DELETE FROM UsersRelationshipEntity u WHERE u.partner.id = :id")
-    void deleteAllWherePartnerId(@Nonnull @Param("id") UUID id);
+    void deleteAllByRelationshipsUsersWherePartnerId(@Nonnull @Param("id") UUID id);
 
 }
