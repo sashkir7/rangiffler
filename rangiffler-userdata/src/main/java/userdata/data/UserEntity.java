@@ -62,6 +62,11 @@ public class UserEntity {
         relationshipUsers.remove(relationshipEntity);
     }
 
+    public UserEntity removeAllRelationships() {
+        relationshipUsers.clear();
+        return this;
+    }
+
     public Set<UserEntity> getRelationshipUsersByStatus(PartnerStatus status) {
         return relationshipUsers.stream()
                 .filter(user -> user.getStatus() == status)
