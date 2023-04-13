@@ -52,6 +52,8 @@ dependencies {
     testImplementation "io.qameta.allure:allure-grpc:${allureVersion}"
     compileOnly 'jakarta.annotation:jakarta.annotation-api:1.3.5' // Java 9+ compatibility - Do NOT update to 2.0.0
 
+    testImplementation "org.assertj:assertj-core:3.24.2"
+
     implementation project(':rangiffler-grpc-common')
 }
 
