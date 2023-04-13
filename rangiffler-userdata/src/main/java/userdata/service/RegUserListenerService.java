@@ -23,6 +23,11 @@ public class RegUserListenerService {
     //  ---> Реализовать, чтобы в случае ошибки сообщение перекладывалось в ошибочную очередь
     @RabbitListener(queues = {"q.userdata-registration"})
     public void registerUser(String json) {
+        // ToDo Как быть то? Мне в этом же проекте нужно писать grpc клиента?
+        //  который предоставит единственный метод addUser()
+//        usersGrpcService.addUser(fromJson(userJson));
+
+        // ToDo -- через grpc api add-user
         userRepository.save(fromJson(json));
     }
 

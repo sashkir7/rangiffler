@@ -21,6 +21,8 @@ import static userdata.data.PartnerStatus.*;
 @GrpcService
 public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBase {
 
+    private final Empty defaultEmptyInstance = Empty.getDefaultInstance();
+
     private final UserRepository userRepository;
 
     @Autowired
@@ -36,12 +38,28 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
     }
 
     @Override
+    public void addUser(User request, StreamObserver<User> responseObserver) {
+        UserEntity userEntity = UserEntity.fromGrpc(request);
+        responseObserver.onNext(userRepository.save(userEntity).toGrpc());
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void updateCurrentUser(User request, StreamObserver<User> responseObserver) {
         UserEntity userEntity = userRepository.findByUsername(request.getUsername())
                 .setFirstname(request.getFirstname())
                 .setLastname(request.getLastname())
                 .setAvatar(request.getAvatarBytes().toByteArray());
         responseObserver.onNext(userRepository.save(userEntity).toGrpc());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void deleteUser(UsernameRequest request, StreamObserver<Empty> responseObserver) {
+        UserEntity entity = userRepository.findByUsername(request.getUsername());
+        userRepository.deleteAllByRelationshipsUsersWherePartnerId(entity.getId());
+        userRepository.delete(entity);
+        responseObserver.onNext(defaultEmptyInstance);
         responseObserver.onCompleted();
     }
 
@@ -71,7 +89,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
 
     @Override
     public void inviteToFriends(RelationshipUsersRequest request,
-                                StreamObserver<RelationshipsResponse> responseObserver) {
+                                StreamObserver<RelationshipResponse> responseObserver) {
         checkThatUserHaveNotRelationshipWithMyself(request.getUsername(), request.getPartner());
         UserEntity currentUser = userRepository.findByUsername(request.getUsername());
         UserEntity partnerUser = userRepository.findByUsername(request.getPartner().getUsername());
@@ -87,13 +105,13 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         userRepository.save(currentUser);
         userRepository.save(partnerUser);
 
-        responseObserver.onNext(convertToRelationships(currentUserRelationship, partnerUserRelationship));
+        responseObserver.onNext(currentUserRelationship.toGrpc());
         responseObserver.onCompleted();
     }
 
     @Override
     public void submitFriends(RelationshipUsersRequest request,
-                              StreamObserver<RelationshipsResponse> responseObserver) {
+                              StreamObserver<RelationshipResponse> responseObserver) {
         checkThatUserHaveNotRelationshipWithMyself(request.getUsername(), request.getPartner());
         UserEntity currentUser = userRepository.findByUsername(request.getUsername());
         UserEntity partnerUser = userRepository.findByUsername(request.getPartner().getUsername());
@@ -107,7 +125,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         userRepository.save(currentUser);
         userRepository.save(partnerUser);
 
-        responseObserver.onNext(convertToRelationships(currentUserRelationship, partnerUserRelationship));
+        responseObserver.onNext(currentUserRelationship.toGrpc());
         responseObserver.onCompleted();
     }
 
@@ -124,7 +142,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         userRepository.save(currentUser);
         userRepository.save(partnerUser);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onNext(defaultEmptyInstance);
         responseObserver.onCompleted();
     }
 
@@ -141,7 +159,7 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         userRepository.save(currentUser);
         userRepository.save(partnerUser);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onNext(defaultEmptyInstance);
         responseObserver.onCompleted();
     }
 
@@ -180,14 +198,6 @@ public class UsersGrpcService extends UserdataServiceGrpc.UserdataServiceImplBas
         return Users.newBuilder()
                 .addAllUsers(entities.stream()
                         .map(UserEntity::toGrpc)
-                        .collect(Collectors.toSet())
-                ).build();
-    }
-
-    public RelationshipsResponse convertToRelationships(UsersRelationshipEntity... entities) {
-        return RelationshipsResponse.newBuilder()
-                .addAllRelationships(Arrays.stream(entities)
-                        .map(UsersRelationshipEntity::toGrpc)
                         .collect(Collectors.toSet())
                 ).build();
     }

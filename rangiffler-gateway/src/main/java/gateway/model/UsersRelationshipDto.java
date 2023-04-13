@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import sashkir7.grpc.RelationshipResponse;
-import sashkir7.grpc.RelationshipsResponse;
 
 import java.util.List;
 
@@ -23,12 +22,6 @@ public class UsersRelationshipDto {
                 .partner(UserDto.fromGrpc(relationship.getPartner()))
                 .status(PartnerStatus.valueOf(relationship.getStatus()))
                 .build();
-    }
-
-    public static List<UsersRelationshipDto> fromGrpc(RelationshipsResponse relationships) {
-        return relationships.getRelationshipsList().stream()
-                .map(UsersRelationshipDto::fromGrpc)
-                .toList();
     }
 
     private UserDto user, partner;

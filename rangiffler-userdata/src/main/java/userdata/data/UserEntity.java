@@ -21,6 +21,18 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @EqualsAndHashCode(exclude = {"avatar", "relationshipUsers"})
 public class UserEntity {
 
+    public static UserEntity fromGrpc(User user) {
+        UserEntityBuilder builder = UserEntity.builder()
+                .username(user.getUsername())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .avatar(user.getAvatar().getBytes(UTF_8));
+        if (!user.getId().isBlank()) {
+            builder.id(UUID.fromString(user.getId()));
+        }
+        return builder.build();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
@@ -48,6 +60,11 @@ public class UserEntity {
 
     public void removeRelationship(UsersRelationshipEntity relationshipEntity) {
         relationshipUsers.remove(relationshipEntity);
+    }
+
+    public UserEntity removeAllRelationships() {
+        relationshipUsers.clear();
+        return this;
     }
 
     public Set<UserEntity> getRelationshipUsersByStatus(PartnerStatus status) {

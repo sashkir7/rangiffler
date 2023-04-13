@@ -10,12 +10,14 @@ option java_outer_classname = "UserdataProto";
 
 service UserdataService {
   rpc GetCurrentUser (UsernameRequest) returns (User) {}
+  rpc AddUser (User) returns (User) {}
   rpc UpdateCurrentUser (User) returns (User) {}
+  rpc DeleteUser (UsernameRequest) returns (google.protobuf.Empty) {}
   rpc GetAllUsers (UsernameRequest) returns (GetAllUsersResponse) {}
   rpc GetFriends (UsernameRequest) returns (Users) {}
 
-  rpc InviteToFriends (RelationshipUsersRequest) returns (RelationshipsResponse) {}
-  rpc SubmitFriends (RelationshipUsersRequest) returns (RelationshipsResponse) {}
+  rpc InviteToFriends (RelationshipUsersRequest) returns (RelationshipResponse) {}
+  rpc SubmitFriends (RelationshipUsersRequest) returns (RelationshipResponse) {}
   rpc DeclineFriend (RelationshipUsersRequest) returns (google.protobuf.Empty) {}
   rpc RemoveFriend (RelationshipUsersRequest) returns (google.protobuf.Empty) {}
 }
@@ -49,8 +51,4 @@ message RelationshipResponse {
   User user = 1;
   User partner = 2;
   string status = 3;
-}
-
-message RelationshipsResponse {
-  repeated RelationshipResponse relationships = 1;
 }

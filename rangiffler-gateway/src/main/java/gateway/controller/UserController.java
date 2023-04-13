@@ -1,6 +1,5 @@
 package gateway.controller;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,15 +50,15 @@ public class UserController {
     }
 
     @PostMapping("friends/invite")
-    public List<UsersRelationshipDto> sendInvitation(@AuthenticationPrincipal Jwt principal,
-                                                     @RequestBody UserDto partnerDto) {
+    public UsersRelationshipDto sendInvitation(@AuthenticationPrincipal Jwt principal,
+                                               @RequestBody UserDto partnerDto) {
         String username = principal.getClaim("sub");
         return userdataGrpcClient.inviteToFriends(username, partnerDto);
     }
 
     @PostMapping("friends/submit")
-    public List<UsersRelationshipDto> submitFriend(@AuthenticationPrincipal Jwt principal,
-                                                   @RequestBody UserDto partnerDto) {
+    public UsersRelationshipDto submitFriend(@AuthenticationPrincipal Jwt principal,
+                                             @RequestBody UserDto partnerDto) {
         String username = principal.getClaim("sub");
         return userdataGrpcClient.submitFriends(username, partnerDto);
     }
