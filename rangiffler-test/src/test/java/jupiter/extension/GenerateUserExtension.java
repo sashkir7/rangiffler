@@ -1,20 +1,19 @@
 package jupiter.extension;
 
-import helper.DataHelper;
-import jupiter.annotation.WithPartner;
-import jupiter.annotation.WithPhoto;
-import jupiter.annotation.GenerateUser;
-import jupiter.annotation.WithUser;
+import data.HibernateUserdataRepository;
+import data.repository.UserdataRepository;
+import jupiter.annotation.*;
 import model.UserModel;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import sashkir7.grpc.*;
 
 import java.io.IOException;
+import java.util.Collection;
 
-public class GenerateUserExtension extends BaseJUnitExtension implements BeforeEachCallback, AfterEachCallback {
+import static com.codeborne.selenide.Selenide.sleep;
+
+public class GenerateUserExtension extends BaseJUnitExtension implements BeforeEachCallback, ParameterResolver, AfterEachCallback {
 
     public static final Namespace NAMESPACE = Namespace.create(GenerateUserExtension.class);
 
@@ -41,34 +40,58 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
             user.addPartner(partnerAnnotation.status(), partner);
         }
 
-        context.getStore(NAMESPACE).put(getUniqueTestId(context), user);
+        putToStore(context, NAMESPACE, user);
     }
 
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
-        // ToDo тут удаление тестовых артефактов
-        UserModel userModel = context.getStore(NAMESPACE).get(getUniqueTestId(context), UserModel.class);
-        System.out.println(userModel);
+        UserModel userModel = getFromStore(context, NAMESPACE, UserModel.class);
+        if (userModel == null)
+            throw new RuntimeException("User not found in context store");
+
+        // Delete user
+        userdataApi.deleteUser(userModel.getUsername());
+        deleteUserPhotos(userModel);
+
+        // Delete partners
+        userModel.getPartners().values().stream()
+                .flatMap(Collection::stream)
+                .peek(partner -> userdataApi.deleteUser(partner.getUsername()))
+                .forEach(this::deleteUserPhotos);
+
+        // ToDo Удалить через DAO auth
+    }
+
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+            throws ParameterResolutionException {
+        return parameterContext.getParameter().getType().isAssignableFrom(UserModel.class)
+                && parameterContext.getParameter().isAnnotationPresent(Inject.class);
+    }
+
+    @Override
+    public UserModel resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+            throws ParameterResolutionException {
+        return getFromStore(extensionContext, NAMESPACE, UserModel.class);
     }
 
     private UserModel handleWithUserAnnotation(WithUser annotation) throws IOException {
-        UserModel user = convertAnnotationToUserModel(annotation);
+        UserModel user = convertToUserModel(annotation);
         authApi.register(user);
+
+        // Wait until userdata service will create new user
+        UserdataRepository repository = new HibernateUserdataRepository();
+        for (int i = 1; i <= 30; i++) {
+            if (repository.findByUsername(user.getUsername()) != null)
+                break;
+            sleep(50);
+        }
 
         for (WithPhoto photoAnnotation : annotation.photos()) {
             Photo input = getCountryAndConvertToPhoto(user.getUsername(), photoAnnotation);
             user.addPhoto(photoApi.addPhoto(input));
         }
         return user;
-    }
-
-    private UserModel convertAnnotationToUserModel(WithUser annotation) {
-        return UserModel.builder()
-                .username("".equals(annotation.username()) ? DataHelper.randomUsername() : annotation.username())
-                .password("".equals(annotation.password()) ? DataHelper.randomPassword() : annotation.password())
-                .firstname(DataHelper.randomFirstname())
-                .lastname(DataHelper.randomLastname())
-                .build();
     }
 
     private Photo getCountryAndConvertToPhoto(String username, WithPhoto annotation) {
@@ -79,6 +102,10 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
                 .setPhoto(annotation.img())
                 .setCountry(country)
                 .build();
+    }
+
+    private void deleteUserPhotos(UserModel user) {
+        user.getPhotos().forEach(photo -> photoApi.deletePhoto(photo.getId()));
     }
 
 }
