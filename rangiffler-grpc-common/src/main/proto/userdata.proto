@@ -12,6 +12,7 @@ service UserdataService {
   rpc GetCurrentUser (UsernameRequest) returns (User) {}
   rpc AddUser (User) returns (User) {}
   rpc UpdateCurrentUser (User) returns (User) {}
+  rpc DeleteUser (UsernameRequest) returns (google.protobuf.Empty) {}
   rpc GetAllUsers (UsernameRequest) returns (GetAllUsersResponse) {}
   rpc GetFriends (UsernameRequest) returns (Users) {}
 
