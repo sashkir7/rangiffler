@@ -14,7 +14,7 @@ abstract class BaseJUnitExtension {
     protected final GeoGrpcApi geoApi = new GeoGrpcApi();
 
     protected String getUniqueTestId(ExtensionContext extensionContext) {
-        return extensionContext.getRequiredTestMethod().getClass().getSimpleName() + ":"
+        return extensionContext.getRequiredTestClass().getSimpleName() + ":"
                 + extensionContext.getRequiredTestMethod().getName();
     }
 
