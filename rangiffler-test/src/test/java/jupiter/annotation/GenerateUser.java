@@ -12,6 +12,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @ExtendWith(GenerateUserExtension.class)
 public @interface GenerateUser {
-    WithUser user();
+    String username() default "";
+    String password() default "";
+    String firstname() default "";
+    String lastname() default "";
+    WithPhoto[] photos() default {};
     WithPartner[] partners() default {};
 }

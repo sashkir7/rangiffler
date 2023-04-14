@@ -27,11 +27,8 @@ public class WithPhotoExtension extends BaseJUnitExtension implements BeforeEach
         Map<String, Photo> photos = new HashMap<>();
         for (Parameter parameter : parameters) {
             WithPhoto annotation = parameter.getAnnotation(WithPhoto.class);
-            Photo photo = convertToPhoto(
-                    "".equals(annotation.username()) ? DataHelper.randomUsername() : annotation.username(),
-                    annotation.description(),
-                    annotation.imageClasspath(),
-                    annotation.country());
+            String username = "".equals(annotation.username()) ? DataHelper.randomUsername() : annotation.username();
+            Photo photo = convertToPhoto(username, annotation);
             photos.put(parameter.getName(), photoApi.addPhoto(photo));
         }
 

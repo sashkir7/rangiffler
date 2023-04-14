@@ -13,9 +13,7 @@ import java.lang.annotation.Target;
 @ExtendWith(WithUserExtension.class)
 public @interface WithUser {
     String username() default "";
-    String password() default "";
     String firstname() default "";
     String lastname() default "";
     String avatarClasspath() default "";
-    WithPhoto[] photos() default {};
 }

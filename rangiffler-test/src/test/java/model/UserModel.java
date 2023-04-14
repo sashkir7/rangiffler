@@ -10,9 +10,8 @@ import java.util.*;
 @Data
 @Builder
 public final class UserModel {
-    private String username, password,
-            firstname, lastname,
-            avatar;
+
+    private String username, password, firstname, lastname;
 
     @Builder.Default
     private Set<Photo> photos = new HashSet<>();
@@ -30,18 +29,11 @@ public final class UserModel {
     }
 
     public User toGrpc() {
-        User.Builder builder = User.newBuilder()
+        return User.newBuilder()
                 .setUsername(username)
                 .setFirstname(firstname)
-                .setLastname(lastname);
-        // ToDo нужен ли id?!
-//        if (id != null) {
-//            builder.setId(id.toString());
-//        }
-        if (avatar != null) {
-            builder.setAvatar(avatar);
-        }
-        return builder.build();
+                .setLastname(lastname)
+                .build();
     }
 
 }

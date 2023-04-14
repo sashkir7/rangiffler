@@ -5,10 +5,12 @@ import api.PhotoGrpcApi;
 import api.UserdataGrpcApi;
 import api.auth.AuthClient;
 import helper.DataHelper;
+import jupiter.annotation.WithPhoto;
 import jupiter.annotation.WithUser;
 import model.UserModel;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import sashkir7.grpc.Photo;
 
 abstract class BaseJUnitExtension {
 
@@ -27,14 +29,28 @@ abstract class BaseJUnitExtension {
         return extensionContext.getStore(namespace).get(uniqueTestId, objectClass);
     }
 
-    protected UserModel convertToUserModel(WithUser annotation) {
-        return UserModel.builder()
-                .username("".equals(annotation.username()) ? DataHelper.randomUsername() : annotation.username())
-                .password("".equals(annotation.password()) ? DataHelper.randomPassword() : annotation.password())
-                .firstname("".equals(annotation.firstname()) ? DataHelper.randomFirstname() : annotation.firstname())
-                .lastname("".equals(annotation.lastname()) ? DataHelper.randomLastname() : annotation.lastname())
-                .avatar("".equals(annotation.avatarClasspath()) ? "" : DataHelper.imageByClasspath(annotation.avatarClasspath()))
+    protected Photo convertToPhoto(String username, WithPhoto annotation) {
+        return Photo.newBuilder()
+                .setUsername(username)
+                .setDescription(annotation.description())
+                .setPhoto(DataHelper.imageByClasspath(annotation.imageClasspath()))
+                .setCountry(geoApi.getCountryByCode(annotation.country().getCode()))
                 .build();
+    }
+
+    protected UserModel convertToUserModel(String username, String password, String firstname, String lastname) {
+        UserModel.UserModelBuilder builder = UserModel.builder()
+                .username("".equals(username) ? DataHelper.randomUsername() : username)
+                .firstname("".equals(firstname) ? DataHelper.randomFirstname() : firstname)
+                .lastname("".equals(lastname) ? DataHelper.randomLastname() : lastname);
+        if (password != null) {
+            builder.password("".equals(password) ? DataHelper.randomPassword() : password);
+        }
+        return builder.build();
+    }
+
+    protected UserModel convertToUserModel(WithUser annotation) {
+        return convertToUserModel(annotation.username(), null, annotation.firstname(), annotation.lastname());
     }
 
     private String getUniqueTestId(ExtensionContext extensionContext) {
