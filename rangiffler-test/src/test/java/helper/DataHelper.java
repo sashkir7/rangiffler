@@ -25,6 +25,10 @@ public final class DataHelper {
         return FAKER.name().lastName();
     }
 
+    public static String randomLorem() {
+        return FAKER.lorem().sentence();
+    }
+
     public static String imageByClasspath(String imageClasspath) {
         ClassLoader classLoader = DataHelper.class.getClassLoader();
         try (InputStream is = classLoader.getResourceAsStream(imageClasspath)) {
