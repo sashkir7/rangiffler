@@ -5,6 +5,7 @@
     <persistence-unit name="niffler-persistence-unit-name" transaction-type="RESOURCE_LOCAL">
         <class>data.entity.UserEntity</class>
         <class>data.entity.UsersRelationshipEntity</class>
+        <class>data.entity.CountryEntity</class>
     </persistence-unit>
 
 </persistence>

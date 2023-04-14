@@ -15,7 +15,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import sashkir7.grpc.User;
-import test.BaseTest;
+import test.api.BaseApiTest;
 
 import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic(AllureEpic.API)               @Tag(AllureTag.API)
 @Feature(AllureFeature.USERDATA)    @Tag(AllureTag.USERDATA)
 @Story("CRUD operations")
-class UserdataCrudApiTest extends BaseTest {
+class UserdataCrudApiTest extends BaseApiTest {
 
     private static final String AVATAR_CLASSPATH = "img/dog_01.jpeg";
 
@@ -44,7 +44,10 @@ class UserdataCrudApiTest extends BaseTest {
     @Test
     @DisplayName("Update user")
     void updateUserTest(@WithUser User user) {
-        User modifierUser = getRandomModifierUser(user);
+        User modifierUser = user.toBuilder()
+                .setFirstname(DataHelper.randomFirstname())
+                .setLastname(DataHelper.randomLastname())
+                .build();
         verifyUser(modifierUser, userdataApi.updateUser(modifierUser));
     }
 
@@ -67,15 +70,6 @@ class UserdataCrudApiTest extends BaseTest {
             builder.setAvatar(DataHelper.imageByClasspath(AVATAR_CLASSPATH));
         }
         return builder.build();
-    }
-
-    private User getRandomModifierUser(User existsUser) {
-        return User.newBuilder()
-                .setId(existsUser.getId())
-                .setUsername(existsUser.getUsername())
-                .setFirstname(DataHelper.randomFirstname())
-                .setLastname(DataHelper.randomLastname())
-                .build();
     }
 
     @Step("Verify user")
