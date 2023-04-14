@@ -20,6 +20,10 @@ public final class UserdataGrpcApi extends BaseGrpcApi {
         return blockingStub.addUser(user);
     }
 
+    public User addUser(UserModel user) {
+        return addUser(user.toGrpc());
+    }
+
     public User updateUser(User user) {
         return blockingStub.updateCurrentUser(user);
     }
