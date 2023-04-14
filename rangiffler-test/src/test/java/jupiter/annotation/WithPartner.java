@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WithPartner {
-    WithUser user();
+    WithUser user() default @WithUser;
+    WithPhoto[] photos() default {};
     PartnerStatus status() default PartnerStatus.FRIEND;
 }

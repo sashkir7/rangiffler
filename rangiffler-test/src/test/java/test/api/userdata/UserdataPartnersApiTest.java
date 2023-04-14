@@ -37,37 +37,37 @@ class UserdataPartnersApiTest extends BaseApiTest {
 
     @Test
     @DisplayName("Get all users")
-    @GenerateUser(user = @WithUser, partners = {
-            @WithPartner(user = @WithUser, status = NOT_FRIEND),
-            @WithPartner(user = @WithUser, status = INVITATION_SENT),
-            @WithPartner(user = @WithUser, status = INVITATION_RECEIVED),
-            @WithPartner(user = @WithUser, status = FRIEND)})
+    @GenerateUser(partners = {
+            @WithPartner(status = NOT_FRIEND),
+            @WithPartner(status = INVITATION_SENT),
+            @WithPartner(status = INVITATION_RECEIVED),
+            @WithPartner(status = FRIEND)})
     void getAllUsersTest(@Inject UserModel user) {
         Map<String, Users> allUsers = userdataApi.getAllUsers(user.getUsername()).getUsersMap();
         for (PartnerStatus status : PartnerStatus.values()) {
             List<String> actualUsernamesByStatus = convertToListNicknames(allUsers.get(status.toString()));
             List<String> expectedUsernamesByStatus = convertToListNicknames(user.getPartners().get(status));
 
-            step("Verify users by status " + status, () -> {
-                if (status == NOT_FRIEND) {
-                    // Проверка на вхождение (тк другими потоками могут быть созданы иные пользователи)
-                    assertThat(actualUsernamesByStatus).contains(expectedUsernamesByStatus.toArray(String[]::new));
-                } else {
-                    // Проверка на полное соответствие
-                    assertThat(actualUsernamesByStatus).hasSameElementsAs(expectedUsernamesByStatus);
-                }
-            });
+            if (status == NOT_FRIEND) {
+                step("Verify that not friends list contains partner user", () ->
+                        assertThat(actualUsernamesByStatus)
+                                .contains(expectedUsernamesByStatus.toArray(String[]::new)));
+            } else {
+                step("Verify partners by status " + status, () ->
+                        assertThat(actualUsernamesByStatus)
+                                .hasSameElementsAs(expectedUsernamesByStatus));
+            }
         }
     }
 
     @Test
     @DisplayName("Get friends")
-    @GenerateUser(user = @WithUser, partners = {
-            @WithPartner(user = @WithUser, status = NOT_FRIEND),
-            @WithPartner(user = @WithUser, status = INVITATION_SENT),
-            @WithPartner(user = @WithUser, status = INVITATION_RECEIVED),
-            @WithPartner(user = @WithUser, status = FRIEND),
-            @WithPartner(user = @WithUser, status = FRIEND)})
+    @GenerateUser(partners = {
+            @WithPartner(status = NOT_FRIEND),
+            @WithPartner(status = INVITATION_SENT),
+            @WithPartner(status = INVITATION_RECEIVED),
+            @WithPartner(status = FRIEND),
+            @WithPartner(status = FRIEND)})
     void getFriendsTest(@Inject UserModel user) {
         Map<String, Users> allUsers = userdataApi.getAllUsers(user.getUsername()).getUsersMap();
         List<String> actualFriends = convertToListNicknames(allUsers.get(FRIEND.toString()));

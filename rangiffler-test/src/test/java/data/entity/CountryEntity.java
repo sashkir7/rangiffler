@@ -11,7 +11,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "country", catalog = "get")
+@Table(name = "country", catalog = "geo")
 public class CountryEntity {
 
     @Id
