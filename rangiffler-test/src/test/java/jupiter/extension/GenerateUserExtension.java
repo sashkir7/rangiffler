@@ -20,46 +20,21 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         GenerateUser annotation = context.getRequiredTestMethod().getAnnotation(GenerateUser.class);
-        if (annotation == null)
-            return;
 
         // Create user
-        UserModel user = handleWithUserAnnotation(annotation.user());
+        UserModel generatedUser = register(convertToUserModel(annotation));
+        for (WithPhoto photoAnnotation : annotation.photos()) {
+            Photo photo = createPhoto(generatedUser.getUsername(), photoAnnotation);
+            generatedUser.addPhoto(photo);
+        }
 
         // Create partners
         for (WithPartner partnerAnnotation : annotation.partners()) {
-            UserModel partner = handleWithUserAnnotation(partnerAnnotation.user());
-            switch (partnerAnnotation.status()) {
-                case INVITATION_SENT -> userdataApi.inviteToFriends(user, partner);
-                case INVITATION_RECEIVED -> userdataApi.inviteToFriends(partner, user);
-                case FRIEND -> {
-                    userdataApi.inviteToFriends(partner, user);
-                    userdataApi.submitFriends(user, partner);
-                }
-            }
-            user.addPartner(partnerAnnotation.status(), partner);
+            UserModel partner = createPartner(generatedUser, partnerAnnotation);
+            generatedUser.addPartner(partnerAnnotation.status(), partner);
         }
 
-        putToStore(context, NAMESPACE, user);
-    }
-
-    @Override
-    public void afterEach(ExtensionContext context) throws Exception {
-        UserModel userModel = getFromStore(context, NAMESPACE, UserModel.class);
-        if (userModel == null)
-            throw new RuntimeException("User not found in context store");
-
-        // Delete user
-        userdataApi.deleteUser(userModel.getUsername());
-        deleteUserPhotos(userModel);
-
-        // Delete partners
-        userModel.getPartners().values().stream()
-                .flatMap(Collection::stream)
-                .peek(partner -> userdataApi.deleteUser(partner.getUsername()))
-                .forEach(this::deleteUserPhotos);
-
-        // ToDo Удалить через DAO auth
+        putToStore(context, NAMESPACE, generatedUser);
     }
 
     @Override
@@ -75,8 +50,24 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
         return getFromStore(extensionContext, NAMESPACE, UserModel.class);
     }
 
-    private UserModel handleWithUserAnnotation(WithUser annotation) throws IOException {
-        UserModel user = convertToUserModel(annotation);
+    @Override
+    public void afterEach(ExtensionContext context) throws Exception {
+        UserModel userModel = getFromStore(context, NAMESPACE, UserModel.class);
+
+        // Delete user
+        userdataApi.deleteUser(userModel.getUsername());
+        deleteUserPhotos(userModel);
+
+        // Delete partners
+        userModel.getPartners().values().stream()
+                .flatMap(Collection::stream)
+                .peek(partner -> userdataApi.deleteUser(partner.getUsername()))
+                .forEach(this::deleteUserPhotos);
+
+        // ToDo Удалить через DAO auth
+    }
+
+    private UserModel register(UserModel user) throws IOException {
         authApi.register(user);
 
         // Wait until userdata service will create new user
@@ -87,21 +78,39 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
             sleep(50);
         }
 
-        for (WithPhoto photoAnnotation : annotation.photos()) {
-            Photo input = getCountryAndConvertToPhoto(user.getUsername(), photoAnnotation);
-            user.addPhoto(photoApi.addPhoto(input));
-        }
         return user;
     }
 
-    private Photo getCountryAndConvertToPhoto(String username, WithPhoto annotation) {
-        Country country = geoApi.getCountryByCode(annotation.country());
-        return Photo.newBuilder()
-                .setUsername(username)
-                .setDescription(annotation.description())
-                .setPhoto(annotation.img())
-                .setCountry(country)
-                .build();
+    private UserModel convertToUserModel(GenerateUser annotation) {
+        return convertToUserModel(
+                annotation.username(),
+                annotation.password(),
+                annotation.firstname(),
+                annotation.lastname());
+    }
+
+    private Photo createPhoto(String username, WithPhoto annotation) {
+        Photo photo = convertToPhoto(username, annotation);
+        return photoApi.addPhoto(photo);
+    }
+
+    private UserModel createPartner(UserModel generatedUser, WithPartner annotation) {
+        UserModel partnerUser = convertToUserModel(annotation.user());
+        userdataApi.addUser(partnerUser);
+        switch (annotation.status()) {
+            case INVITATION_SENT -> userdataApi.inviteToFriends(generatedUser, partnerUser);
+            case INVITATION_RECEIVED -> userdataApi.inviteToFriends(partnerUser, generatedUser);
+            case FRIEND -> {
+                userdataApi.inviteToFriends(partnerUser, generatedUser);
+                userdataApi.submitFriends(generatedUser, partnerUser);
+            }
+        }
+
+        for (WithPhoto photoAnnotation : annotation.photos()) {
+            partnerUser.addPhoto(createPhoto(partnerUser.getUsername(), photoAnnotation));
+        }
+
+        return partnerUser;
     }
 
     private void deleteUserPhotos(UserModel user) {
