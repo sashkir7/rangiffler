@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Story("CRUD operations")
 class UserdataCrudApiTest extends BaseApiTest {
 
-    private static final String AVATAR_CLASSPATH = "img/dog_01.jpeg";
+    private static final String AVATAR_CLASSPATH = "img/jpeg.jpeg";
 
     @Test
     @DisplayName("Get current user")
@@ -74,15 +74,13 @@ class UserdataCrudApiTest extends BaseApiTest {
 
     @Step("Verify user")
     private void verifyUser(User expected, User actual) {
-        step("Verify id", () -> {
-            if ("".equals(expected.getId())) {
-                // Create new user
-                assertNotEquals("", actual.getId());
-            } else {
-                // Update exists user
-                assertEquals(expected.getId(), actual.getId());
-            }
-        });
+        if ("".equals(expected.getId())) {
+            step("Verify id from new user", () ->
+                    assertNotEquals("", actual.getId()));
+        } else {
+            step("Verify id from exists user", () ->
+                    assertEquals(expected.getId(), actual.getId()));
+        }
 
         step("Verify username", () ->
                 assertEquals(expected.getUsername(), actual.getUsername()));
