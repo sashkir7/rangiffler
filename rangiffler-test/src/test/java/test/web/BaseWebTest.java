@@ -4,10 +4,8 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import pages.LoginPage;
-import pages.LandingPage;
-import pages.MainPage;
-import pages.RegistrationPage;
+import pages.*;
+import pages.components.FriendsComponent;
 import test.BaseTest;
 
 public abstract class BaseWebTest extends BaseTest {
@@ -16,7 +14,8 @@ public abstract class BaseWebTest extends BaseTest {
     protected final LoginPage loginPage = new LoginPage();
     protected final RegistrationPage registrationPage = new RegistrationPage();
     protected final MainPage mainPage = new MainPage();
-
+    protected final PeopleAroundPage peopleAroundPage = new PeopleAroundPage();
+    protected final FriendsComponent friendsComponent = new FriendsComponent();
 
     @BeforeAll
     static void ab() {

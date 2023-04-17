@@ -101,7 +101,8 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
                 annotation.username(),
                 annotation.password(),
                 annotation.firstname(),
-                annotation.lastname());
+                annotation.lastname(),
+                "");
     }
 
     private Photo createPhoto(String username, WithPhoto annotation) {

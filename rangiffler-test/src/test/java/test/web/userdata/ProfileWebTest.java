@@ -1,4 +1,4 @@
-package test.web;
+package test.web.userdata;
 
 import allure.AllureEpic;
 import allure.AllureFeature;
@@ -18,6 +18,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import pages.components.ProfileComponent;
 import sashkir7.grpc.User;
+import test.web.BaseWebTest;
 
 import java.util.stream.Stream;
 

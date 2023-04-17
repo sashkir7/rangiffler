@@ -6,6 +6,9 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import pages.components.HeaderComponent;
 
+import static com.codeborne.selenide.Selectors.byTagAndText;
+import static com.codeborne.selenide.Selenide.$;
+
 public class MainPage extends BasePage<MainPage> {
 
     @Getter
@@ -21,6 +24,11 @@ public class MainPage extends BasePage<MainPage> {
     public MainPage verifyPageIsLoaded() {
         header.verifyTitleIsRangiffler();
         return this;
+    }
+
+    @Step("Main page: open [People around] section")
+    public void openPeopleAroundSection() {
+        $(byTagAndText("button", "People Around")).click();
     }
 
 }
