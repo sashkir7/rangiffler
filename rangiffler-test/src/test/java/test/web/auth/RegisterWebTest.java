@@ -11,7 +11,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.Story;
 import model.pages.RegisterPageViewModel;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -28,15 +27,12 @@ class RegisterWebTest extends BaseWebTest {
     private final SuccessRegistrationPage successRegistrationPage = new SuccessRegistrationPage();
     private final String password = DataHelper.randomPassword();
 
-    @BeforeEach
-    void openRegistrationPage() {
-        registrationPage.open();
-    }
-
     @Test
     @DisplayName("Success register")
     void successRegisterTest() {
         RegisterPageViewModel viewModel = getViewModel(DataHelper.randomUsername(), password, password);
+
+        landingPage.open().clickRegisterButton();
         registrationPage.fillForm(viewModel)
                 .clickSignUpButton();
         successRegistrationPage.verifySuccessfulRegistrationMessage()
@@ -49,14 +45,16 @@ class RegisterWebTest extends BaseWebTest {
     @Test
     @DisplayName("Already have account")
     void alreadyHaveAccountTest() {
-        registrationPage.clickSignInButton();
+        registrationPage.open()
+                .clickSignInButton();
         loginPage.verifyPageIsLoaded();
     }
 
     @Test
     @DisplayName("Username can not be empty")
     void usernameCanNotBeEmptyTest() {
-        registrationPage.fillForm(getViewModel(null, password, password))
+        registrationPage.open().
+                fillForm(getViewModel(null, password, password))
                 .clickSignUpButton()
                 .verifyUsernameCanNotBeEmptyErrorMessage();
     }
@@ -64,7 +62,8 @@ class RegisterWebTest extends BaseWebTest {
     @Test
     @DisplayName("Password can not be empty")
     void passwordCanNotBeEmptyTest() {
-        registrationPage.fillForm(getViewModel(DataHelper.randomUsername(), null, password))
+        registrationPage.open()
+                .fillForm(getViewModel(DataHelper.randomUsername(), null, password))
                 .clickSignUpButton()
                 .verifyPasswordCanNotBeEmptyErrorMessage();
     }
@@ -72,7 +71,8 @@ class RegisterWebTest extends BaseWebTest {
     @Test
     @DisplayName("Passwords should be equal")
     void passwordShouldBeEqualTest() {
-        registrationPage.fillForm(getViewModel(DataHelper.randomUsername(), password, DataHelper.randomPassword()))
+        registrationPage.open()
+                .fillForm(getViewModel(DataHelper.randomUsername(), password, DataHelper.randomPassword()))
                 .clickSignUpButton()
                 .verifyPasswordsShouldBeEqualErrorMessage();
     }
