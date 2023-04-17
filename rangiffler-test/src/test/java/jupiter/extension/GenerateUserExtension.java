@@ -19,7 +19,9 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        GenerateUser annotation = context.getRequiredTestMethod().getAnnotation(GenerateUser.class);
+        GenerateUser annotation = extractGenerateUserAnnotationFromContext(context);
+        if (!annotation.handleAnnotation())
+            return;
 
         // Create user
         UserModel generatedUser = register(convertToUserModel(annotation));
@@ -38,9 +40,10 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
     }
 
     @Override
-    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext context)
             throws ParameterResolutionException {
-        return parameterContext.getParameter().getType().isAssignableFrom(UserModel.class)
+        return extractGenerateUserAnnotationFromContext(context).handleAnnotation() &&
+                parameterContext.getParameter().getType().isAssignableFrom(UserModel.class)
                 && parameterContext.getParameter().isAnnotationPresent(Inject.class);
     }
 
@@ -53,6 +56,8 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
         UserModel userModel = getFromStore(context, NAMESPACE, UserModel.class);
+        if (userModel == null)
+            return;
 
         // Delete user
         userdataApi.deleteUser(userModel.getUsername());
@@ -67,7 +72,17 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
         // ToDo Удалить через DAO auth
     }
 
-    private UserModel register(UserModel user) throws IOException {
+    private GenerateUser extractGenerateUserAnnotationFromContext(ExtensionContext context) {
+        if (context.getRequiredTestMethod().isAnnotationPresent(ApiLogin.class)) {
+            return context.getRequiredTestMethod().getAnnotation(ApiLogin.class).user();
+        } else if (context.getRequiredTestMethod().isAnnotationPresent(GenerateUser.class)) {
+            return context.getRequiredTestMethod().getAnnotation(GenerateUser.class);
+        } else {
+            throw new IllegalArgumentException("Annotation @GenerateUser not found");
+        }
+    }
+
+    private UserModel register(UserModel user) throws Exception {
         authApi.register(user);
 
         // Wait until userdata service will create new user

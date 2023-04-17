@@ -16,31 +16,31 @@
          alt="Rangiffler logo"/>
     <label class="form__label">Username:
       <input class="form__input" type="text" id="username" th:field="*{username}" name="username"
-             placeholder="Type your username" required/>
+             placeholder="Type your username"/>
       <span class="form__error" th:if="${#fields.hasErrors('username')}"
             th:errors="*{username}"></span>
     </label>
     <label class="form__label">First name:
       <input class="form__input" type="text" id="firstname" th:field="*{firstname}" name="firstname"
-             placeholder="Type your first name" required/>
+             placeholder="Type your first name"/>
       <span class="form__error" th:if="${#fields.hasErrors('firstname')}"
             th:errors="*{firstname}"></span>
     </label>
     <label class="form__label">Last name:
       <input class="form__input" type="text" id="lastname" th:field="*{lastname}" name="lastname"
-             placeholder="Type your last name" required/>
+             placeholder="Type your last name"/>
       <span class="form__error" th:if="${#fields.hasErrors('lastname')}"
             th:errors="*{lastname}"></span>
     </label>
     <label class="form__label">Password:
       <input class="form__input" type="password" id="password" name="password"
-             th:field="*{password}" placeholder="Type your password" required/>
+             th:field="*{password}" placeholder="Type your password"/>
       <span class="form__error" th:if="${#fields.hasErrors('password')}"
             th:errors="*{password}"></span>
     </label>
     <label class="form__label">Submit Password:
       <input class="form__input" type="password" id="passwordSubmit" name="passwordSubmit"
-             th:field="*{passwordSubmit}" placeholder="Submit your password" required/>
+             th:field="*{passwordSubmit}" placeholder="Submit your password"/>
       <span class="form__error" th:if="${#fields.hasErrors('passwordSubmit')}"
             th:errors="*{passwordSubmit}"></span>
     </label>

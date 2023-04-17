@@ -42,7 +42,7 @@ dependencies {
         exclude group: "org.junit.platform"
         exclude group: "org.junit.jupiter"
     }
-    testImplementation 'com.codeborne:selenide:6.12.2'
+    testImplementation 'com.codeborne:selenide:6.13.0'
     testImplementation 'com.github.javafaker:javafaker:1.0.2'
     testImplementation 'com.google.code.findbugs:jsr305:3.0.2'
     testImplementation "io.grpc:grpc-protobuf:${grpcVersion}"
