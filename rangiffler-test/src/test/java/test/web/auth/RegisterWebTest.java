@@ -21,7 +21,7 @@ import static com.codeborne.selenide.Selenide.sleep;
 
 @Epic(AllureEpic.WEB)           @Tag(AllureTag.WEB)
 @Feature(AllureFeature.AUTH)    @Tag(AllureTag.AUTH)
-@Story("Registration page")
+@Story("Registration")
 class RegisterWebTest extends BaseWebTest {
 
     private final SuccessRegistrationPage successRegistrationPage = new SuccessRegistrationPage();
