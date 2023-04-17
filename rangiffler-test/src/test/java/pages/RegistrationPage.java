@@ -15,6 +15,11 @@ public class RegistrationPage extends BasePage<RegistrationPage> {
         return this;
     }
 
+    @Step("Verify that registration page is loaded")
+    public void verifyPageIsLoaded() {
+        $("h1").shouldHave(text("Register to Rangiffler"));
+    }
+
     @Step("Fill registration form")
     public RegistrationPage fillForm(RegisterPageViewModel viewModel) {
         $("#username").setValue(viewModel.getUsername());
