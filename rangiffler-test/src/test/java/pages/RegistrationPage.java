@@ -40,21 +40,23 @@ public class RegistrationPage extends BasePage<RegistrationPage> {
 
     @Step("Verify username can not be empty error message")
     public void verifyUsernameCanNotBeEmptyErrorMessage() {
-        $("#username").closest("label")
-                .find("span.form__error")
-                .shouldHave(text("Username can not be empty"));
+        verifyErrorMessage("#username", "Username can not be empty");
     }
 
     @Step("Verify password can not be empty error message")
     public void verifyPasswordCanNotBeEmptyErrorMessage() {
-        $("#password").closest("label").find("span.form__error")
-                .shouldHave(text("Allowed password length should be from 3 to 12 characters"));
+        verifyErrorMessage("#password",
+                "Allowed password length should be from 3 to 12 characters");
     }
 
     @Step("Verify passwords should be equal error message")
     public void verifyPasswordsShouldBeEqualErrorMessage() {
-        $("#password").closest("label").find("span.form__error")
-                .shouldHave(text("Passwords should be equal"));
+        verifyErrorMessage("#password", "Passwords should be equal");
+    }
+
+    private void verifyErrorMessage(String elementLocator, String expectedErrorMessage) {
+        $(elementLocator).closest("label").find("span.form__error")
+                .shouldHave(text(expectedErrorMessage));
     }
 
 }
