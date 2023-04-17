@@ -1,21 +1,42 @@
 package pages.components;
 
+import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import pages.conditions.PhotoCondition;
 
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 public class HeaderComponent extends BaseComponent<HeaderComponent> {
 
-    @Step("Verify that title is [Rangiffler]")
+    private final SelenideElement self = $("header");
+
+    @Step("Header: verify that title is [Rangiffler]")
     public HeaderComponent verifyTitleIsRangiffler() {
-        $("h1").shouldHave(text("Rangiffler"));
+        self.find("h1").shouldHave(text("Rangiffler"));
         return this;
     }
 
-    @Step("Click on [Log out] icon")
+    @Step("Header: click on [Log out] icon")
     public void clickLogoutIcon() {
-        $("[data-testid=LogoutIcon]").click();
+        self.find("[data-testid=LogoutIcon]").click();
+    }
+
+    @Step("Header: open [Profile] modal window")
+    public void openProfileModalWindow() {
+        self.find("[data-testid=PersonIcon]").click();
+    }
+
+    @Step("Header: verify that user does not have avatar image")
+    public HeaderComponent verifyUserDoesNotHaveAvatarImage() {
+        self.find("[data-testid=PersonIcon]").shouldBe(visible);
+        return this;
+    }
+
+    @Step("Header: verify user avatar")
+    public void verifyUserAvatar(String avatarClasspath) {
+        self.find(".MuiAvatar-root img").shouldHave(PhotoCondition.photo(avatarClasspath));
     }
 
 }
