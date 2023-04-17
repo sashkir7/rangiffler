@@ -1,6 +1,7 @@
 package pages;
 
 import com.codeborne.selenide.Selenide;
+import config.AppProperties;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import pages.components.HeaderComponent;
@@ -12,7 +13,7 @@ public class MainPage extends BasePage<MainPage> {
 
     @Step("Open main page")
     public MainPage open() {
-        Selenide.open("http://127.0.0.1:3001/");
+        Selenide.open(AppProperties.APP_BASE_URL);
         return this;
     }
 

@@ -6,6 +6,7 @@ import api.auth.interceptops.AddCookiesReqInterceptor;
 import api.auth.interceptops.ExtractCodeFromRespInterceptor;
 import api.auth.interceptops.ReceivedCookieRespInterceptor;
 import com.fasterxml.jackson.databind.JsonNode;
+import config.AppProperties;
 import model.UserModel;
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
@@ -27,7 +28,7 @@ public class AuthClient {
     private final Retrofit retrofit = new Retrofit.Builder()
             .client(HTTP_CLIENT)
             .addConverterFactory(JacksonConverterFactory.create())
-            .baseUrl("http://127.0.0.1:9000/")
+            .baseUrl(AppProperties.AUTH_BASE_URL)
             .build();
 
     private final AuthService authService = retrofit.create(AuthService.class);
@@ -38,7 +39,7 @@ public class AuthClient {
                 "code",
                 "client",
                 "openid",
-                "http://127.0.0.1:3001/" + "authorized",
+                AppProperties.APP_BASE_URL + "/authorized",
                 SessionStorageHolder.getInstance().getCodeChallenge(),
                 "S256"
         ).execute();
@@ -59,7 +60,7 @@ public class AuthClient {
         return authService.getToken(
                 basic,
                 "client",
-                "http://127.0.0.1:3001/" + "authorized",
+                AppProperties.APP_BASE_URL + "/authorized",
                 "authorization_code",
                 SessionStorageHolder.getInstance().getCode(),
                 SessionStorageHolder.getInstance().getCodeVerifier()

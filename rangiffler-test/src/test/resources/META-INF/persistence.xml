@@ -2,7 +2,7 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
-    <persistence-unit name="niffler-persistence-unit-name" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="persistence-unit-name" transaction-type="RESOURCE_LOCAL">
         <class>data.entity.UserEntity</class>
         <class>data.entity.UsersRelationshipEntity</class>
         <class>data.entity.CountryEntity</class>
