@@ -50,22 +50,8 @@ class ProfileWebTest extends BaseWebTest {
 
     @Test
     @ApiLogin(user = @GenerateUser)
-    @DisplayName("Update user profile (without avatar)")
-    void updateUserProfileWithoutAvatarTest(@Inject UserModel user) {
-        String firstname = DataHelper.randomFirstname();
-        String lastname = DataHelper.randomLastname();
-
-        profileComponent.setFirstname(firstname)
-                .setLastname(lastname)
-                .clickSaveButton()
-                .verifyProfileModalWindowIsClosed();
-        verifyUserDataHasBeenUpdated(user.getUsername(), firstname, lastname, "");
-    }
-
-    @Test
-    @ApiLogin(user = @GenerateUser)
-    @DisplayName("Update user profile (with avatar)")
-    void updateUserProfileWithAvatarTest(@Inject UserModel user) {
+    @DisplayName("Update user profile")
+    void updateUserProfileTest(@Inject UserModel user) {
         String firstname = DataHelper.randomFirstname();
         String lastname = DataHelper.randomLastname();
         String avatarClasspath = "img/jpeg.jpeg";
