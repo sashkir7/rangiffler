@@ -4,7 +4,6 @@ import com.codeborne.selenide.Selenide;
 import io.qameta.allure.Step;
 import model.pages.RegisterPageViewModel;
 
-import static com.codeborne.selenide.Condition.href;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
@@ -26,17 +25,17 @@ public class RegistrationPage extends BasePage<RegistrationPage> {
         return this;
     }
 
-    @Step("Click [Sign up] button")
+    @Step("Click on [Sign up] button")
     public RegistrationPage clickSignUpButton() {
         $("button[type=submit]").click();
         return this;
     }
 
-    @Step("Verify successful registration message")
-    public void verifySuccessfulRegistrationMessage() {
-        $(".form__paragraph").shouldHave(text("Congratulations! You've registered!"));
-        $("a").shouldHave(text("Sign in!"))
-                .shouldHave(href("http://127.0.0.1:3001/redirect"));
+    @Step("Click on [Sign In] button")
+    public void clickSignInButton() {
+        $("p.form__paragraph").shouldHave(text("Already have an account?"))
+                .find("a")
+                .shouldHave(text("Sign in!")).click();
     }
 
     @Step("Verify username can not be empty error message")
