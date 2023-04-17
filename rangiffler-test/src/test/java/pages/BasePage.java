@@ -1,4 +1,6 @@
 package pages;
 
-public abstract class BasePage<T extends BasePage<T>> {
+import pages.components.BaseComponent;
+
+public abstract class BasePage<T extends BasePage<T>> extends BaseComponent<T> {
 }
