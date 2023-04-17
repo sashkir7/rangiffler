@@ -6,6 +6,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SessionStorage;
 import com.codeborne.selenide.WebDriverRunner;
 import com.fasterxml.jackson.databind.JsonNode;
+import config.AppProperties;
 import jupiter.annotation.ApiLogin;
 import model.UserModel;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -37,7 +38,7 @@ public class ApiLoginExtension extends BaseJUnitExtension implements BeforeEachC
         }
 
         apiLogin(username, password);
-        Selenide.open("http://127.0.0.1:3001/");
+        Selenide.open(AppProperties.APP_BASE_URL);
         SessionStorage sessionStorage = Selenide.sessionStorage();
         sessionStorage.setItem("codeChallenge", SessionStorageHolder.getInstance().getCodeChallenge());
         sessionStorage.setItem("id_token", SessionStorageHolder.getInstance().getToken());

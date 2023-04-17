@@ -1,6 +1,7 @@
 package pages;
 
 import com.codeborne.selenide.Selenide;
+import config.AppProperties;
 import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.*;
@@ -10,7 +11,7 @@ public class LoginPage extends BasePage<LoginPage> {
 
     @Step("Open login page")
     public LoginPage open() {
-        Selenide.open("http://127.0.0.1:9000/login");
+        Selenide.open(AppProperties.AUTH_BASE_URL + "/login");
         return this;
     }
 

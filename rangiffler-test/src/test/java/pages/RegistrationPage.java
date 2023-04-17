@@ -1,6 +1,7 @@
 package pages;
 
 import com.codeborne.selenide.Selenide;
+import config.AppProperties;
 import io.qameta.allure.Step;
 import model.pages.RegisterPageViewModel;
 
@@ -11,7 +12,7 @@ public class RegistrationPage extends BasePage<RegistrationPage> {
 
     @Step("Open registration page")
     public RegistrationPage open() {
-        Selenide.open("http://127.0.0.1:9000/register");
+        Selenide.open(AppProperties.AUTH_BASE_URL + "/register");
         return this;
     }
 

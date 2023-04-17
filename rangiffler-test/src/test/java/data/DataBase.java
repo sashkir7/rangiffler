@@ -1,17 +1,19 @@
 package data;
 
+import config.DatabaseProperties;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public enum DataBase {
-    USERDATA("jdbc:postgresql://127.0.0.1:5432/userdata"),
-    GEO("jdbc:postgresql://127.0.0.1:5432/geo"),
-    PHOTO("jdbc:postgresql://127.0.0.1:5432/photo");
+    AUTH(DatabaseProperties.AUTH_DATABASE_URL),
+    USERDATA(DatabaseProperties.USERDATA_DATABASE_URL),
+    GEO(DatabaseProperties.GEO_DATABASE_URL),
+    PHOTO(DatabaseProperties.PHOTO_DATABASE_URL);
 
     private final String url;
 
-    DataBase(String url) {
-        this.url = url;
-    }
-
-    public String getUrl() {
+    @Override
+    public String toString() {
         return url;
     }
 
