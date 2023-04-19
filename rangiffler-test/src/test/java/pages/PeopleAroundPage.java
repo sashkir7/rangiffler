@@ -13,6 +13,32 @@ import static pages.conditions.PhotoCondition.photo;
 
 public class PeopleAroundPage extends BasePage<PeopleAroundPage> {
 
+    @Step("Invite to friends {username}")
+    public void inviteToFriends(String username) {
+        getAddToFriendButton(username).click();
+        verifyActionStatusIsInvitationSent(username);
+    }
+
+    @Step("Submit friend {username}")
+    public void submitFriend(String username) {
+        getSubmitFriendButton(username).click();
+        getRemoveFriendButton(username).shouldBe(visible);
+    }
+
+    @Step("Decline friend {username}")
+    public void declineFriend(String username) {
+        getDeclineFriendButton(username).click();
+        $(byTagAndText("button", "Decline")).click();
+        getAddToFriendButton(username).shouldBe(visible);
+    }
+
+    @Step("Remove friend {username}")
+    public void removeFriend(String username) {
+        getRemoveFriendButton(username).click();
+        $(byTagAndText("button", "Delete")).click();
+        getAddToFriendButton(username).shouldBe(visible);
+    }
+
     @Step("Verify partner {partner.username}")
     public void verifyPartnerInformation(UserModel partner, PartnerStatus status) {
         SelenideElement partnerRow = findRowByUsername(partner.getUsername());
@@ -24,7 +50,7 @@ public class PeopleAroundPage extends BasePage<PeopleAroundPage> {
                         .shouldHave(text(partner.getFirstname()), text(partner.getLastname())));
 
         verifyAvatarCell(partnerRow, partner.getAvatarImageClasspath());
-        verifyStatusCell(partnerRow, status);
+        verifyStatusCell(partner.getUsername(), status);
     }
 
     private SelenideElement findRowByUsername(String username) {
@@ -45,26 +71,38 @@ public class PeopleAroundPage extends BasePage<PeopleAroundPage> {
     }
 
     @Step("Verify status (user actions) cell")
-    private void verifyStatusCell(SelenideElement partnerRow, PartnerStatus status) {
-        SelenideElement statusCell = partnerRow.find("td", 3);
+    private void verifyStatusCell(String username, PartnerStatus status) {
         switch (status) {
-            case NOT_FRIEND -> verifyStatusActionButton(
-                    statusCell, "Add friend", "PersonAddAlt1Icon");
-            case INVITATION_SENT -> statusCell.shouldHave(text("Invitation sent"));
+            case NOT_FRIEND -> getAddToFriendButton(username).shouldBe(visible);
+            case INVITATION_SENT -> verifyActionStatusIsInvitationSent(username);
             case INVITATION_RECEIVED -> {
-                verifyStatusActionButton(statusCell, "Accept invitation", "HowToRegIcon");
-                verifyStatusActionButton(statusCell, "Decline invitation", "PersonOffIcon");
+                getSubmitFriendButton(username).shouldBe(visible);
+                getDeclineFriendButton(username).shouldBe(visible);
             }
-            default -> verifyStatusActionButton(
-                    statusCell, "Remove friend", "PersonRemoveAlt1Icon");
+            default -> getRemoveFriendButton(username).shouldBe(visible);
         }
     }
 
-    private void verifyStatusActionButton(SelenideElement statusCell,
-                                          String ariaLabelAttrValue,
-                                          String iconDataTestIdValue) {
-        statusCell.find(String.format("button[aria-label='%s']", ariaLabelAttrValue)).shouldBe(visible)
-                .find(String.format("svg[data-testid='%s']", iconDataTestIdValue)).shouldBe(visible);
+    // ToDo может на aria-label сменить? Чет id тупые какие-то...
+    private SelenideElement getAddToFriendButton(String username) {
+        return findRowByUsername(username).find("[data-testid=PersonAddAlt1Icon]");
+    }
+
+    private SelenideElement getSubmitFriendButton(String username) {
+        return findRowByUsername(username).find("[data-testid=HowToRegIcon]");
+    }
+
+    private SelenideElement getDeclineFriendButton(String username) {
+        return findRowByUsername(username).find("[data-testid=PersonOffIcon]");
+    }
+
+    private SelenideElement getRemoveFriendButton(String username) {
+        return findRowByUsername(username).find("[data-testid=PersonRemoveAlt1Icon]");
+    }
+
+    private SelenideElement verifyActionStatusIsInvitationSent(String username) {
+        return findRowByUsername(username).find("td", 3)
+                .shouldHave(text("Invitation sent"));
     }
 
 }
