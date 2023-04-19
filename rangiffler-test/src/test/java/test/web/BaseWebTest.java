@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import pages.*;
 import pages.components.FriendsComponent;
+import pages.components.HeaderComponent;
 import test.BaseTest;
 
 public abstract class BaseWebTest extends BaseTest {
@@ -15,6 +16,7 @@ public abstract class BaseWebTest extends BaseTest {
     protected final RegistrationPage registrationPage = new RegistrationPage();
     protected final MainPage mainPage = new MainPage();
     protected final PeopleAroundPage peopleAroundPage = new PeopleAroundPage();
+    protected final HeaderComponent headerComponent = new HeaderComponent();
     protected final FriendsComponent friendsComponent = new FriendsComponent();
 
     @BeforeAll

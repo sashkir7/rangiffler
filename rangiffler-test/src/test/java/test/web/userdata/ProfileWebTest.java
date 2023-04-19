@@ -34,16 +34,15 @@ class ProfileWebTest extends BaseWebTest {
 
     @BeforeEach
     void openUserProfile() {
-        mainPage.open()
-                .getHeader()
-                .openProfileModalWindow();
+        mainPage.open();
+        headerComponent.openFriendsModalWindow();
     }
 
     @Test
     @ApiLogin(user = @GenerateUser)
     @DisplayName("Get current user profile")
     void getCurrentUserProfileTest(@Inject UserModel user) {
-        mainPage.getHeader().verifyUserDoesNotHaveAvatarImage();
+        headerComponent.verifyUserDoesNotHaveAvatarImage();
         profileComponent.verifyValues(user)
                 .verifyUserDoesNotHaveAvatarImage();
     }
@@ -62,7 +61,7 @@ class ProfileWebTest extends BaseWebTest {
                 .verifyAvatarImage(avatarClasspath)
                 .clickSaveButton()
                 .verifyProfileModalWindowIsClosed();
-        mainPage.getHeader().verifyUserAvatar(avatarClasspath);
+        headerComponent.verifyUserAvatar(avatarClasspath);
 
         String expectedAvatar = DataHelper.imageByClasspath(avatarClasspath);
         verifyUserDataHasBeenUpdated(user.getUsername(), firstname, lastname, expectedAvatar);

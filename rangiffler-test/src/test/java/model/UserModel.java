@@ -19,9 +19,9 @@ public final class UserModel {
     private Set<Photo> photos = new HashSet<>();
 
     @Builder.Default
-    private Map<PartnerStatus, Set<UserModel>> partners = new HashMap<>();
+    private Map<PartnerStatus, List<UserModel>> partners = new HashMap<>();
 
-    public Set<UserModel> getFriends() {
+    public List<UserModel> getFriends() {
         return partners.get(PartnerStatus.FRIEND);
     }
 
@@ -30,7 +30,7 @@ public final class UserModel {
     }
 
     public void addPartner(PartnerStatus status, UserModel partner) {
-        partners.computeIfAbsent(status, k -> new HashSet<>());
+        partners.computeIfAbsent(status, k -> new ArrayList<>());
         partners.get(status).add(partner);
     }
 

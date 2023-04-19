@@ -24,8 +24,8 @@ class LogoutWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser)
     @DisplayName("Logout")
     void logoutTest() {
-        mainPage.verifyPageIsLoaded()
-                .getHeader().clickLogoutIcon();
+        mainPage.verifyPageIsLoaded();
+        headerComponent.clickLogoutIcon();
         landingPage.verifyPageIsLoaded()
                 .clickLoginButton();
         loginPage.verifyPageIsLoaded();

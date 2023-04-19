@@ -27,8 +27,11 @@ public class FriendsComponent extends BaseComponent<FriendsComponent> {
                     .find("svg[data-testid=PersonRemoveAlt1Icon").shouldBe(visible));
     }
 
-    private SelenideElement findRowByUsername(String username) {
-        return self.$(byTagAndText("td", username)).closest("tr");
+    @Step("Remove friend {username}")
+    public void removeFriend(String username) {
+        findRowByUsername(username).find("[data-testid=PersonRemoveAlt1Icon]").click();
+        $(byTagAndText("button", "Delete")).click();
+        self.shouldNotBe(visible);
     }
 
     @Step("Verify avatar cell")
@@ -42,6 +45,10 @@ public class FriendsComponent extends BaseComponent<FriendsComponent> {
             avatarCell.find("svg").shouldHave(
                     attribute("data-testid", "PersonIcon"));
         }
+    }
+
+    private SelenideElement findRowByUsername(String username) {
+        return self.$(byTagAndText("td", username)).closest("tr");
     }
 
 }
