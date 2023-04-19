@@ -3,12 +3,16 @@ package pages;
 import com.codeborne.selenide.Selenide;
 import config.AppProperties;
 import io.qameta.allure.Step;
-import lombok.Getter;
 import pages.components.HeaderComponent;
+
+import java.time.Duration;
+
+import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
+import static com.codeborne.selenide.Selectors.byTagAndText;
+import static com.codeborne.selenide.Selenide.*;
 
 public class MainPage extends BasePage<MainPage> {
 
-    @Getter
     private final HeaderComponent header = new HeaderComponent();
 
     @Step("Open main page")
@@ -21,6 +25,16 @@ public class MainPage extends BasePage<MainPage> {
     public MainPage verifyPageIsLoaded() {
         header.verifyTitleIsRangiffler();
         return this;
+    }
+
+    @Step("Main page: open [People around] section")
+    public void openPeopleAroundSection() {
+        $(byTagAndText("button", "People Around")).click();
+        $$("[id*=P-all] .MuiTableRow-root")
+                .shouldHave(sizeGreaterThan(1), Duration.ofSeconds(20));
+        // ToDo Немного подождать, чтобы нажатия на кнопки корректно обрабатывались:
+        //  в идеале найти атрибут, за который можно "прицепиться"
+        sleep(500);
     }
 
 }

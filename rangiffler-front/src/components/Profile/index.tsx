@@ -161,7 +161,7 @@ export const Profile: FC<ProfileInterface> = ({onClose}) => {
                             helperText={fieldErrors["firstname"]}
                             error={fieldErrors["firstname"] !== null}
                             onChange={event => {
-                              checkTextLengthValid(event.target.name, false, event.target.value);
+                              checkTextLengthValid(event.target.name, true, event.target.value);
                               handleFieldChange(event)
                             }}
                         />
@@ -182,7 +182,7 @@ export const Profile: FC<ProfileInterface> = ({onClose}) => {
                             helperText={fieldErrors["lastname"]}
                             error={fieldErrors["lastname"] !== null}
                             onChange={event => {
-                              checkTextLengthValid(event.target.name, false, event.target.value);
+                              checkTextLengthValid(event.target.name, true, event.target.value);
                               handleFieldChange(event)
                             }}
                         />

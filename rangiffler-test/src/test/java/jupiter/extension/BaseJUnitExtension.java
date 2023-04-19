@@ -38,11 +38,16 @@ abstract class BaseJUnitExtension {
                 .build();
     }
 
-    protected UserModel convertToUserModel(String username, String password, String firstname, String lastname) {
+    protected UserModel convertToUserModel(String username,
+                                           String password,
+                                           String firstname,
+                                           String lastname,
+                                           String avatarImageClasspath) {
         UserModel.UserModelBuilder builder = UserModel.builder()
                 .username("".equals(username) ? DataHelper.randomUsername() : username)
                 .firstname("".equals(firstname) ? DataHelper.randomFirstname() : firstname)
-                .lastname("".equals(lastname) ? DataHelper.randomLastname() : lastname);
+                .lastname("".equals(lastname) ? DataHelper.randomLastname() : lastname)
+                .avatarImageClasspath(avatarImageClasspath);
         if (password != null) {
             builder.password("".equals(password) ? DataHelper.randomPassword() : password);
         }
@@ -50,7 +55,12 @@ abstract class BaseJUnitExtension {
     }
 
     protected UserModel convertToUserModel(WithUser annotation) {
-        return convertToUserModel(annotation.username(), null, annotation.firstname(), annotation.lastname());
+        return convertToUserModel(
+                annotation.username(),
+                null,
+                annotation.firstname(),
+                annotation.lastname(),
+                annotation.avatarClasspath());
     }
 
     private String getUniqueTestId(ExtensionContext extensionContext) {
