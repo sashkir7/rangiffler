@@ -3,26 +3,27 @@ package pages.conditions;
 import com.codeborne.selenide.CheckResult;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Driver;
-import org.apache.commons.lang3.StringUtils;
+import helper.DataHelper;
 import org.openqa.selenium.WebElement;
+import sashkir7.grpc.Photo;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Base64;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class PhotoCondition extends Condition {
 
     public static Condition photo(String expectedPhotoClasspath) {
-        ClassLoader classLoader = PhotoCondition.class.getClassLoader();
-        try (InputStream is = classLoader.getResourceAsStream(expectedPhotoClasspath)) {
-            assert is != null;
-            byte[] base64Photo = Base64.getEncoder().encode(is.readAllBytes());
-            return new PhotoCondition(base64Photo);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return photo(DataHelper.imageByClasspath(expectedPhotoClasspath).getBytes(UTF_8));
+    }
+
+    public static Condition photo(Photo expectedPhoto) {
+        return photo(expectedPhoto.getPhoto().getBytes(UTF_8));
+    }
+
+    public static Condition photo(byte[] expectedBase64Photo) {
+        return new PhotoCondition(expectedBase64Photo);
     }
 
     private final byte[] expectedBase64Photo;
@@ -35,10 +36,8 @@ public final class PhotoCondition extends Condition {
     @Nonnull
     @Override
     public CheckResult check(Driver driver, WebElement element) {
-        String imageSrc = element.getAttribute("src");
-        String actualBase64Photo = StringUtils.substringAfter(imageSrc, "base64,");
-
-        return new CheckResult(Arrays.equals(expectedBase64Photo, actualBase64Photo.getBytes()), actualBase64Photo);
+        String actualPhoto = element.getAttribute("src");
+        return new CheckResult(Arrays.equals(expectedBase64Photo, actualPhoto.getBytes()), actualPhoto);
     }
 
 }
