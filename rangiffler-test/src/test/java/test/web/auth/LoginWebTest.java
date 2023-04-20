@@ -32,7 +32,7 @@ class LoginWebTest extends BaseWebTest {
         landingPage.open().clickLoginButton();
         loginPage.fillForm(userModel.getUsername(), userModel.getPassword())
                 .clickSignInButton();
-        mainPage.verifyPageIsLoaded();
+        yourTravelsPage.verifyPageIsLoaded();
     }
 
     @Test
