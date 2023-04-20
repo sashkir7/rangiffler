@@ -34,7 +34,6 @@ class ProfileWebTest extends BaseWebTest {
 
     @BeforeEach
     void openUserProfile() {
-        mainPage.open();
         headerComponent.openProfileModalWindow();
     }
 
