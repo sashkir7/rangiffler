@@ -10,7 +10,7 @@ public enum CountryEnum {
     FIJI("Fiji", "FJ", ""),
     TANZANIA("Tanzania", "TZ", ""),
     WESTERN_SAHARA("Western Sahara", "EH", ""),
-    CANADA("Canada", "CA", ""),
+    CANADA("Canada", "CA", "M152.085"),
     UNITED_STATES("United States", "US", ""),
     KAZAKHSTAN("Kazakhstan", "KZ", ""),
     UZBEKISTAN("Uzbekistan", "UZ", ""),

@@ -42,6 +42,11 @@ public class YourTravelsPage extends BasePage<YourTravelsPage> {
         sleep(500);
     }
 
+    @Step("Open [Friends travels] section")
+    public void openFriendsTravelsSection() {
+        $(byTagAndText("button", "Friends travels")).click();
+    }
+
     @Step("Verify that country is shade on world map")
     public YourTravelsPage verifyCountyIsShadeOnWorldMap(CountryEnum country) {
         SelenideElement countryWebElement = getCountryWebElement(country).shouldBe(visible);
