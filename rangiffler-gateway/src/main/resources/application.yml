@@ -41,3 +41,31 @@ grpc:
 
 rangiffler-front:
   base-uri: 'http://127.0.0.1:3001'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: 'docker'
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: 'http://auth:9000'
+
+grpc:
+  client:
+    grpcUserdataClient:
+      address: 'static://userdata:9002'
+      negotiationType: PLAINTEXT
+    grpcGeoClient:
+      address: 'static://geo:9004'
+      negotiationType: PLAINTEXT
+    grpcPhotoClient:
+      address: 'static://photo:9006'
+      negotiationType: PLAINTEXT
+      max-inbound-message-size: 10485760 # 10 MB
+
+rangiffler-front:
+  base-uri: 'http://frontend:3001'
+---
