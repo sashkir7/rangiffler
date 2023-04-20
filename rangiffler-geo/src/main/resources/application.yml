@@ -49,3 +49,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+---
+spring:
+  config:
+    activate:
+      on-profile: 'docker'
+  datasource:
+    url: 'jdbc:postgresql://all-db:5432/geo'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+---
