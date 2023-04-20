@@ -11,6 +11,7 @@ plugins {
     id 'io.qameta.allure' version '2.11.2'
     id 'io.qameta.allure-adapter' version '2.11.2'
     id "io.freefair.lombok" version '6.4.2'
+    id 'org.gradle.test-retry' version '1.2.1'
 }
 
 repositories {
@@ -64,4 +65,9 @@ test {
         systemProperties(System.getProperties())
     }
     useJUnitPlatform()
+
+    retry {
+        maxRetries = 3
+        maxFailures = 20 // Optional attribute
+    }
 }
