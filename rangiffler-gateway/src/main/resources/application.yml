@@ -67,5 +67,5 @@ grpc:
       max-inbound-message-size: 10485760 # 10 MB
 
 rangiffler-front:
-  base-uri: 'http://frontend:3001'
+  base-uri: 'http://frontend'
 ---
