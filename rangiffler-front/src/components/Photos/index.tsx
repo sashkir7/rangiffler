@@ -32,6 +32,7 @@ export const Photos: FC<PhotosInterface> = ({photos, handlePhotoClick}) => {
                         width={270}
                         height={270}
                         alt={item.description}
+                        data-testid={item.id}
                         loading='lazy'
                     />
                   </Button>

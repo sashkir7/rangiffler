@@ -8,8 +8,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import jupiter.annotation.ApiLogin;
 import jupiter.annotation.GenerateUser;
-import jupiter.annotation.Inject;
-import model.UserModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,7 +22,7 @@ class LogoutWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser)
     @DisplayName("Logout")
     void logoutTest() {
-        mainPage.verifyPageIsLoaded();
+        yourTravelsPage.verifyPageIsLoaded();
         headerComponent.clickLogoutIcon();
         landingPage.verifyPageIsLoaded()
                 .clickLoginButton();

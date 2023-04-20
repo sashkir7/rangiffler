@@ -26,7 +26,7 @@ class PeopleAroundWebTest extends BaseWebTest {
 
     @BeforeEach
     void openPeopleAroundSection() {
-        mainPage.openPeopleAroundSection();
+        yourTravelsPage.openPeopleAroundSection();
     }
 
     @Test

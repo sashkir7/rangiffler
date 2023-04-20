@@ -33,6 +33,11 @@ public class HeaderComponent extends BaseComponent<HeaderComponent> {
         self.find("[data-testid=GroupIcon]").click();
     }
 
+    @Step("Header: click [Add photo] modal window")
+    public void openAddPhotoModalWindow() {
+        self.find("[data-testid=AddCircleOutlineIcon]").closest("button").click();
+    }
+
     @Step("Header: verify that user does not have avatar image")
     public HeaderComponent verifyUserDoesNotHaveAvatarImage() {
         self.find("[data-testid=PersonIcon]").shouldBe(visible);
@@ -48,6 +53,20 @@ public class HeaderComponent extends BaseComponent<HeaderComponent> {
     public HeaderComponent verifyFriendsCount(int expectedFriendsCount) {
         self.find("[aria-label='Your friends']")
                 .shouldHave(text(String.valueOf(expectedFriendsCount)));
+        return this;
+    }
+
+    @Step("Header: verify photos count")
+    public HeaderComponent verifyPhotosCount(int expectedFriendsCount) {
+        self.find("[aria-label='Your photos']")
+                .shouldHave(text(String.valueOf(expectedFriendsCount)));
+        return this;
+    }
+
+    @Step("Header: verify countries count")
+    public HeaderComponent verifyCountriesCount(int expectedCountriesCount) {
+        self.find("[aria-label='Your visited countries']")
+                .shouldHave(text(String.valueOf(expectedCountriesCount)));
         return this;
     }
 

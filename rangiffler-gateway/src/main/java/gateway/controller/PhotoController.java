@@ -52,8 +52,8 @@ public class PhotoController {
     }
 
     @DeleteMapping("/photos")
-    public void deletePhoto(@RequestParam UUID id) {
-        photoGrpcClient.deletePhoto(id);
+    public void deletePhoto(@RequestParam UUID photoId) {
+        photoGrpcClient.deletePhoto(photoId);
     }
 
 }

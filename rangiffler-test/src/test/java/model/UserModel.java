@@ -16,7 +16,7 @@ public final class UserModel {
     private String avatarImageClasspath;
 
     @Builder.Default
-    private Set<Photo> photos = new HashSet<>();
+    private List<Photo> photos = new ArrayList<>();
 
     @Builder.Default
     private Map<PartnerStatus, List<UserModel>> partners = new HashMap<>();

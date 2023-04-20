@@ -8,5 +8,4 @@
         <class>data.entity.CountryEntity</class>
         <class>data.entity.PhotoEntity</class>
     </persistence-unit>
-
 </persistence>
