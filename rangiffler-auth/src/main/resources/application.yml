@@ -61,3 +61,18 @@ rangiffler-front:
   base-uri: 'http://127.0.0.1:3001'
 rangiffler-auth:
   base-uri: 'http://127.0.0.1:9000'
+---
+spring:
+  config:
+    activate:
+      on-profile: 'docker'
+  datasource:
+    url: 'jdbc:postgresql://all-db:5432/auth'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+niffler-front:
+  base-uri: 'http://rangiffler-frontend'
+niffler-auth:
+  base-uri: 'http://rangiffler-auth:9000'
+---
