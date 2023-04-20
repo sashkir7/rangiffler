@@ -32,8 +32,8 @@ public final class DataHelper {
     public static String imageByClasspath(String imageClasspath) {
         ClassLoader classLoader = DataHelper.class.getClassLoader();
         try (InputStream is = classLoader.getResourceAsStream(imageClasspath)) {
-            String fileExtension = imageClasspath.substring(imageClasspath.lastIndexOf(".") + 1);
             assert is != null;
+            String fileExtension = imageClasspath.substring(imageClasspath.lastIndexOf(".") + 1);
             byte[] base64Image = Base64.getEncoder().encode(is.readAllBytes());
             return "data:image/" + fileExtension + ";base64," + new String(base64Image);
         } catch (IOException e) {
