@@ -1,0 +1,118 @@
+version: '3.9'
+
+# ToDo Добавить rabbitMq
+services:
+  all-db:
+    container_name: all-db
+    image: postgres:15.1
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    expose:
+      - "5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  auth:
+    container_name: auth
+    image: akireev/auth:latest
+    ports:
+      - "9000:9000"
+    healthcheck:
+      test: "wget --spider http://localhost:9000/actuator/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: always
+    depends_on:
+      all-db:
+        condition: service_healthy
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  gateway:
+    container_name: gateway
+    image: akireev/gateway:latest
+    ports:
+      - "8090:8090"
+    healthcheck:
+      test: "wget --spider http://localhost:8090/actuator/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: always
+    depends_on:
+      - auth
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  userdata:
+    container_name: userdata
+    image: akireev/userdata:latest
+    expose:
+      - "8089"
+    restart: always
+    depends_on:
+      all-db:
+        condition: service_healthy
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  photo:
+    container_name: photo
+    image: akireev/photo:latest
+    expose:
+      - "8099"
+    restart: always
+    depends_on:
+      all-db:
+        condition: service_healthy
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  geo:
+    container_name: geo
+    image: akireev/geo:latest
+    expose:
+      - "8098"
+    restart: always
+    depends_on:
+      all-db:
+        condition: service_healthy
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  frontend:
+    container_name: frontend
+    image: akireev/frontend:latest
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      gateway:
+        condition: service_healthy
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+volumes:
+  pgdata:
+    external: true
+
+networks:
+  rangiffler-network:
+    driver: bridge
