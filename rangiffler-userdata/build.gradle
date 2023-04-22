@@ -17,7 +17,6 @@ dependencies {
     implementation project(':rangiffler-grpc-common')
     implementation 'org.springframework.amqp:spring-rabbit:3.0.3'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'net.devh:grpc-server-spring-boot-starter:2.14.0.RELEASE'
 
@@ -31,11 +30,6 @@ docker {
     files bootJar.archiveFile
     buildArgs([APP_VER: project.version, DOCKER: project.ext.dockerImage])
     noCache true
-}
-
-task dockerRmi(type: Exec) {
-    workingDir "${buildDir}"
-    commandLine 'bash', '-c', "docker rmi -f \$(docker images | grep 'userdata')\n"
 }
 
 tasks.named('test') {
