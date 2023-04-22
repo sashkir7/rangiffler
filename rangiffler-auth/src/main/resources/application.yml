@@ -52,12 +52,12 @@ spring:
     hibernate:
       ddl-auto: validate
   rabbitmq:
-    host: 'http://127.0.0.1'
+    host: '127.0.0.1'
     port: 5672
     username: 'guest'
     password: 'guest'
 rangiffler-front:
-  base-uri: 'http://127.0.0.1:3001'
+  base-uri: 'http://127.0.0.1'
 rangiffler-auth:
   base-uri: 'http://127.0.0.1:9000'
 ---
