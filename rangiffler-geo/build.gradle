@@ -33,11 +33,6 @@ docker {
     noCache true
 }
 
-task dockerRmi(type: Exec) {
-    workingDir "${buildDir}"
-    commandLine 'bash', '-c', "docker rmi -f \$(docker images | grep 'geo')\n"
-}
-
 tasks.named('test') {
     useJUnitPlatform()
 }
