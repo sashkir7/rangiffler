@@ -25,7 +25,6 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: 'http://127.0.0.1:9000'
-
 grpc:
   client:
     grpcUserdataClient:
@@ -38,7 +37,6 @@ grpc:
       address: 'static://localhost:9006'
       negotiationType: PLAINTEXT
       max-inbound-message-size: 10485760 # 10 MB
-
 rangiffler-front:
   base-uri: 'http://127.0.0.1:3001'
 
@@ -52,7 +50,6 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: 'http://auth:9000'
-
 grpc:
   client:
     grpcUserdataClient:
@@ -65,7 +62,6 @@ grpc:
       address: 'static://photo:9006'
       negotiationType: PLAINTEXT
       max-inbound-message-size: 10485760 # 10 MB
-
 rangiffler-front:
-  base-uri: 'http://frontend'
+  base-uri: 'http://127.0.0.1'
 ---
