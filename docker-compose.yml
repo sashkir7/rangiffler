@@ -41,6 +41,8 @@ services:
     depends_on:
       all-db:
         condition: service_healthy
+      rabbit-mq:
+        condition: service_started
     networks:
       - rangiffler-network
     dns_search: .
