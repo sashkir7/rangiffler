@@ -6,5 +6,5 @@ ENV JAVA_OPTS=""
 WORKDIR /application
 COPY rangiffler-geo-$VER.jar ./
 
-EXPOSE 8090
+EXPOSE 9004
 CMD java -jar -Dspring.profiles.active=docker $JAVA_OPTS rangiffler-geo-$VER.jar
