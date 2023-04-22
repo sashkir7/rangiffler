@@ -71,6 +71,11 @@ services:
     depends_on:
       all-db:
         condition: service_healthy
+      # After created main and error queues
+      auth:
+        condition: service_started
+      rabbit-mq:
+        condition: service_started
     networks:
       - rangiffler-network
     dns_search: .
