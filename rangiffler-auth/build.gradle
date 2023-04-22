@@ -35,11 +35,6 @@ docker {
     noCache true
 }
 
-task dockerRmi(type: Exec) {
-    workingDir "${buildDir}"
-    commandLine 'bash', '-c', "docker rmi -f \$(docker images | grep 'auth')\n"
-}
-
 tasks.named('test') {
     useJUnitPlatform()
 }

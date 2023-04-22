@@ -33,14 +33,12 @@ spring:
   sql:
     init:
       mode: always
-
 logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
     org.springframework.security: DEBUG
     org.springframework.security.oauth2: DEBUG
-
 ---
 spring:
   config:
