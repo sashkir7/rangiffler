@@ -14,13 +14,12 @@ repositories {
 }
 
 dependencies {
+    runtimeOnly 'org.postgresql:postgresql'
     implementation project(':rangiffler-grpc-common')
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'net.devh:grpc-server-spring-boot-starter:2.14.0.RELEASE'
     implementation 'net.devh:grpc-client-spring-boot-starter:2.14.0.RELEASE'
-
-    runtimeOnly 'org.postgresql:postgresql'
 }
 
 docker {
@@ -30,11 +29,6 @@ docker {
     files bootJar.archiveFile
     buildArgs([APP_VER: project.version, DOCKER: project.ext.dockerImage])
     noCache true
-}
-
-task dockerRmi(type: Exec) {
-    workingDir "${buildDir}"
-    commandLine 'bash', '-c', "docker rmi -f \$(docker images | grep 'photo')\n"
 }
 
 tasks.named('test') {

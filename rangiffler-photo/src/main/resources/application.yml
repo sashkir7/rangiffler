@@ -34,12 +34,10 @@ spring:
   sql:
     init:
       mode: always
-
 logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
-
 ---
 spring:
   config:
@@ -58,7 +56,6 @@ grpc:
     grpcGeoClient:
       address: 'static://localhost:9004'
       negotiationType: PLAINTEXT
-
 ---
 spring:
   config:
