@@ -50,7 +50,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-
 grpc:
   client:
     grpcUserdataClient:
@@ -70,13 +69,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-
 grpc:
   client:
     grpcUserdataClient:
-      address: 'static://photo:9002'
+      address: 'static://userdata:9002'
       negotiationType: PLAINTEXT
     grpcGeoClient:
-      address: 'static://photo:9004'
+      address: 'static://geo:9004'
       negotiationType: PLAINTEXT
 ---
