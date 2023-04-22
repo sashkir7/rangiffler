@@ -1,6 +1,5 @@
 version: '3.9'
 
-# ToDo Добавить rabbitMq
 services:
   all-db:
     container_name: all-db
@@ -13,10 +12,21 @@ services:
       interval: 3s
       timeout: 3s
       retries: 5
-    expose:
-      - "5432"
+    ports:
+      - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pg-rangiffler-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  rabbit-mq:
+    container_name: rabbit-mq
+    image: rabbitmq:3.11-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
     restart: always
     networks:
       - rangiffler-network
@@ -27,11 +37,6 @@ services:
     image: akireev/auth:latest
     ports:
       - "9000:9000"
-    healthcheck:
-      test: "wget --spider http://localhost:9000/actuator/health || exit 1"
-      interval: 5s
-      timeout: 5s
-      retries: 10
     restart: always
     depends_on:
       all-db:
@@ -44,7 +49,7 @@ services:
     container_name: gateway
     image: akireev/gateway:latest
     ports:
-      - "8090:8090"
+      - "8080:8080"
     healthcheck:
       test: "wget --spider http://localhost:8090/actuator/health || exit 1"
       interval: 5s
@@ -61,20 +66,7 @@ services:
     container_name: userdata
     image: akireev/userdata:latest
     expose:
-      - "8089"
-    restart: always
-    depends_on:
-      all-db:
-        condition: service_healthy
-    networks:
-      - rangiffler-network
-    dns_search: .
-
-  photo:
-    container_name: photo
-    image: akireev/photo:latest
-    expose:
-      - "8099"
+      - "9002"
     restart: always
     depends_on:
       all-db:
@@ -87,7 +79,20 @@ services:
     container_name: geo
     image: akireev/geo:latest
     expose:
-      - "8098"
+      - "9004"
+    restart: always
+    depends_on:
+      all-db:
+        condition: service_healthy
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  photo:
+    container_name: photo
+    image: akireev/photo:latest
+    expose:
+      - "9006"
     restart: always
     depends_on:
       all-db:
@@ -102,15 +107,12 @@ services:
     ports:
       - "80:80"
     restart: always
-    depends_on:
-      gateway:
-        condition: service_healthy
     networks:
       - rangiffler-network
     dns_search: .
 
 volumes:
-  pgdata:
+  pg-rangiffler-data:
     external: true
 
 networks:
