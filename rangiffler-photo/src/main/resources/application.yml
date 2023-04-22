@@ -50,7 +50,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-
 grpc:
   client:
     grpcUserdataClient:
@@ -59,3 +58,23 @@ grpc:
     grpcGeoClient:
       address: 'static://localhost:9004'
       negotiationType: PLAINTEXT
+
+---
+spring:
+  config:
+    activate:
+      on-profile: 'docker'
+  datasource:
+    url: 'jdbc:postgresql://all-db:5432/photo'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+grpc:
+  client:
+    grpcUserdataClient:
+      address: 'static://userdata:9002'
+      negotiationType: PLAINTEXT
+    grpcGeoClient:
+      address: 'static://geo:9004'
+      negotiationType: PLAINTEXT
+---

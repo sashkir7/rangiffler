@@ -3,7 +3,11 @@ plugins {
     id 'org.springframework.boot' version '3.0.1'
     id 'io.spring.dependency-management' version '1.1.0'
     id "io.freefair.lombok" version '6.4.2'
+    id 'com.palantir.docker' version '0.34.0'
 }
+
+group = 'org.rangiffler'
+version = '0.0.1'
 
 repositories {
     mavenCentral()
@@ -23,5 +27,23 @@ dependencies {
 }
 
 test {
+    useJUnitPlatform()
+}
+
+docker {
+    dependsOn build
+    name "akireev/gateway:${project.version}"
+    tag 'latest', 'akireev/gateway:latest'
+    files bootJar.archiveFile
+    buildArgs([APP_VER: project.version, DOCKER: project.ext.dockerImage])
+    noCache true
+}
+
+task dockerRmi(type: Exec) {
+    workingDir "${buildDir}"
+    commandLine 'bash', '-c', "docker rmi -f \$(docker images | grep 'gateway')\n"
+}
+
+tasks.named('test') {
     useJUnitPlatform()
 }

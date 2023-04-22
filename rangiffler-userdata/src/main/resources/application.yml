@@ -33,11 +33,6 @@ spring:
   sql:
     init:
       mode: always
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
 
 logging:
   level:
@@ -54,3 +49,24 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  rabbitmq:
+    host: '127.0.0.1'
+    port: 5672
+    username: 'guest'
+    password: 'guest'
+---
+spring:
+  config:
+    activate:
+      on-profile: 'docker'
+  datasource:
+    url: 'jdbc:postgresql://all-db:5432/userdata'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  rabbitmq:
+    host: 'rabbit-mq'
+    port: 5672
+    username: 'guest'
+    password: 'guest'
+---
