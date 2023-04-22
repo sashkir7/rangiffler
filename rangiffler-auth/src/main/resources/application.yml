@@ -1,6 +1,5 @@
 server:
   port: 9000
-# ONLY FOR TESTING
   servlet:
     session:
       cookie:
@@ -34,11 +33,6 @@ spring:
   sql:
     init:
       mode: always
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
 
 logging:
   level:
@@ -57,6 +51,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  rabbitmq:
+    host: 'http://127.0.0.1'
+    port: 5672
+    username: 'guest'
+    password: 'guest'
 rangiffler-front:
   base-uri: 'http://127.0.0.1:3001'
 rangiffler-auth:
@@ -71,8 +70,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-niffler-front:
-  base-uri: 'http://frontend'
-niffler-auth:
+  rabbitmq:
+    host: 'rabbit-mq'
+    port: 5672
+    username: 'guest'
+    password: 'guest'
+rangiffler-front:
+  base-uri: 'http://127.0.0.1'
+rangiffler-auth:
   base-uri: 'http://auth:9000'
 ---
