@@ -12,7 +12,6 @@ import sashkir7.grpc.Country;
 import sashkir7.grpc.GeoServiceGrpc;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @GrpcService
 public class GeoGrpcService extends GeoServiceGrpc.GeoServiceImplBase {
@@ -26,7 +25,7 @@ public class GeoGrpcService extends GeoServiceGrpc.GeoServiceImplBase {
 
     @Override
     public void getAllCountries(Empty request, StreamObserver<Countries> responseObserver) {
-        responseObserver.onNext(convertToCountries(countryRepository.findAll()));
+        responseObserver.onNext(convertToCountries(countryRepository.findAllByOrderByNameAsc()));
         responseObserver.onCompleted();
     }
 
@@ -40,7 +39,7 @@ public class GeoGrpcService extends GeoServiceGrpc.GeoServiceImplBase {
         return Countries.newBuilder()
                 .addAllCountries(entities.stream()
                         .map(CountryEntity::toGrpc)
-                        .collect(Collectors.toSet())
+                        .toList()
                 ).build();
     }
 

@@ -1,8 +1,7 @@
 package gateway.model;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import lombok.Builder;
 import lombok.Data;
@@ -21,10 +20,10 @@ public class CountryDto {
                 .build();
     }
 
-    public static Set<CountryDto> fromGrpc(Countries countries) {
+    public static List<CountryDto> fromGrpc(Countries countries) {
         return countries.getCountriesList().stream()
                 .map(CountryDto::fromGrpc)
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     private UUID id;

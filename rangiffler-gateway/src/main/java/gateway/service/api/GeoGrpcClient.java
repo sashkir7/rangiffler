@@ -6,7 +6,7 @@ import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Component;
 import sashkir7.grpc.GeoServiceGrpc;
 
-import java.util.Set;
+import java.util.List;
 
 @Component
 public class GeoGrpcClient {
@@ -14,7 +14,7 @@ public class GeoGrpcClient {
     @GrpcClient("grpcGeoClient")
     private GeoServiceGrpc.GeoServiceBlockingStub geoServiceBlockingStub;
 
-    public Set<CountryDto> getAllCountries() {
+    public List<CountryDto> getAllCountries() {
         return CountryDto.fromGrpc(geoServiceBlockingStub.getAllCountries(Empty.getDefaultInstance()));
     }
 
