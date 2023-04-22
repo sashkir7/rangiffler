@@ -1,6 +1,6 @@
 package gateway.controller;
 
-import java.util.Set;
+import java.util.List;
 
 import gateway.model.CountryDto;
 import gateway.service.api.GeoGrpcClient;
@@ -19,7 +19,7 @@ public class CountryController {
     }
 
     @GetMapping("/countries")
-    public Set<CountryDto> getAllCountries() {
+    public List<CountryDto> getAllCountries() {
         return geoGrpcClient.getAllCountries();
     }
 

@@ -15,7 +15,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pg-rangiffler-data:/var/lib/postgresql/data
+      - ./sql/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql
     restart: always
     networks:
       - rangiffler-network
@@ -41,6 +41,8 @@ services:
     depends_on:
       all-db:
         condition: service_healthy
+      rabbit-mq:
+        condition: service_started
     networks:
       - rangiffler-network
     dns_search: .
@@ -71,6 +73,11 @@ services:
     depends_on:
       all-db:
         condition: service_healthy
+      # After created main and error queues
+      auth:
+        condition: service_started
+      rabbit-mq:
+        condition: service_started
     networks:
       - rangiffler-network
     dns_search: .
@@ -110,10 +117,6 @@ services:
     networks:
       - rangiffler-network
     dns_search: .
-
-volumes:
-  pg-rangiffler-data:
-    external: true
 
 networks:
   rangiffler-network:
