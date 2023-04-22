@@ -33,11 +33,6 @@ spring:
   sql:
     init:
       mode: always
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
 
 logging:
   level:
@@ -54,7 +49,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-
+  rabbitmq:
+    host: 'http://127.0.0.1'
+    port: 5672
+    username: 'guest'
+    password: 'guest'
 ---
 spring:
   config:
@@ -65,4 +64,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  rabbitmq:
+    host: 'rabbit-mq'
+    port: 5672
+    username: 'guest'
+    password: 'guest'
 ---
