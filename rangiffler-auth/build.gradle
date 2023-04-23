@@ -28,8 +28,8 @@ dependencies {
 
 docker {
     dependsOn build
-    name "akireev/auth:${project.version}"
-    tag 'latest', 'akireev/auth:latest'
+    name "sashkir7/rangiffler-auth:${project.version}"
+    tag 'latest', 'sashkir7/rangiffler-auth:latest'
     files bootJar.archiveFile
     buildArgs([APP_VER: project.version, DOCKER: project.ext.dockerImage])
     noCache true

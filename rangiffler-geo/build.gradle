@@ -26,8 +26,8 @@ dependencies {
 
 docker {
     dependsOn build
-    name "akireev/geo:${project.version}"
-    tag 'latest', 'akireev/geo:latest'
+    name "sashkir7/rangiffler-geo:${project.version}"
+    tag 'latest', 'sashkir7/rangiffler-geo:latest'
     files bootJar.archiveFile
     buildArgs([APP_VER: project.version, DOCKER: project.ext.dockerImage])
     noCache true

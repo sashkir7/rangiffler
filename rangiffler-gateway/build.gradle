@@ -32,8 +32,8 @@ test {
 
 docker {
     dependsOn build
-    name "akireev/gateway:${project.version}"
-    tag 'latest', 'akireev/gateway:latest'
+    name "sashkir7/rangiffler-gateway:${project.version}"
+    tag 'latest', 'sashkir7/rangiffler-gateway:latest'
     files bootJar.archiveFile
     buildArgs([APP_VER: project.version, DOCKER: project.ext.dockerImage])
     noCache true
