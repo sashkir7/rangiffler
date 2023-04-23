@@ -35,10 +35,10 @@ class PeopleAroundWebTest extends BaseWebTest {
     @DisplayName("Get all users (by status)")
     @ApiLogin(user = @GenerateUser(partners = {
             @WithPartner(status = NOT_FRIEND),
-            @WithPartner(status = NOT_FRIEND, user = @WithUser(avatarClasspath = "img/png.png")),
-            @WithPartner(status = INVITATION_SENT, user = @WithUser(avatarClasspath = "img/jpeg.jpeg")),
+            @WithPartner(status = NOT_FRIEND, user = @WithUser(avatarClasspath = "img/dog.png")),
+            @WithPartner(status = INVITATION_SENT, user = @WithUser(avatarClasspath = "img/girl.jpeg")),
             @WithPartner(status = INVITATION_RECEIVED),
-            @WithPartner(status = INVITATION_RECEIVED, user = @WithUser(avatarClasspath = "img/jpg.jpg")),
+            @WithPartner(status = INVITATION_RECEIVED, user = @WithUser(avatarClasspath = "img/minon.jpg")),
             @WithPartner(status = FRIEND)}))
     void getAllUsersTest(@Inject UserModel user) {
         for (PartnerStatus status : user.getPartners().keySet()) {

@@ -35,10 +35,10 @@ class PhotoCrudApiTest extends BaseApiTest {
 
     static Stream<Arguments> addPhotoTest() {
         return Stream.of(
-                Arguments.of("jpeg.jpeg", RUSSIA, "Попутчица"),
-                Arguments.of("jpg.jpg", RUSSIA, "Сходили на новый фильм"),
-                Arguments.of("png.png", KAZAKHSTAN, "Собака товарища"),
-                Arguments.of("svg.svg", KAZAKHSTAN, "")
+                Arguments.of("girl.jpeg", RUSSIA, "Попутчица"),
+                Arguments.of("minon.jpg", RUSSIA, "Сходили на новый фильм"),
+                Arguments.of("dog.png", KAZAKHSTAN, "Собака товарища"),
+                Arguments.of("chicken.svg", KAZAKHSTAN, "")
         );
     }
 
@@ -64,7 +64,7 @@ class PhotoCrudApiTest extends BaseApiTest {
     @DisplayName("Delete photo")
     void deletePhoto() {
         Photo photo = step("Create photo", () ->
-                photoApi.addPhoto(getPhoto("png.png", ROMANIA, "Фоточка")));
+                photoApi.addPhoto(getPhoto("dog.png", ROMANIA, "Фоточка")));
         photoApi.deletePhoto(photo.getId());
 
         step("Verify that photo has been deleted", () -> {

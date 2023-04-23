@@ -53,7 +53,7 @@ class UserPhotosWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser(photos = {
             @WithPhoto(country = UKRAINE, imageClasspath = "img/cat.jpeg"),
             @WithPhoto(country = UKRAINE, imageClasspath = "img/leopard.jpeg"),
-            @WithPhoto(country = AUSTRALIA, imageClasspath = "img/png.png"),
+            @WithPhoto(country = AUSTRALIA, imageClasspath = "img/dog.png"),
             @WithPhoto(country = RUSSIA, imageClasspath = "img/tiger.jpeg")}))
     void getUserPhotosByCountry(@Inject UserModel user) {
         step("Verify information in header", () ->

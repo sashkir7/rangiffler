@@ -53,7 +53,7 @@ class ProfileWebTest extends BaseWebTest {
     void updateUserProfileTest(@Inject UserModel user) {
         String firstname = DataHelper.randomFirstname();
         String lastname = DataHelper.randomLastname();
-        String avatarClasspath = "img/jpeg.jpeg";
+        String avatarClasspath = "img/girl.jpeg";
 
         step("Update user profile", () ->
                 profileComponent.setFirstname(firstname)

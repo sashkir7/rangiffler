@@ -35,9 +35,9 @@ class GetSomePhotosApiTest extends BaseApiTest {
     @DisplayName("Get user photos")
     @GenerateUser(photos = {
             @WithPhoto(description = "Фотка", country = CAMBODIA),
-            @WithPhoto(imageClasspath = "img/jpg.jpg", country = KAZAKHSTAN),
-            @WithPhoto(imageClasspath = "img/png.png", description = "Hello world", country = UNITED_ARAB_EMIRATES)
-    }, partners = @WithPartner(photos = @WithPhoto(imageClasspath = "img/svg.svg")))
+            @WithPhoto(imageClasspath = "img/minon.jpg", country = KAZAKHSTAN),
+            @WithPhoto(imageClasspath = "img/dog.png", description = "Hello world", country = UNITED_ARAB_EMIRATES)
+    }, partners = @WithPartner(photos = @WithPhoto(imageClasspath = "img/chicken.svg")))
     void getUserPhotosTest(@Inject UserModel user) {
         List<Photo> actualPhotos = photoApi.getUserPhotos(user.getUsername()).getPhotosList();
         step("Verify response", () ->
@@ -60,8 +60,8 @@ class GetSomePhotosApiTest extends BaseApiTest {
                     @WithPartner(status = INVITATION_SENT, photos = @WithPhoto),
                     @WithPartner(status = NOT_FRIEND, photos = @WithPhoto),
                     @WithPartner(status = FRIEND, photos = {
-                            @WithPhoto(description = "Смотри!", imageClasspath = "img/png.png", country = ANGOLA),
-                            @WithPhoto(imageClasspath = "img/svg.svg", country = KAZAKHSTAN)}),
+                            @WithPhoto(description = "Смотри!", imageClasspath = "img/dog.png", country = ANGOLA),
+                            @WithPhoto(imageClasspath = "img/chicken.svg", country = KAZAKHSTAN)}),
                     @WithPartner(status = FRIEND, photos = @WithPhoto)})
     void getAllFriendsPhotosTest(@Inject UserModel user) {
         List<Photo> actualFriendsPhotos = photoApi.getAllFriendsPhotos(user.getUsername()).getPhotosList();

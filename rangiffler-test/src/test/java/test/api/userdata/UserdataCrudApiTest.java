@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Story("CRUD operations")
 class UserdataCrudApiTest extends BaseApiTest {
 
-    private static final String AVATAR_CLASSPATH = "img/jpeg.jpeg";
+    private static final String AVATAR_CLASSPATH = "img/girl.jpeg";
 
     @Test
     @DisplayName("Get current user")

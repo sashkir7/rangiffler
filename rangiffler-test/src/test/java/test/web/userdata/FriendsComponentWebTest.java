@@ -33,7 +33,7 @@ class FriendsComponentWebTest extends BaseWebTest {
     @DisplayName("Get user friends")
     @ApiLogin(user = @GenerateUser(partners = {
             @WithPartner(status = FRIEND),
-            @WithPartner(status = FRIEND, user = @WithUser(avatarClasspath = "img/png.png")),
+            @WithPartner(status = FRIEND, user = @WithUser(avatarClasspath = "img/dog.png")),
             @WithPartner(status = INVITATION_SENT),
             @WithPartner(status = INVITATION_RECEIVED)}))
     void getUserFriendsTest(@Inject UserModel user) {

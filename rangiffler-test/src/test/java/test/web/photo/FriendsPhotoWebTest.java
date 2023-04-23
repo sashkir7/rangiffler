@@ -41,7 +41,7 @@ class FriendsPhotoWebTest extends BaseWebTest {
             @WithPartner(status = FRIEND, photos = @WithPhoto(country = CANADA, imageClasspath = "img/cat.jpeg")),
             @WithPartner(status = FRIEND, photos = {
                     @WithPhoto(country = AUSTRALIA, imageClasspath = "img/tiger.jpeg"),
-                    @WithPhoto(country = UKRAINE, imageClasspath = "img/svg.svg")}),
+                    @WithPhoto(country = UKRAINE, imageClasspath = "img/chicken.svg")}),
             @WithPartner(status = FRIEND, photos = @WithPhoto(country = CANADA, imageClasspath = "img/leopard.jpeg"))}))
     void getFriendsPhotosTest(@Inject UserModel user) {
         List<Photo> photos = getUserFriendsPhotos(user);
