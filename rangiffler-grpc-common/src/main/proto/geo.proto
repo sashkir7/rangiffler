@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
+import "common.proto";
 
 package sashkir7.grpc;
 
@@ -15,12 +16,6 @@ service GeoService {
 
 message CodeRequest {
   string code = 1;
-}
-
-message Country {
-  string id = 1;
-  string code = 2;
-  string name = 3;
 }
 
 message Countries {

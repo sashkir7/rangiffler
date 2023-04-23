@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
+import "common.proto";
 
 package sashkir7.grpc;
 
@@ -20,10 +21,6 @@ service UserdataService {
   rpc SubmitFriends (RelationshipUsersRequest) returns (RelationshipResponse) {}
   rpc DeclineFriend (RelationshipUsersRequest) returns (google.protobuf.Empty) {}
   rpc RemoveFriend (RelationshipUsersRequest) returns (google.protobuf.Empty) {}
-}
-
-message UsernameRequest {
-  string username = 1;
 }
 
 message User {
