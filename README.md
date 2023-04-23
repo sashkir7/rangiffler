@@ -24,6 +24,7 @@ Rangiffler - современное, модное и молодежное при
 - [Spring Web](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#spring-web)
 - [Spring Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
 - [Spring gRPC](https://yidongnan.github.io/grpc-spring-boot-starter/en/server/getting-started.html)
+- [RabbitMq](https://www.rabbitmq.com/)
 - [Docker](https://www.docker.com/resources/what-container/)
 - [Docker-compose](https://docs.docker.com/compose/)
 - [Postgres](https://www.postgresql.org/about/)
