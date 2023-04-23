@@ -14,10 +14,10 @@ public class FriendsComponent extends BaseComponent<FriendsComponent> {
 
     private final SelenideElement self = $(".MuiCard-root");
 
-    @Step("Friends: verify friend information")
+    @Step("Verify friend information in friends modal window")
     public void verifyFriendInformation(UserModel friend) {
         SelenideElement friendRow = findRowByUsername(friend.getUsername());
-        verifyAvatarCell(friendRow, friend.getAvatarImageClasspath());
+        verifyFriendAvatarCell(friendRow, friend.getAvatarImageClasspath());
         step("Verify username cell", () ->
                 friendRow.find("td", 1)
                         .shouldHave(text(friend.getUsername())));
@@ -27,15 +27,15 @@ public class FriendsComponent extends BaseComponent<FriendsComponent> {
                     .find("svg[data-testid=PersonRemoveAlt1Icon").shouldBe(visible));
     }
 
-    @Step("Remove friend {username}")
+    @Step("Remove friend {username} in friends modal window")
     public void removeFriend(String username) {
         findRowByUsername(username).find("[data-testid=PersonRemoveAlt1Icon]").click();
         $(byTagAndText("button", "Delete")).click();
         self.shouldNotBe(visible);
     }
 
-    @Step("Verify avatar cell")
-    private void verifyAvatarCell(SelenideElement friendRow, String avatarImageClasspath) {
+    @Step("Verify friend avatar cell")
+    private void verifyFriendAvatarCell(SelenideElement friendRow, String avatarImageClasspath) {
         SelenideElement avatarCell = friendRow.find("td");
         if (avatarImageClasspath != null && !avatarImageClasspath.isBlank()) {
             // Friend has avatar

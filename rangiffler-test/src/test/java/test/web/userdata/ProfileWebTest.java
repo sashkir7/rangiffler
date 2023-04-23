@@ -42,7 +42,7 @@ class ProfileWebTest extends BaseWebTest {
     @DisplayName("Get current user profile")
     void getCurrentUserProfileTest(@Inject UserModel user) {
         headerComponent.verifyUserDoesNotHaveAvatarImage();
-        profileComponent.verifyValues(user)
+        profileComponent.verifyProfileInformation(user)
                 .verifyUserDoesNotHaveAvatarImage();
     }
 
