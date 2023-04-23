@@ -129,8 +129,11 @@ class UserdataPartnersApiTest extends BaseApiTest {
     @Test
     @DisplayName("Remove friend")
     void removeFriendTest(@WithUser User user, @WithUser User partner) {
-        inviteToFriends(user, partner);
-        submitFriends(partner, user);
+        step("Add to friends", () -> {
+            inviteToFriends(user, partner);
+            submitFriends(partner, user);
+        });
+
         step("Remove friend", () ->
                 userdataApi.removeFriend(user.getUsername(), partner));
 

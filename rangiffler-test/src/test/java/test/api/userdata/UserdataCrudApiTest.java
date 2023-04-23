@@ -54,11 +54,14 @@ class UserdataCrudApiTest extends BaseApiTest {
     @Test
     @DisplayName("Delete user")
     void deleteUserTest() {
-        UserdataRepository repository = new HibernateUserdataRepository();
-        User user = userdataApi.addUser(getRandomUser(false));
+        User user = step("Create user", () ->
+                userdataApi.addUser(getRandomUser(false)));
         userdataApi.deleteUser(user.getUsername());
-        step("Verify that user has been deleted", () ->
-                assertNull(repository.findByUsername(user.getUsername())));
+
+        step("Verify that user has been deleted", () -> {
+            UserdataRepository repository = new HibernateUserdataRepository();
+            assertNull(repository.findByUsername(user.getUsername()));
+        });
     }
 
     private User getRandomUser(boolean withAvatar) {

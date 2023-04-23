@@ -48,7 +48,7 @@ public class WithUserExtension extends BaseJUnitExtension implements BeforeEachC
     }
 
     @Override
-    @Step("Remove created photo")
+    @Step("Remove created user")
     public void afterEach(ExtensionContext context) throws Exception {
         Map<String, User> users = getFromStore(context, NAMESPACE, Map.class);
         users.values().forEach(user -> userdataApi.deleteUser(user.getUsername()));
