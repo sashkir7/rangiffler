@@ -1,5 +1,7 @@
 package jupiter.extension;
 
+import data.repository.AuthRepository;
+import data.repository.hibernate.HibernateAuthRepository;
 import data.repository.hibernate.HibernateUserdataRepository;
 import data.repository.UserdataRepository;
 import jupiter.annotation.*;
@@ -58,17 +60,19 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
         if (userModel == null)
             return;
 
+        AuthRepository repository = new HibernateAuthRepository();
+
         // Delete user
         userdataApi.deleteUser(userModel.getUsername());
         deleteUserPhotos(userModel);
+        repository.removeByUsername(userModel.getUsername());
 
         // Delete partners
         userModel.getPartners().values().stream()
                 .flatMap(Collection::stream)
+                .peek(partner -> repository.removeByUsername(partner.getUsername()))
                 .peek(partner -> userdataApi.deleteUser(partner.getUsername()))
                 .forEach(this::deleteUserPhotos);
-
-        // ToDo Удалить через DAO auth
     }
 
     private GenerateUser extractGenerateUserAnnotationFromContext(ExtensionContext context) {
