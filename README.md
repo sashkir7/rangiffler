@@ -61,16 +61,20 @@ create database "geo" with owner postgres;
 create database "photo" with owner postgres;
 create database "userdata" with owner postgres;
 ```
-#### 3. Запустить fronted-сервис
+#### 3. Запустить RabbitMq брокер сообщений:
+```posh
+docker run --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.11-management
+```
+#### 4. Запустить fronted-сервис
 ```posh
 alx.krw@Aleksandrs-MacBook-Pro rangiffler % cd rangiffler-front
 alx.krw@Aleksandrs-MacBook-Pro rangiffler-front % npm i
 alx.krw@Aleksandrs-MacBook-Pro rangiffler-front % npm start
 ```
-#### 4. Прописать run конфигурацию для всех backend-сервисов - Active profiles local
+#### 5. Прописать run конфигурацию для всех backend-сервисов - Active profiles local
 Run -> Edit Configurations -> выбрать main класс -> указать Active profiles: local
 ![Установка active profiles](images/local-profile.png)
-#### 5. Запустить backend-микросервисы Rangiffler(а) командой Run в IDE в следующем порядке:
+#### 6. Запустить backend-микросервисы Rangiffler(а) командой Run в IDE в следующем порядке:
 
 *AUTH -> GATEWAY -> USERDATA -> GEO -> PHOTO*
 
