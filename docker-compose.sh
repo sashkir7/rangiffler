@@ -1,5 +1,4 @@
 #!/bin/bash
-source ./rangiffler-test/docker.properties
 
 echo '### Java version ###'
 java --version
