@@ -8,17 +8,16 @@ import java.util.Map;
 public class CookieHolder {
 
     private static final String COOKIE_KEY = "Cookie";
-
-    private final Map<String, List<String>> cookieStorage;
-
     private static final ThreadLocal<CookieHolder> INSTANCE = ThreadLocal.withInitial(CookieHolder::new);
-
-    private CookieHolder() {
-        cookieStorage = new HashMap<>(Map.of(COOKIE_KEY, new ArrayList<>()));
-    }
 
     public static CookieHolder getInstance() {
         return INSTANCE.get();
+    }
+
+    private final Map<String, List<String>> cookieStorage;
+
+    private CookieHolder() {
+        cookieStorage = new HashMap<>(Map.of(COOKIE_KEY, new ArrayList<>()));
     }
 
     public void setCookie(List<String> value) {
