@@ -8,7 +8,7 @@ gradle --version
 
 echo '### Stop services and remove old docker images ###'
 docker-compose -f docker-compose.yml down
-docker rmi -f $(docker images | grep 'akireev')
+docker rmi -f $(docker images | grep 'sashkir7')
 
 echo '### Build docker spring services ###'
 bash ./gradlew clean build dockerTagLatest -x :rangiffler-test:test
