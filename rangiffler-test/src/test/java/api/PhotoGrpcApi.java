@@ -1,5 +1,6 @@
 package api;
 
+import config.AppProperties;
 import sashkir7.grpc.Photo;
 import sashkir7.grpc.PhotoIdRequest;
 import sashkir7.grpc.PhotoServiceGrpc;
@@ -10,7 +11,7 @@ public final class PhotoGrpcApi extends BaseGrpcApi {
     private final PhotoServiceGrpc.PhotoServiceBlockingStub blockingStub;
 
     public PhotoGrpcApi() {
-        super("localhost", 9006);
+        super(AppProperties.PHOTO_SERVICE_HOST, AppProperties.PHOTO_SERVICE_PORT);
         blockingStub = PhotoServiceGrpc.newBlockingStub(channel);
     }
 
