@@ -54,14 +54,14 @@ Rangiffler - современное, модное и молодежное при
 ```posh
 docker run --name all-db -p 5432:5432 -e POSTGRES_PASSWORD=secret -d postgres:15.1
 ```
-#### 2. Подключиться к БД postgres (host: localhost, port: 5432, user: postgres, pass: secret, database name: postgres) и создать пустые БД микросервисов
+#### 2. Подключиться к БД postgres (localhost:5432, postgres/secret, database: postgres) и создать пустые БД микросервисов
 ```sql
 create database "auth" with owner postgres;
 create database "geo" with owner postgres;
 create database "photo" with owner postgres;
 create database "userdata" with owner postgres;
 ```
-#### 3. Запустить RabbitMq брокер сообщений:
+#### 3. Запустить Rabbit-mq брокер сообщений
 ```posh
 docker run --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.11-management
 ```
@@ -74,17 +74,22 @@ alx.krw@Aleksandrs-MacBook-Pro rangiffler-front % npm start
 #### 5. Прописать run конфигурацию для всех backend-сервисов - Active profiles local
 Run -> Edit Configurations -> выбрать main класс -> указать Active profiles: local
 ![Установка active profiles](images/local-profile.png)
-#### 6. Запустить backend-микросервисы Rangiffler(а) командой Run в IDE в следующем порядке:
+#### 6. Запустить backend-микросервисы Rangiffler(а) командой Run в IDE в следующем порядке
 
 *AUTH -> GATEWAY -> USERDATA -> GEO -> PHOTO*
 
+# Запуск приложения в Docker
+
+#### 1. Запустить все сервисы (сначала будут собраны образы, после чего - запущены контейнеры)
+```posh
+alx.krw@Aleksandrs-MacBook-Pro rangiffler % bash docker-compose.sh
+```
+#### 2. Проверить, что сервисы корректно запустились. Ошибки отсутствуют
 
 
 
-Варианты запуска приложения:
-Локально в idea
-Локально через docker
-(что нужно для этого)
+
+
 
 Запуск тестов
 
