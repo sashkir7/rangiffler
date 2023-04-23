@@ -1,5 +1,6 @@
 package api;
 
+import config.AppProperties;
 import model.UserModel;
 import sashkir7.grpc.*;
 
@@ -8,7 +9,7 @@ public final class UserdataGrpcApi extends BaseGrpcApi {
     private final UserdataServiceGrpc.UserdataServiceBlockingStub blockingStub;
 
     public UserdataGrpcApi() {
-        super("localhost", 9002);
+        super(AppProperties.USERDATA_SERVICE_HOST, AppProperties.USERDATA_SERVICE_PORT);
         blockingStub = UserdataServiceGrpc.newBlockingStub(channel);
     }
 

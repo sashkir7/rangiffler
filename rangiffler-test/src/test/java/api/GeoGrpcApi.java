@@ -1,5 +1,6 @@
 package api;
 
+import config.AppProperties;
 import model.CountryEnum;
 import sashkir7.grpc.CodeRequest;
 import sashkir7.grpc.Countries;
@@ -11,7 +12,7 @@ public final class GeoGrpcApi extends BaseGrpcApi {
     private final GeoServiceGrpc.GeoServiceBlockingStub blockingStub;
 
     public GeoGrpcApi() {
-        super("localhost", 9004);
+        super(AppProperties.GEO_SERVICE_HOST, AppProperties.GEO_SERVICE_PORT);
         blockingStub = GeoServiceGrpc.newBlockingStub(channel);
     }
 
