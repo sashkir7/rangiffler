@@ -1,8 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
-import "geo.proto";
-import "userdata.proto";
+import "common.proto";
 
 package sashkir7.grpc;
 
