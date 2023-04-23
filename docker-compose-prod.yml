@@ -1,0 +1,122 @@
+version: '3.9'
+
+networks:
+  rangiffler-network:
+    driver: bridge
+
+services:
+  all-db:
+    container_name: all-db
+    image: postgres:15.1
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    expose:
+      - "5432"
+    volumes:
+      - ./sql/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql
+    restart: always
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  rabbit-mq:
+    container_name: rabbit-mq
+    image: rabbitmq:3.11-management
+    expose:
+      - "5672"
+    restart: always
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  auth:
+    container_name: auth
+    image: sashkir7/rangiffler-auth:latest
+    ports:
+      - "9000:9000"
+    restart: always
+    depends_on:
+      all-db:
+        condition: service_healthy
+      rabbit-mq:
+        condition: service_started
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  gateway:
+    container_name: gateway
+    image: sashkir7/rangiffler-gateway:latest
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: "wget --spider http://localhost:8090/actuator/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: always
+    depends_on:
+      - auth
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  userdata:
+    container_name: userdata
+    image: sashkir7/rangiffler-userdata:latest
+    expose:
+      - "9002"
+    restart: always
+    depends_on:
+      all-db:
+        condition: service_healthy
+      # After created main and error queues
+      auth:
+        condition: service_started
+      rabbit-mq:
+        condition: service_started
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  geo:
+    container_name: geo
+    image: sashkir7/rangiffler-geo:latest
+    expose:
+      - "9004"
+    restart: always
+    depends_on:
+      all-db:
+        condition: service_healthy
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  photo:
+    container_name: photo
+    image: sashkir7/rangiffler-photo:latest
+    expose:
+      - "9006"
+    restart: always
+    depends_on:
+      all-db:
+        condition: service_healthy
+    networks:
+      - rangiffler-network
+    dns_search: .
+
+  frontend:
+    container_name: frontend
+    image: sashkir7/rangiffler-frontend:latest
+    ports:
+      - "80:80"
+    restart: always
+    networks:
+      - rangiffler-network
+    dns_search: .
