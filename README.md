@@ -12,8 +12,8 @@ Rangiffler - современное, модное и молодежное при
 1. **AUTH** - аутентификация и авторизация (*backend*).
 2. **GATEWAY** - связывание (прокси) клиента с необходимыми микросервисами (*backend*).
 3. **USERDATA** - информация о пользователе: как личные данные, так и список друзей (*backend*).
-4. **PHOTO** - сведения о фотографиях пользователей (*backend*).
-5. **GEO** - данные о странах мира (*backend*).
+4. **GEO** - данные о странах мира (*backend*).
+5. **PHOTO** - сведения о фотографиях пользователей (*backend*).
 6. **FRONTEND** - интерфейс приложения, с которым взаимодействует пользователь (*frontend*). 
 
 ![Архитектура приложения](images/architecture.png)
@@ -37,25 +37,18 @@ Rangiffler - современное, модное и молодежное при
 - [Gradle 7.5.1](https://docs.gradle.org/7.5/release-notes.html)
 - И многое другое!
 
+# Список портов приложения
 
-Таблица с портами сервисов
-Auth service:
-- server: 9000
+|    Сервис    |            Порт            |
+|:------------:|:--------------------------:|
+|     AUTH     |       9000 (server)        |
+|   GATEWAY    |       8080 (server)        |
+|   USERDATA   | 9001 (server), 9002 (grpc) |
+|     GEO      | 9003 (server), 9004 (grpc) |
+|    PHOTO     | 9005 (server), 9006 (grpc) |
+|   FRONTEND   |        80 (server)         |
 
-Gateway service:
-- server: 8080
 
-Userdata service:
-- server: 9001
-- grpc: 9002
-
-Geo service:
-- server: 9003
-- grpc: 9004
-
-Photo service:
-- server: 9005
-- grpc: 9006
 
 Варианты запуска приложения:
 Локально в idea
