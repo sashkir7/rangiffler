@@ -7,5 +7,6 @@
         <class>data.entity.UsersRelationshipEntity</class>
         <class>data.entity.CountryEntity</class>
         <class>data.entity.PhotoEntity</class>
+        <class>data.entity.AuthEntity</class>
     </persistence-unit>
 </persistence>
