@@ -19,32 +19,32 @@ public class ProfileComponent extends BaseComponent<ProfileComponent> {
             lastnameInput = self.find("input[name=lastname]"),
             saveButton = self.find("button[type=submit]");
 
-    @Step("Profile: set firstname")
+    @Step("Set firstname {firstname} in Profile")
     public ProfileComponent setFirstname(String firstname) {
         return setValue(firstnameInput, firstname);
     }
 
-    @Step("Profile: set lastname")
+    @Step("Set lastname {lastname} in Profile")
     public ProfileComponent setLastname(String lastname) {
         return setValue(lastnameInput, lastname);
     }
 
-    @Step("Profile: set avatar")
+    @Step("Set avatar in Profile")
     public ProfileComponent setAvatar(String imageClasspath) {
         self.find("input[type=file]").uploadFromClasspath(imageClasspath);
         return this;
     }
 
-    @Step("Profile: click on [Save] button")
+    @Step("Click on [Save] button in Profile")
     public ProfileComponent clickSaveButton() {
         saveButton.click();
         return this;
     }
 
-    @Step("Profile: verify values")
-    public ProfileComponent verifyValues(String expectedUsername,
-                                         String expectedFirstname,
-                                         String expectedLastname) {
+    @Step("Verify profile information")
+    public ProfileComponent verifyProfileInformation(String expectedUsername,
+                                                     String expectedFirstname,
+                                                     String expectedLastname) {
         step("Verify username", () ->
                 self.find(".MuiTypography-root")
                         .shouldHave(text("Username: " + expectedUsername)));
@@ -56,37 +56,37 @@ public class ProfileComponent extends BaseComponent<ProfileComponent> {
         return this;
     }
 
-    public ProfileComponent verifyValues(UserModel user) {
-        return verifyValues(user.getUsername(), user.getFirstname(), user.getLastname());
+    public ProfileComponent verifyProfileInformation(UserModel user) {
+        return verifyProfileInformation(user.getUsername(), user.getFirstname(), user.getLastname());
     }
 
-    @Step("Profile: verify that user does not have avatar image")
+    @Step("Verify that user does not have avatar image in Profile")
     public void verifyUserDoesNotHaveAvatarImage() {
         self.find("[data-testid=PersonIcon]").shouldBe(visible);
     }
 
-    @Step("Profile: verify avatar image")
+    @Step("Verify avatar image in Profile")
     public ProfileComponent verifyAvatarImage(String avatarImageClasspath) {
         self.find("img").shouldHave(photo(avatarImageClasspath));
         return this;
     }
 
-    @Step("Profile: verify firstname input error message")
+    @Step("Verify firstname input error message in Profile")
     public ProfileComponent verifyFirstnameInputErrorMessage(String expectedErrorMessage) {
         return verifyErrorMessage(firstnameInput, expectedErrorMessage);
     }
 
-    @Step("Profile: verify lastname input error message")
+    @Step("Verify lastname input error message in Profile")
     public ProfileComponent verifyLastnameInputErrorMessage(String expectedErrorMessage) {
         return verifyErrorMessage(lastnameInput, expectedErrorMessage);
     }
 
-    @Step("Profile: verify that [Save] button is disabled")
+    @Step("Verify that [Save] button is disabled in Profile")
     public void verifySaveButtonIsDisabled() {
         saveButton.shouldBe(disabled);
     }
 
-    @Step("Profile: verify that profile modal window is closed")
+    @Step("Verify that profile modal window is closed in Profile")
     public void verifyProfileModalWindowIsClosed() {
         self.shouldNotBe(visible);
     }

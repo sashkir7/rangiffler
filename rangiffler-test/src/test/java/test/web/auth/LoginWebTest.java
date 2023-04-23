@@ -10,6 +10,7 @@ import io.qameta.allure.Story;
 import jupiter.annotation.GenerateUser;
 import jupiter.annotation.Inject;
 import model.UserModel;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -20,25 +21,33 @@ import test.web.BaseWebTest;
 
 import java.util.stream.Stream;
 
+import static io.qameta.allure.Allure.step;
+
 @Epic(AllureEpic.WEB)           @Tag(AllureTag.WEB)
 @Feature(AllureFeature.AUTH)    @Tag(AllureTag.AUTH)
 @Story("Login")
 class LoginWebTest extends BaseWebTest {
 
+    @BeforeEach
+    void goToLoginPage() {
+        landingPage.open().clickLoginButton();
+    }
+
     @Test
     @GenerateUser
     @DisplayName("Success login")
-    void successLoginTest(@Inject UserModel userModel) {
-        landingPage.open().clickLoginButton();
-        loginPage.fillForm(userModel.getUsername(), userModel.getPassword())
-                .clickSignInButton();
-        yourTravelsPage.verifyPageIsLoaded();
+    void successLoginTest(@Inject UserModel user) {
+        step("Login to system", () ->
+                loginPage.fillForm(user)
+                        .clickSignInButton());
+        step("Verify success login",
+                headerComponent::verifyTitleIsRangiffler);
     }
 
     @Test
     @DisplayName("Have no account")
     void haveNotAccountTest() {
-        loginPage.open().clickSignUpButton();
+        loginPage.clickSignUpButton();
         registrationPage.verifyPageIsLoaded();
     }
 
@@ -55,10 +64,11 @@ class LoginWebTest extends BaseWebTest {
     @DisplayName("Invalid login:")
     @ParameterizedTest(name = "username = {0}, password = {1}")
     void invalidLoginTest(String username, String password) {
-        loginPage.open()
-                .fillForm(username, password)
-                .clickSignInButton()
-                .verifyBadCredentialsErrorMessage();
+        step("Login to system", () ->
+                loginPage.fillForm(username, password)
+                        .clickSignInButton());
+        step("Verify failure login",
+                loginPage::verifyBadCredentialsErrorMessage);
     }
 
 }

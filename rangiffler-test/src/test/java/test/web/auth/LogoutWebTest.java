@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import test.web.BaseWebTest;
 
+import static io.qameta.allure.Allure.step;
+
 @Epic(AllureEpic.WEB)           @Tag(AllureTag.WEB)
 @Feature(AllureFeature.AUTH)    @Tag(AllureTag.AUTH)
 @Story("Logout")
@@ -22,11 +24,14 @@ class LogoutWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser)
     @DisplayName("Logout")
     void logoutTest() {
-        yourTravelsPage.verifyPageIsLoaded();
-        headerComponent.clickLogoutIcon();
-        landingPage.verifyPageIsLoaded()
-                .clickLoginButton();
-        loginPage.verifyPageIsLoaded();
+        step("Verify that user is success login",
+                headerComponent::verifyTitleIsRangiffler);
+        step("Logout", headerComponent::clickLogoutIcon);
+        step("Verify that user success logout", () -> {
+            landingPage.verifyPageIsLoaded()
+                    .clickLoginButton();
+            loginPage.verifyPageIsLoaded();
+        });
     }
 
 }

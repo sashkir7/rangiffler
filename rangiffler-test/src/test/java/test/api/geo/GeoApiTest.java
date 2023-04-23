@@ -3,7 +3,7 @@ package test.api.geo;
 import allure.AllureEpic;
 import allure.AllureFeature;
 import allure.AllureTag;
-import data.HibernateCountryRepository;
+import data.repository.hibernate.HibernateCountryRepository;
 import data.entity.CountryEntity;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;

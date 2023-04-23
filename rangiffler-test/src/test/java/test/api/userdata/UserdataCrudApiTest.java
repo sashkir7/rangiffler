@@ -3,7 +3,7 @@ package test.api.userdata;
 import allure.AllureEpic;
 import allure.AllureFeature;
 import allure.AllureTag;
-import data.HibernateUserdataRepository;
+import data.repository.hibernate.HibernateUserdataRepository;
 import data.repository.UserdataRepository;
 import helper.DataHelper;
 import io.qameta.allure.Epic;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Story("CRUD operations")
 class UserdataCrudApiTest extends BaseApiTest {
 
-    private static final String AVATAR_CLASSPATH = "img/jpeg.jpeg";
+    private static final String AVATAR_CLASSPATH = "img/girl.jpeg";
 
     @Test
     @DisplayName("Get current user")
@@ -54,11 +54,14 @@ class UserdataCrudApiTest extends BaseApiTest {
     @Test
     @DisplayName("Delete user")
     void deleteUserTest() {
-        UserdataRepository repository = new HibernateUserdataRepository();
-        User user = userdataApi.addUser(getRandomUser(false));
+        User user = step("Create user", () ->
+                userdataApi.addUser(getRandomUser(false)));
         userdataApi.deleteUser(user.getUsername());
-        step("Verify that user has been deleted", () ->
-                assertNull(repository.findByUsername(user.getUsername())));
+
+        step("Verify that user has been deleted", () -> {
+            UserdataRepository repository = new HibernateUserdataRepository();
+            assertNull(repository.findByUsername(user.getUsername()));
+        });
     }
 
     private User getRandomUser(boolean withAvatar) {

@@ -13,7 +13,7 @@ public abstract class JpaService {
         this.em = em;
     }
 
-    public void persist(Object entity) {
+    protected void persist(Object entity) {
         tx(em -> em.persist(entity));
     }
 
@@ -21,11 +21,11 @@ public abstract class JpaService {
         tx(em -> em.remove(entity));
     }
 
-    public void merge(Object entity) {
+    protected void merge(Object entity) {
         tx(em -> em.merge(entity));
     }
 
-    private void tx(Consumer<EntityManager> consumer) {
+    protected void tx(Consumer<EntityManager> consumer) {
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();

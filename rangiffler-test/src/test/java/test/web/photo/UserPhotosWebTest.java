@@ -20,6 +20,7 @@ import test.web.BaseWebTest;
 
 import java.util.List;
 
+import static io.qameta.allure.Allure.step;
 import static model.CountryEnum.*;
 
 @Epic(AllureEpic.WEB)               @Tag(AllureTag.WEB)
@@ -34,13 +35,16 @@ class UserPhotosWebTest extends BaseWebTest {
             @WithPhoto(country = RUSSIA, imageClasspath = "img/leopard.jpeg"),
             @WithPhoto(country = AUSTRALIA, imageClasspath = "img/tiger.jpeg")}))
     void getUserPhotosTest(@Inject UserModel user) {
-        headerComponent.verifyPhotosCount(user.getPhotos().size())
-                .verifyCountriesCount(2);
-
-        yourTravelsPage.verifyPhotosCount(user.getPhotos().size());
-        user.getPhotos().forEach(photo -> {
-            yourTravelsPage.verifyCountyIsShadeOnWorldMap(CountryEnum.fromCode(photo.getCountry().getCode()))
-                    .verifyPhoto(photo);
+        step("Verify information in header", () ->
+                headerComponent.verifyPhotosCount(user.getPhotos().size())
+                        .verifyCountriesCount(2));
+        step("Verify information in world map", () -> {
+            travelsPage.verifyPhotosCount(user.getPhotos().size());
+            for (Photo photo : user.getPhotos()) {
+                CountryEnum country = CountryEnum.fromCode(photo.getCountry().getCode());
+                travelsPage.verifyCountyIsShadeOnWorldMap(country)
+                        .verifyPhotoInformation(photo);
+            }
         });
     }
 
@@ -49,24 +53,35 @@ class UserPhotosWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser(photos = {
             @WithPhoto(country = UKRAINE, imageClasspath = "img/cat.jpeg"),
             @WithPhoto(country = UKRAINE, imageClasspath = "img/leopard.jpeg"),
-            @WithPhoto(country = AUSTRALIA, imageClasspath = "img/png.png"),
+            @WithPhoto(country = AUSTRALIA, imageClasspath = "img/dog.png"),
             @WithPhoto(country = RUSSIA, imageClasspath = "img/tiger.jpeg")}))
     void getUserPhotosByCountry(@Inject UserModel user) {
-        headerComponent.verifyPhotosCount(user.getPhotos().size())
-                .verifyCountriesCount(3);
-        yourTravelsPage.clickToCountryOnWorldMap(UKRAINE);
-        List<Photo> photos = user.getPhotos().stream()
-                .filter(a -> a.getCountry().getCode().equals(UKRAINE.getCode())).toList();
-        yourTravelsPage.verifyPhotosCount(photos.size());
-        photos.forEach(yourTravelsPage::verifyPhoto);
+        step("Verify information in header", () ->
+                headerComponent.verifyPhotosCount(user.getPhotos().size())
+                        .verifyCountriesCount(3));
+        step("Select one country in world map", () ->
+                travelsPage.clickToCountryOnWorldMap(UKRAINE));
+        step("Verify information in world map", () -> {
+            List<Photo> photos = getUserPhotosByCountry(user, UKRAINE);
+            travelsPage.verifyPhotosCount(photos.size());
+            photos.forEach(travelsPage::verifyPhotoInformation);
+        });
     }
 
     @Test
     @DisplayName("Not found photos in country")
     @ApiLogin(user = @GenerateUser(photos = @WithPhoto(country = RUSSIA)))
     void notFoundPhotosInCountryTest() {
-        yourTravelsPage.clickToCountryOnWorldMap(AUSTRALIA);
-        yourTravelsPage.verifyPhotosCount(0);
+        step("Select one country in world map", () ->
+                travelsPage.clickToCountryOnWorldMap(AUSTRALIA));
+        step("Verify that photos not found", () ->
+                travelsPage.verifyPhotosCount(0));
+    }
+
+    private List<Photo> getUserPhotosByCountry(UserModel user, CountryEnum country) {
+        return user.getPhotos().stream()
+                .filter(photo -> photo.getCountry().getCode().equals(country.getCode()))
+                .toList();
     }
 
 }

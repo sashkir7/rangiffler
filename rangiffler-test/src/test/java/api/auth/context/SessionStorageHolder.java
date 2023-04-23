@@ -7,21 +7,20 @@ import java.util.Map;
 
 public class SessionStorageHolder {
 
-    private static final String CODE_VERIFIER_KEY = "codeVerifier";
-    private static final String CODE_CHALLENGE_KEY = "codeChallenge";
-    private static final String CODE_KEY = "code";
-    private static final String ID_TOKEN_KEY = "id_token";
-
-    private final Map<String, String> sessionStorage;
-
+    private static final String CODE_VERIFIER_KEY = "codeVerifier",
+            CODE_CHALLENGE_KEY = "codeChallenge",
+            CODE_KEY = "code",
+            ID_TOKEN_KEY = "id_token";
     private static final ThreadLocal<SessionStorageHolder> INSTANCE = ThreadLocal.withInitial(SessionStorageHolder::new);
-
-    private SessionStorageHolder() {
-        sessionStorage = new HashMap<>();
-    }
 
     public static SessionStorageHolder getInstance() {
         return INSTANCE.get();
+    }
+
+    private final Map<String, String> sessionStorage;
+
+    private SessionStorageHolder() {
+        sessionStorage = new HashMap<>();
     }
 
     public void init() {

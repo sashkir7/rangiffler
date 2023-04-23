@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
 public @interface WithPhoto {
     String username() default "";
     String description() default "";
-    String imageClasspath() default "img/jpeg.jpeg";
+    String imageClasspath() default "img/girl.jpeg";
     CountryEnum country() default CountryEnum.RUSSIA;
 }

@@ -1,6 +1,7 @@
 package pages;
 
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
 import config.AppProperties;
 import io.qameta.allure.Step;
 
@@ -22,14 +23,17 @@ public class LandingPage extends BasePage<LandingPage> {
         return this;
     }
 
-    @Step("Click on [Login] button")
+    @Step("Click on [Login] button in LandingPage")
     public void clickLoginButton() {
-        $(byTagAndText("a", "Login")).click();
+        getButtonByText("Login").click();
     }
 
-    @Step("Click on [Register] button")
+    @Step("Click on [Register] button in LandingPage")
     public void clickRegisterButton() {
-        $(byTagAndText("a", "Register")).click();
+        getButtonByText("Register").click();
     }
 
+    private SelenideElement getButtonByText(String title) {
+        return $(byTagAndText("a", title));
+    }
 }

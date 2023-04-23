@@ -13,33 +13,33 @@ import static pages.conditions.PhotoCondition.photo;
 
 public class PeopleAroundPage extends BasePage<PeopleAroundPage> {
 
-    @Step("Invite to friends {username}")
+    @Step("Invite to friends {username} in PeopleAroundPage")
     public void inviteToFriends(String username) {
         getAddToFriendButton(username).click();
         verifyActionStatusIsInvitationSent(username);
     }
 
-    @Step("Submit friend {username}")
+    @Step("Submit friend {username} in PeopleAroundPage")
     public void submitFriend(String username) {
         getSubmitFriendButton(username).click();
         getRemoveFriendButton(username).shouldBe(visible);
     }
 
-    @Step("Decline friend {username}")
+    @Step("Decline friend {username} in PeopleAroundPage")
     public void declineFriend(String username) {
         getDeclineFriendButton(username).click();
         $(byTagAndText("button", "Decline")).click();
         getAddToFriendButton(username).shouldBe(visible);
     }
 
-    @Step("Remove friend {username}")
+    @Step("Remove friend {username} in PeopleAroundPage")
     public void removeFriend(String username) {
         getRemoveFriendButton(username).click();
         $(byTagAndText("button", "Delete")).click();
         getAddToFriendButton(username).shouldBe(visible);
     }
 
-    @Step("Verify partner {partner.username}")
+    @Step("Verify partner {partner.username} in PeopleAroundPage")
     public void verifyPartnerInformation(UserModel partner, PartnerStatus status) {
         SelenideElement partnerRow = findRowByUsername(partner.getUsername());
         step("Verify username cell", () ->
@@ -83,7 +83,6 @@ public class PeopleAroundPage extends BasePage<PeopleAroundPage> {
         }
     }
 
-    // ToDo может на aria-label сменить? Чет id тупые какие-то...
     private SelenideElement getAddToFriendButton(String username) {
         return findRowByUsername(username).find("[data-testid=PersonAddAlt1Icon]");
     }
@@ -100,8 +99,8 @@ public class PeopleAroundPage extends BasePage<PeopleAroundPage> {
         return findRowByUsername(username).find("[data-testid=PersonRemoveAlt1Icon]");
     }
 
-    private SelenideElement verifyActionStatusIsInvitationSent(String username) {
-        return findRowByUsername(username).find("td", 3)
+    private void verifyActionStatusIsInvitationSent(String username) {
+        findRowByUsername(username).find("td", 3)
                 .shouldHave(text("Invitation sent"));
     }
 

@@ -6,7 +6,6 @@ import allure.AllureTag;
 import helper.DataHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import io.qameta.allure.Step;
 import io.qameta.allure.Story;
 import jupiter.annotation.ApiLogin;
 import jupiter.annotation.GenerateUser;
@@ -41,9 +40,11 @@ class ProfileWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser)
     @DisplayName("Get current user profile")
     void getCurrentUserProfileTest(@Inject UserModel user) {
-        headerComponent.verifyUserDoesNotHaveAvatarImage();
-        profileComponent.verifyValues(user)
-                .verifyUserDoesNotHaveAvatarImage();
+        step("Verify user information in header",
+                headerComponent::verifyUserDoesNotHaveAvatarImage);
+        step("Verify user information in profile", () ->
+                profileComponent.verifyProfileInformation(user)
+                        .verifyUserDoesNotHaveAvatarImage());
     }
 
     @Test
@@ -52,18 +53,21 @@ class ProfileWebTest extends BaseWebTest {
     void updateUserProfileTest(@Inject UserModel user) {
         String firstname = DataHelper.randomFirstname();
         String lastname = DataHelper.randomLastname();
-        String avatarClasspath = "img/jpeg.jpeg";
+        String avatarClasspath = "img/girl.jpeg";
 
-        profileComponent.setFirstname(firstname)
-                .setLastname(lastname)
-                .setAvatar(avatarClasspath)
-                .verifyAvatarImage(avatarClasspath)
-                .clickSaveButton()
-                .verifyProfileModalWindowIsClosed();
-        headerComponent.verifyUserAvatar(avatarClasspath);
-
-        String expectedAvatar = DataHelper.imageByClasspath(avatarClasspath);
-        verifyUserDataHasBeenUpdated(user.getUsername(), firstname, lastname, expectedAvatar);
+        step("Update user profile", () ->
+                profileComponent.setFirstname(firstname)
+                        .setLastname(lastname)
+                        .setAvatar(avatarClasspath)
+                        .verifyAvatarImage(avatarClasspath)
+                        .clickSaveButton()
+                        .verifyProfileModalWindowIsClosed());
+        step("Verify that user avatar in header", () ->
+                headerComponent.verifyUserAvatar(avatarClasspath));
+        step("Verify that user data has been updated (API)", () -> {
+            String expectedAvatar = DataHelper.imageByClasspath(avatarClasspath);
+            verifyUserDataHasBeenUpdated(user.getUsername(), firstname, lastname, expectedAvatar);
+        });
     }
 
     static Stream<Arguments> validateInputTest() {
@@ -78,9 +82,11 @@ class ProfileWebTest extends BaseWebTest {
     @DisplayName("Validate firstname input")
     @ParameterizedTest(name = "value is {0}")
     void validateFirstnameInputTest(String invalidFirstname, String expectedErrorMessage) {
-        profileComponent.setFirstname(invalidFirstname)
-                .verifyFirstnameInputErrorMessage(expectedErrorMessage)
-                .verifySaveButtonIsDisabled();
+        step("Set profile information", () ->
+                profileComponent.setFirstname(invalidFirstname));
+        step("Verify error message", () ->
+                profileComponent.verifyFirstnameInputErrorMessage(expectedErrorMessage)
+                        .verifySaveButtonIsDisabled());
     }
 
     @MethodSource("validateInputTest")
@@ -88,12 +94,13 @@ class ProfileWebTest extends BaseWebTest {
     @DisplayName("Validate lastname input")
     @ParameterizedTest(name = "value is {0}")
     void validateLastnameInputTest(String invalidLastname, String expectedErrorMessage) {
-        profileComponent.setLastname(invalidLastname)
-                .verifyLastnameInputErrorMessage(expectedErrorMessage)
-                .verifySaveButtonIsDisabled();
+        step("Set profile information", () ->
+                profileComponent.setLastname(invalidLastname));
+        step("Verify error message", () ->
+                profileComponent.verifyLastnameInputErrorMessage(expectedErrorMessage)
+                        .verifySaveButtonIsDisabled());
     }
 
-    @Step("Verify that user data has been updated")
     private void verifyUserDataHasBeenUpdated(String username,
                                               String expectedFirstname,
                                               String expectedLastname,

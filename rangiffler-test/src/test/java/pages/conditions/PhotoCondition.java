@@ -35,7 +35,7 @@ public final class PhotoCondition extends Condition {
 
     @Nonnull
     @Override
-    public CheckResult check(Driver driver, WebElement element) {
+    public CheckResult check(@Nonnull Driver driver, WebElement element) {
         String actualPhoto = element.getAttribute("src");
         return new CheckResult(Arrays.equals(expectedBase64Photo, actualPhoto.getBytes()), actualPhoto);
     }
