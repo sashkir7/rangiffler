@@ -38,7 +38,7 @@ class AddPhotoWebTest extends BaseWebTest {
     @DisplayName("With description | user's first photo")
     void withDescriptionTest(@Inject UserModel user) {
         CountryEnum country = AUSTRIA;
-        uploadPhotoComponent.uploadPhoto(imageClasspath)
+        photoComponent.uploadPhoto(imageClasspath)
                 .setCountry(country)
                 .setDescription(description)
                 .clickSaveButton()
@@ -63,7 +63,7 @@ class AddPhotoWebTest extends BaseWebTest {
             @WithPhoto(imageClasspath = "img/cat.jpeg")}))
     void withoutDescriptionTest(@Inject UserModel user) {
         CountryEnum country = INDIA;
-        uploadPhotoComponent.uploadPhoto(imageClasspath)
+        photoComponent.uploadPhoto(imageClasspath)
                 .setCountry(country)
                 .clickSaveButton()
                 .verifyUploadPhotoModalWindowIsClosed();
@@ -83,7 +83,7 @@ class AddPhotoWebTest extends BaseWebTest {
     @DisplayName("Validate: disabled button [Save]")
     @ApiLogin(user = @GenerateUser)
     void validateDisabledButtonSaveTest() {
-        uploadPhotoComponent.setCountry(HUNGARY)
+        photoComponent.setCountry(HUNGARY)
                 .setDescription(description)
                 .verifySaveButtonIsDisabled();
     }

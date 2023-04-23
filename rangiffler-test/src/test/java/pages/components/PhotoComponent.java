@@ -8,39 +8,38 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class UploadPhotoComponent extends BaseComponent<UploadPhotoComponent> {
+public class PhotoComponent extends BaseComponent<PhotoComponent> {
 
     private final SelenideElement self = $(".MuiBox-root .MuiPaper-elevation");
 
-    @Step("Upload photo by classpath")
-    public UploadPhotoComponent uploadPhoto(String photoClasspath) {
+    @Step("Upload photo by classpath in PhotoComponent")
+    public PhotoComponent uploadPhoto(String photoClasspath) {
         self.find("input[type=file]").uploadFromClasspath(photoClasspath);
         return this;
     }
 
-    @Step("Set country")
-    public UploadPhotoComponent setCountry(CountryEnum country) {
+    @Step("Set country {country} in PhotoComponent")
+    public PhotoComponent setCountry(CountryEnum country) {
         self.find("[aria-haspopup=listbox]").click();
         $$("ul[role=listbox] li").find(text(country.toString())).click();
         return this;
     }
 
-    @Step("Set description")
-    public UploadPhotoComponent setDescription(String description) {
+    @Step("Set description {description} in PhotoComponent")
+    public PhotoComponent setDescription(String description) {
         self.find("textarea").setValue(description);
         return this;
     }
 
-    @Step("Click on [Save] button")
-    public UploadPhotoComponent clickSaveButton() {
+    @Step("Click on [Save] button in PhotoComponent")
+    public PhotoComponent clickSaveButton() {
         self.find("[type=submit]").click();
         return this;
     }
 
-    @Step("Verify that save button is disabled")
-    public UploadPhotoComponent verifySaveButtonIsDisabled() {
+    @Step("Verify that save button is disabled in PhotoComponent")
+    public void verifySaveButtonIsDisabled() {
         self.find("[type=submit]").shouldBe(disabled);
-        return this;
     }
 
     @Step("Verify that upload photo modal windows is closed")

@@ -4,7 +4,7 @@ import com.codeborne.selenide.*;
 import io.qameta.allure.Step;
 import model.CountryEnum;
 import pages.components.HeaderComponent;
-import pages.components.UploadPhotoComponent;
+import pages.components.PhotoComponent;
 import sashkir7.grpc.Photo;
 
 import java.time.Duration;
@@ -23,7 +23,7 @@ import static pages.conditions.PhotoCondition.photo;
 public class YourTravelsPage extends BasePage<YourTravelsPage> {
 
     private final HeaderComponent header = new HeaderComponent();
-    private final UploadPhotoComponent photoComponent = new UploadPhotoComponent();
+    private final PhotoComponent photoComponent = new PhotoComponent();
     private final SelenideElement map = $("figure.worldmap__figure-container");
 
     @Step("Verify that your travels page is loaded")

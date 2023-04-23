@@ -14,7 +14,7 @@ public class FriendsComponent extends BaseComponent<FriendsComponent> {
 
     private final SelenideElement self = $(".MuiCard-root");
 
-    @Step("Verify friend information in friends modal window")
+    @Step("Verify friend information in FriendComponent")
     public void verifyFriendInformation(UserModel friend) {
         SelenideElement friendRow = findRowByUsername(friend.getUsername());
         verifyFriendAvatarCell(friendRow, friend.getAvatarImageClasspath());
@@ -27,7 +27,7 @@ public class FriendsComponent extends BaseComponent<FriendsComponent> {
                     .find("svg[data-testid=PersonRemoveAlt1Icon").shouldBe(visible));
     }
 
-    @Step("Remove friend {username} in friends modal window")
+    @Step("Remove friend {username} in FriendComponent")
     public void removeFriend(String username) {
         findRowByUsername(username).find("[data-testid=PersonRemoveAlt1Icon]").click();
         $(byTagAndText("button", "Delete")).click();

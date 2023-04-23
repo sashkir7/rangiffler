@@ -5,7 +5,7 @@ import com.codeborne.selenide.Selenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import pages.*;
-import pages.components.UploadPhotoComponent;
+import pages.components.PhotoComponent;
 import pages.components.FriendsComponent;
 import pages.components.HeaderComponent;
 import test.BaseTest;
@@ -19,7 +19,7 @@ public abstract class BaseWebTest extends BaseTest {
     protected final PeopleAroundPage peopleAroundPage = new PeopleAroundPage();
     protected final HeaderComponent headerComponent = new HeaderComponent();
     protected final FriendsComponent friendsComponent = new FriendsComponent();
-    protected final UploadPhotoComponent uploadPhotoComponent = new UploadPhotoComponent();
+    protected final PhotoComponent photoComponent = new PhotoComponent();
 
     @BeforeAll
     static void ab() {
