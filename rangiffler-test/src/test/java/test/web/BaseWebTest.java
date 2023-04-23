@@ -15,7 +15,7 @@ public abstract class BaseWebTest extends BaseTest {
     protected final LandingPage landingPage = new LandingPage();
     protected final LoginPage loginPage = new LoginPage();
     protected final RegistrationPage registrationPage = new RegistrationPage();
-    protected final YourTravelsPage yourTravelsPage = new YourTravelsPage();
+    protected final TravelsPage travelsPage = new TravelsPage();
     protected final PeopleAroundPage peopleAroundPage = new PeopleAroundPage();
     protected final HeaderComponent headerComponent = new HeaderComponent();
     protected final FriendsComponent friendsComponent = new FriendsComponent();

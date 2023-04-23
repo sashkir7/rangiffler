@@ -35,10 +35,10 @@ class EditPhotoWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser(photos = @WithPhoto(country = RUSSIA)))
     void updatePhotoInformationTest(@Inject UserModel user) {
         Photo photo = getFirstUserPhoto(user.getUsername());
-        yourTravelsPage.editPhoto(photo.getId(), country, description)
+        travelsPage.editPhoto(photo.getId(), country, description)
                 .verifyCountryIsNotShadeOnWorldMap(RUSSIA)
                 .verifyCountyIsShadeOnWorldMap(country)
-                .verifyPhoto(updatePhotoInformation(photo, country, description));
+                .verifyPhotoInformation(updatePhotoInformation(photo, country, description));
     }
 
     private Photo getFirstUserPhoto(String username) {

@@ -37,10 +37,10 @@ class UserPhotosWebTest extends BaseWebTest {
         headerComponent.verifyPhotosCount(user.getPhotos().size())
                 .verifyCountriesCount(2);
 
-        yourTravelsPage.verifyPhotosCount(user.getPhotos().size());
+        travelsPage.verifyPhotosCount(user.getPhotos().size());
         user.getPhotos().forEach(photo -> {
-            yourTravelsPage.verifyCountyIsShadeOnWorldMap(CountryEnum.fromCode(photo.getCountry().getCode()))
-                    .verifyPhoto(photo);
+            travelsPage.verifyCountyIsShadeOnWorldMap(CountryEnum.fromCode(photo.getCountry().getCode()))
+                    .verifyPhotoInformation(photo);
         });
     }
 
@@ -54,19 +54,19 @@ class UserPhotosWebTest extends BaseWebTest {
     void getUserPhotosByCountry(@Inject UserModel user) {
         headerComponent.verifyPhotosCount(user.getPhotos().size())
                 .verifyCountriesCount(3);
-        yourTravelsPage.clickToCountryOnWorldMap(UKRAINE);
+        travelsPage.clickToCountryOnWorldMap(UKRAINE);
         List<Photo> photos = user.getPhotos().stream()
                 .filter(a -> a.getCountry().getCode().equals(UKRAINE.getCode())).toList();
-        yourTravelsPage.verifyPhotosCount(photos.size());
-        photos.forEach(yourTravelsPage::verifyPhoto);
+        travelsPage.verifyPhotosCount(photos.size());
+        photos.forEach(travelsPage::verifyPhotoInformation);
     }
 
     @Test
     @DisplayName("Not found photos in country")
     @ApiLogin(user = @GenerateUser(photos = @WithPhoto(country = RUSSIA)))
     void notFoundPhotosInCountryTest() {
-        yourTravelsPage.clickToCountryOnWorldMap(AUSTRALIA);
-        yourTravelsPage.verifyPhotosCount(0);
+        travelsPage.clickToCountryOnWorldMap(AUSTRALIA);
+        travelsPage.verifyPhotosCount(0);
     }
 
 }

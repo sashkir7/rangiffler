@@ -33,22 +33,22 @@ class FriendsPhotoWebTest extends BaseWebTest {
                 .toList();
 
 
-        yourTravelsPage.openFriendsTravelsSection();
-        yourTravelsPage.verifyPhotosCount(photos.size());
-        yourTravelsPage.verifyCountyIsShadeOnWorldMap(CANADA)
+        travelsPage.openFriendsTravelsSection();
+        travelsPage.verifyPhotosCount(photos.size());
+        travelsPage.verifyCountyIsShadeOnWorldMap(CANADA)
                 .verifyCountyIsShadeOnWorldMap(AUSTRALIA)
                 .verifyCountyIsShadeOnWorldMap(UKRAINE);
 
-        yourTravelsPage.verifyCountryIsNotShadeOnWorldMap(RUSSIA);
+        travelsPage.verifyCountryIsNotShadeOnWorldMap(RUSSIA);
 
-        photos.forEach(yourTravelsPage::verifyPhoto);
+        photos.forEach(travelsPage::verifyPhotoInformation);
 
-        yourTravelsPage.clickToCountryOnWorldMap(CANADA);
+        travelsPage.clickToCountryOnWorldMap(CANADA);
 
         List<Photo> photos1 = photos.stream().filter(f -> f.getCountry().getCode().equals(CANADA.getCode()))
                 .toList();
-        yourTravelsPage.verifyPhotosCount(photos1.size());
-        photos1.forEach(a -> yourTravelsPage.verifyPhoto(a));
+        travelsPage.verifyPhotosCount(photos1.size());
+        photos1.forEach(a -> travelsPage.verifyPhotoInformation(a));
     }
 
     @Test
@@ -58,14 +58,14 @@ class FriendsPhotoWebTest extends BaseWebTest {
             @WithPartner(status = FRIEND, photos = @WithPhoto(country = CANADA, imageClasspath = "img/leopard.jpeg")),
             @WithPartner(status = FRIEND, photos = @WithPhoto(country = AUSTRALIA, imageClasspath = "img/tiger.jpeg"))}))
     void test123(@Inject UserModel user) {
-        yourTravelsPage.openFriendsTravelsSection();
-        yourTravelsPage.clickToCountryOnWorldMap(CANADA);
+        travelsPage.openFriendsTravelsSection();
+        travelsPage.clickToCountryOnWorldMap(CANADA);
 
         List<Photo> photos1 = user.getFriends().stream().flatMap(a -> a.getPhotos().stream())
                 .filter(f -> f.getCountry().getCode().equals(CANADA.getCode()))
                 .toList();
-        yourTravelsPage.verifyPhotosCount(photos1.size());
-        photos1.forEach(a -> yourTravelsPage.verifyPhoto(a));
+        travelsPage.verifyPhotosCount(photos1.size());
+        photos1.forEach(a -> travelsPage.verifyPhotoInformation(a));
     }
 
     @Test
@@ -75,10 +75,10 @@ class FriendsPhotoWebTest extends BaseWebTest {
             @WithPartner(status = FRIEND, photos = @WithPhoto(country = CANADA, imageClasspath = "img/leopard.jpeg")),
             @WithPartner(status = FRIEND, photos = @WithPhoto(country = AUSTRALIA, imageClasspath = "img/tiger.jpeg"))}))
     void test1234(@Inject UserModel user) {
-        yourTravelsPage.openFriendsTravelsSection();
-        yourTravelsPage.clickToCountryOnWorldMap(INDIA);
+        travelsPage.openFriendsTravelsSection();
+        travelsPage.clickToCountryOnWorldMap(INDIA);
 
-        yourTravelsPage.verifyPhotosCount(0);
+        travelsPage.verifyPhotosCount(0);
     }
 
 }

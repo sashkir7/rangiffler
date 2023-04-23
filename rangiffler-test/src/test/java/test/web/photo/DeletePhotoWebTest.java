@@ -34,7 +34,7 @@ class DeletePhotoWebTest extends BaseWebTest {
     void deletePhotoTest(@Inject UserModel user) {
         Photo photo = createPhoto(user.getUsername(), country);
         Selenide.refresh();
-        yourTravelsPage.deletePhoto(photo.getId())
+        travelsPage.deletePhoto(photo.getId())
                 .verifyCountryIsNotShadeOnWorldMap(country)
                 .verifyDoNotContainsPhoto(photo.getId());
 

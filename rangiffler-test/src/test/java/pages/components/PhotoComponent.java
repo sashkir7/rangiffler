@@ -18,6 +18,17 @@ public class PhotoComponent extends BaseComponent<PhotoComponent> {
         return this;
     }
 
+    @Step("Click on edit photo button in PhotoComponent")
+    public PhotoComponent clickEditPhotoButton() {
+        self.find("[data-testid=EditIcon]").click();
+        return this;
+    }
+
+    @Step("Click on delete button in PhotoComponent")
+    public void clickDeleteButton() {
+        $("[data-testid=DeleteOutlineIcon]").click();
+    }
+
     @Step("Set country {country} in PhotoComponent")
     public PhotoComponent setCountry(CountryEnum country) {
         self.find("[aria-haspopup=listbox]").click();

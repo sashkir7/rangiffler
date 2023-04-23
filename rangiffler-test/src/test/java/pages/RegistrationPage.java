@@ -31,31 +31,31 @@ public class RegistrationPage extends BasePage<RegistrationPage> {
         return this;
     }
 
-    @Step("Click on [Sign up] button")
+    @Step("Click on [Sign up] button in RegistrationPage")
     public RegistrationPage clickSignUpButton() {
         $("button[type=submit]").click();
         return this;
     }
 
-    @Step("Click on [Sign In] button")
+    @Step("Click on [Sign In] button in RegistrationPage")
     public void clickSignInButton() {
         $("p.form__paragraph").shouldHave(text("Already have an account?"))
                 .find("a")
                 .shouldHave(text("Sign in!")).click();
     }
 
-    @Step("Verify username can not be empty error message")
+    @Step("Verify username can not be empty error message in RegistrationPage")
     public void verifyUsernameCanNotBeEmptyErrorMessage() {
         verifyErrorMessage("#username", "Username can not be empty");
     }
 
-    @Step("Verify password can not be empty error message")
+    @Step("Verify password can not be empty error message in RegistrationPage")
     public void verifyPasswordCanNotBeEmptyErrorMessage() {
         verifyErrorMessage("#password",
                 "Allowed password length should be from 3 to 12 characters");
     }
 
-    @Step("Verify passwords should be equal error message")
+    @Step("Verify passwords should be equal error message in RegistrationPage")
     public void verifyPasswordsShouldBeEqualErrorMessage() {
         verifyErrorMessage("#password", "Passwords should be equal");
     }

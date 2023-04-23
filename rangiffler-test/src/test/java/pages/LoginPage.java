@@ -22,13 +22,13 @@ public class LoginPage extends BasePage<LoginPage> {
         return this;
     }
 
-    @Step("Click on [Sign In] button")
+    @Step("Click on [Sign In] button in LoginPage")
     public LoginPage clickSignInButton() {
         $("button[type=submit]").click();
         return this;
     }
 
-    @Step("Click on [Sign Up] button")
+    @Step("Click on [Sign Up] button in LoginPage")
     public void clickSignUpButton() {
         $("p.form__paragraph").shouldHave(text("Have no account?"))
                 .find("a")
@@ -36,13 +36,12 @@ public class LoginPage extends BasePage<LoginPage> {
     }
 
     @Step("Verify that login page is loaded")
-    public LoginPage verifyPageIsLoaded() {
+    public void verifyPageIsLoaded() {
         $("h1").shouldHave(text("Login to Rangiffler"));
         $("button[type=submit]").shouldHave(text("Sign In"));
-        return this;
     }
 
-    @Step("Verify bad credentials error message")
+    @Step("Verify bad credentials error message in LoginPage")
     public void verifyBadCredentialsErrorMessage() {
         $("p.form__error").shouldHave(text("Bad credentials"));
     }

@@ -46,12 +46,12 @@ class AddPhotoWebTest extends BaseWebTest {
 
         headerComponent.verifyPhotosCount(1)
                 .verifyCountriesCount(1);
-        yourTravelsPage.verifyCountyIsShadeOnWorldMap(country);
+        travelsPage.verifyCountyIsShadeOnWorldMap(country);
 
         step("Verify photo", () -> {
             List<Photo> photos = photoApi.getUserPhotos(user.getUsername()).getPhotosList();
             assertEquals(1, photos.size());
-            photos.forEach(yourTravelsPage::verifyPhoto);
+            photos.forEach(travelsPage::verifyPhotoInformation);
         });
     }
 
@@ -70,12 +70,12 @@ class AddPhotoWebTest extends BaseWebTest {
 
         headerComponent.verifyPhotosCount(user.getPhotos().size() + 1)
                 .verifyCountriesCount(3);
-        yourTravelsPage.verifyCountyIsShadeOnWorldMap(country);
+        travelsPage.verifyCountyIsShadeOnWorldMap(country);
 
         step("Verify photos", () -> {
             List<Photo> photos = photoApi.getUserPhotos(user.getUsername()).getPhotosList();
             assertEquals(user.getPhotos().size() + 1, photos.size());
-            photos.forEach(yourTravelsPage::verifyPhoto);
+            photos.forEach(travelsPage::verifyPhotoInformation);
         });
     }
 

@@ -22,7 +22,7 @@ class LogoutWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser)
     @DisplayName("Logout")
     void logoutTest() {
-        yourTravelsPage.verifyPageIsLoaded();
+        headerComponent.verifyTitleIsRangiffler();
         headerComponent.clickLogoutIcon();
         landingPage.verifyPageIsLoaded()
                 .clickLoginButton();
