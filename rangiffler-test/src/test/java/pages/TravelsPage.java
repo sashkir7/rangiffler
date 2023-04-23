@@ -3,7 +3,6 @@ package pages;
 import com.codeborne.selenide.*;
 import io.qameta.allure.Step;
 import model.CountryEnum;
-import pages.components.HeaderComponent;
 import pages.components.PhotoComponent;
 import sashkir7.grpc.Photo;
 
@@ -22,7 +21,6 @@ import static pages.conditions.PhotoCondition.photo;
 
 public class TravelsPage extends BasePage<TravelsPage> {
 
-    private final HeaderComponent header = new HeaderComponent();
     private final PhotoComponent photoComponent = new PhotoComponent();
     private final SelenideElement map = $("figure.worldmap__figure-container");
 
