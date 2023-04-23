@@ -69,23 +69,10 @@ alx.krw@Aleksandrs-MacBook-Pro rangiffler-front % npm start
 ```
 #### 4. Прописать run конфигурацию для всех backend-сервисов - Active profiles local
 Run -> Edit Configurations -> выбрать main класс -> указать Active profiles: local
-
-[Инструкция](https://stackoverflow.com/questions/39738901/how-do-i-activate-a-spring-boot-profile-when-running-from-intellij).
-
 ![Установка active profiles](images/local-profile.png)
+#### 5. Запустить backend-микросервисы Rangiffler(а) командой Run в IDE в следующем порядке:
 
-#### 4 Запустить сервис Niffler-auth c помощью gradle или командой Run в IDE:
-- 
-
-- Запустить сервис auth
-
-```posh
-Dmitriis-MacBook-Pro niffler % cd niffler-auth
-Dmitriis-MacBook-Pro niffler-auth % gradle bootRun --args='--spring.profiles.active=local'
-```
-
-Или просто перейдя к main-классу приложения NifflerAuthApplication выбрать run в IDEA (предварительно удостовериться что
-выполнен предыдущий пункт)
+*AUTH -> GATEWAY -> USERDATA -> GEO -> PHOTO*
 
 
 
