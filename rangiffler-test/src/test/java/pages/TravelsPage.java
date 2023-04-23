@@ -38,9 +38,11 @@ public class TravelsPage extends BasePage<TravelsPage> {
     }
 
     @Step("Verify that country is shade on world map")
-    public TravelsPage verifyCountyIsShadeOnWorldMap(CountryEnum country) {
-        SelenideElement countryWebElement = getCountryWebElement(country).shouldBe(visible);
-        assertTrue(getFillOpacityValueFromCountry(countryWebElement) > 0.2);
+    public TravelsPage verifyCountyIsShadeOnWorldMap(CountryEnum... countries) {
+        for (CountryEnum country : countries) {
+            SelenideElement countryWebElement = getCountryWebElement(country).shouldBe(visible);
+            assertTrue(getFillOpacityValueFromCountry(countryWebElement) > 0.2);
+        }
         return this;
     }
 
@@ -64,8 +66,9 @@ public class TravelsPage extends BasePage<TravelsPage> {
     }
 
     @Step("Verify photos count in TravelsPage")
-    public void verifyPhotosCount(int expectedCount) {
+    public TravelsPage verifyPhotosCount(int expectedCount) {
         $$("img.photo__list-item").shouldHave(CollectionCondition.size(expectedCount));
+        return this;
     }
 
     @Step("Click to country {country} on world map")

@@ -38,17 +38,18 @@ class AddPhotoWebTest extends BaseWebTest {
     @DisplayName("With description | user's first photo")
     void withDescriptionTest(@Inject UserModel user) {
         CountryEnum country = AUSTRIA;
-        photoComponent.uploadPhoto(imageClasspath)
-                .setCountry(country)
-                .setDescription(description)
-                .clickSaveButton()
-                .verifyUploadPhotoModalWindowIsClosed();
-
-        headerComponent.verifyPhotosCount(1)
-                .verifyCountriesCount(1);
-        travelsPage.verifyCountyIsShadeOnWorldMap(country);
-
-        step("Verify photo", () -> {
+        step("Upload photo", () ->
+                photoComponent.uploadPhoto(imageClasspath)
+                        .setCountry(country)
+                        .setDescription(description)
+                        .clickSaveButton()
+                        .verifyUploadPhotoModalWindowIsClosed());
+        step("Verify that photo has been added (UI)", () -> {
+            headerComponent.verifyPhotosCount(1)
+                    .verifyCountriesCount(1);
+            travelsPage.verifyCountyIsShadeOnWorldMap(country);
+        });
+        step("Verify that photo has been added (API)", () -> {
             List<Photo> photos = photoApi.getUserPhotos(user.getUsername()).getPhotosList();
             assertEquals(1, photos.size());
             photos.forEach(travelsPage::verifyPhotoInformation);
@@ -63,16 +64,17 @@ class AddPhotoWebTest extends BaseWebTest {
             @WithPhoto(imageClasspath = "img/cat.jpeg")}))
     void withoutDescriptionTest(@Inject UserModel user) {
         CountryEnum country = INDIA;
-        photoComponent.uploadPhoto(imageClasspath)
-                .setCountry(country)
-                .clickSaveButton()
-                .verifyUploadPhotoModalWindowIsClosed();
-
-        headerComponent.verifyPhotosCount(user.getPhotos().size() + 1)
-                .verifyCountriesCount(3);
-        travelsPage.verifyCountyIsShadeOnWorldMap(country);
-
-        step("Verify photos", () -> {
+        step("Upload photo", () ->
+                photoComponent.uploadPhoto(imageClasspath)
+                        .setCountry(country)
+                        .clickSaveButton()
+                        .verifyUploadPhotoModalWindowIsClosed());
+        step("Verify that photo has been added (UI)", () -> {
+            headerComponent.verifyPhotosCount(user.getPhotos().size() + 1)
+                    .verifyCountriesCount(3);
+            travelsPage.verifyCountyIsShadeOnWorldMap(country);
+        });
+        step("Verify that photo has been added (API)", () -> {
             List<Photo> photos = photoApi.getUserPhotos(user.getUsername()).getPhotosList();
             assertEquals(user.getPhotos().size() + 1, photos.size());
             photos.forEach(travelsPage::verifyPhotoInformation);

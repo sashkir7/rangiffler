@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import sashkir7.grpc.Photo;
 import test.web.BaseWebTest;
 
+import static io.qameta.allure.Allure.step;
 import static model.CountryEnum.NEW_ZEALAND;
 import static model.CountryEnum.RUSSIA;
 
@@ -27,18 +28,21 @@ import static model.CountryEnum.RUSSIA;
 @Story("Edit photo")
 class EditPhotoWebTest extends BaseWebTest {
 
-    private final CountryEnum country = NEW_ZEALAND;
     private final String description = DataHelper.randomLorem();
 
     @Test
     @DisplayName("Update photo information")
     @ApiLogin(user = @GenerateUser(photos = @WithPhoto(country = RUSSIA)))
     void updatePhotoInformationTest(@Inject UserModel user) {
+        CountryEnum country = NEW_ZEALAND;
         Photo photo = getFirstUserPhoto(user.getUsername());
-        travelsPage.editPhoto(photo.getId(), country, description)
-                .verifyCountryIsNotShadeOnWorldMap(RUSSIA)
-                .verifyCountyIsShadeOnWorldMap(country)
-                .verifyPhotoInformation(updatePhotoInformation(photo, country, description));
+
+        step("Update photo information", () ->
+                travelsPage.editPhoto(photo.getId(), country, description));
+        step("Verify that photo has been updated", () ->
+                travelsPage.verifyCountryIsNotShadeOnWorldMap(RUSSIA)
+                        .verifyCountyIsShadeOnWorldMap(country)
+                        .verifyPhotoInformation(updatePhotoInformation(photo, country, description)));
     }
 
     private Photo getFirstUserPhoto(String username) {
