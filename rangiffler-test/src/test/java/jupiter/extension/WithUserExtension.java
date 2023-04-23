@@ -1,6 +1,7 @@
 package jupiter.extension;
 
 import api.UserdataGrpcApi;
+import io.qameta.allure.Step;
 import jupiter.annotation.WithUser;
 import model.UserModel;
 import org.junit.jupiter.api.extension.*;
@@ -16,6 +17,7 @@ public class WithUserExtension extends BaseJUnitExtension implements BeforeEachC
     private final UserdataGrpcApi userdataApi = new UserdataGrpcApi();
 
     @Override
+    @Step("Arrange user test data")
     public void beforeEach(ExtensionContext context) throws Exception {
         List<Parameter> parameters = Arrays.stream(context.getRequiredTestMethod().getParameters())
                 .filter(p -> p.isAnnotationPresent(WithUser.class))
@@ -46,6 +48,7 @@ public class WithUserExtension extends BaseJUnitExtension implements BeforeEachC
     }
 
     @Override
+    @Step("Remove created photo")
     public void afterEach(ExtensionContext context) throws Exception {
         Map<String, User> users = getFromStore(context, NAMESPACE, Map.class);
         users.values().forEach(user -> userdataApi.deleteUser(user.getUsername()));

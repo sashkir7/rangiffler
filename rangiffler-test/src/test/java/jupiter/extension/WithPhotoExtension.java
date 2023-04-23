@@ -2,6 +2,7 @@ package jupiter.extension;
 
 import api.PhotoGrpcApi;
 import helper.DataHelper;
+import io.qameta.allure.Step;
 import jupiter.annotation.WithPhoto;
 import org.junit.jupiter.api.extension.*;
 import sashkir7.grpc.Photo;
@@ -19,6 +20,7 @@ public class WithPhotoExtension extends BaseJUnitExtension implements BeforeEach
     private final PhotoGrpcApi photoApi = new PhotoGrpcApi();
 
     @Override
+    @Step("Arrange photo test data")
     public void beforeEach(ExtensionContext context) throws Exception {
         List<Parameter> parameters = Arrays.stream(context.getRequiredTestMethod().getParameters())
                 .filter(p -> p.isAnnotationPresent(WithPhoto.class))
@@ -48,6 +50,7 @@ public class WithPhotoExtension extends BaseJUnitExtension implements BeforeEach
     }
 
     @Override
+    @Step("Remove created photo")
     public void afterEach(ExtensionContext context) throws Exception {
         Map<String, Photo> photos = getFromStore(context, NAMESPACE, Map.class);
         photos.values().forEach(photo -> photoApi.deletePhoto(photo.getId()));

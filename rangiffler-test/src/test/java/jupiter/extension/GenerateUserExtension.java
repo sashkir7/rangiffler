@@ -4,6 +4,7 @@ import data.repository.AuthRepository;
 import data.repository.hibernate.HibernateAuthRepository;
 import data.repository.hibernate.HibernateUserdataRepository;
 import data.repository.UserdataRepository;
+import io.qameta.allure.Step;
 import jupiter.annotation.*;
 import model.UserModel;
 import org.junit.jupiter.api.extension.*;
@@ -13,29 +14,34 @@ import sashkir7.grpc.*;
 import java.util.Collection;
 
 import static com.codeborne.selenide.Selenide.sleep;
+import static io.qameta.allure.Allure.step;
 
 public class GenerateUserExtension extends BaseJUnitExtension implements BeforeEachCallback, ParameterResolver, AfterEachCallback {
 
     public static final Namespace NAMESPACE = Namespace.create(GenerateUserExtension.class);
 
     @Override
+    @Step("Arrange test data")
     public void beforeEach(ExtensionContext context) throws Exception {
         GenerateUser annotation = extractGenerateUserAnnotationFromContext(context);
         if (!annotation.handleAnnotation())
             return;
 
-        // Create user
-        UserModel generatedUser = register(convertToUserModel(annotation));
-        for (WithPhoto photoAnnotation : annotation.photos()) {
-            Photo photo = createPhoto(generatedUser.getUsername(), photoAnnotation);
-            generatedUser.addPhoto(photo);
-        }
+        UserModel generatedUser = step("Create user", () -> {
+            UserModel user = register(convertToUserModel(annotation));
+            for (WithPhoto photoAnnotation : annotation.photos()) {
+                Photo photo = createPhoto(user.getUsername(), photoAnnotation);
+                user.addPhoto(photo);
+            }
+            return user;
+        });
 
-        // Create partners
-        for (WithPartner partnerAnnotation : annotation.partners()) {
-            UserModel partner = createPartner(generatedUser, partnerAnnotation);
-            generatedUser.addPartner(partnerAnnotation.status(), partner);
-        }
+        step("Create partners", () -> {
+            for (WithPartner partnerAnnotation : annotation.partners()) {
+                UserModel partner = createPartner(generatedUser, partnerAnnotation);
+                generatedUser.addPartner(partnerAnnotation.status(), partner);
+            }
+        });
 
         putToStore(context, NAMESPACE, generatedUser);
     }
@@ -55,24 +61,26 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
     }
 
     @Override
+    @Step("Remove test artifacts")
     public void afterEach(ExtensionContext context) throws Exception {
         UserModel userModel = getFromStore(context, NAMESPACE, UserModel.class);
         if (userModel == null)
             return;
 
         AuthRepository repository = new HibernateAuthRepository();
+        step("Delete user data", () -> {
+            userdataApi.deleteUser(userModel.getUsername());
+            deleteUserPhotos(userModel);
+            repository.removeByUsername(userModel.getUsername());
+        });
 
-        // Delete user
-        userdataApi.deleteUser(userModel.getUsername());
-        deleteUserPhotos(userModel);
-        repository.removeByUsername(userModel.getUsername());
-
-        // Delete partners
-        userModel.getPartners().values().stream()
-                .flatMap(Collection::stream)
-                .peek(partner -> repository.removeByUsername(partner.getUsername()))
-                .peek(partner -> userdataApi.deleteUser(partner.getUsername()))
-                .forEach(this::deleteUserPhotos);
+        step("Delete partners data", () -> {
+            userModel.getPartners().values().stream()
+                    .flatMap(Collection::stream)
+                    .peek(partner -> repository.removeByUsername(partner.getUsername()))
+                    .peek(partner -> userdataApi.deleteUser(partner.getUsername()))
+                    .forEach(this::deleteUserPhotos);
+        });
     }
 
     private GenerateUser extractGenerateUserAnnotationFromContext(ExtensionContext context) {
@@ -85,6 +93,7 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
         }
     }
 
+    @Step("Register user {user.username}")
     private UserModel register(UserModel user) throws Exception {
         authApi.register(user);
 
@@ -108,6 +117,7 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
                 "");
     }
 
+    @Step("Create photo")
     private Photo createPhoto(String username, WithPhoto annotation) {
         Photo photo = convertToPhoto(username, annotation);
         return photoApi.addPhoto(photo);
@@ -115,19 +125,21 @@ public class GenerateUserExtension extends BaseJUnitExtension implements BeforeE
 
     private UserModel createPartner(UserModel generatedUser, WithPartner annotation) {
         UserModel partnerUser = convertToUserModel(annotation.user());
-        userdataApi.addUser(partnerUser);
-        switch (annotation.status()) {
-            case INVITATION_SENT -> userdataApi.inviteToFriends(generatedUser, partnerUser);
-            case INVITATION_RECEIVED -> userdataApi.inviteToFriends(partnerUser, generatedUser);
-            case FRIEND -> {
-                userdataApi.inviteToFriends(partnerUser, generatedUser);
-                userdataApi.submitFriends(generatedUser, partnerUser);
+        step("Create partner " + partnerUser.getUsername() + " with status " + annotation.status(), () -> {
+            userdataApi.addUser(partnerUser);
+            switch (annotation.status()) {
+                case INVITATION_SENT -> userdataApi.inviteToFriends(generatedUser, partnerUser);
+                case INVITATION_RECEIVED -> userdataApi.inviteToFriends(partnerUser, generatedUser);
+                case FRIEND -> {
+                    userdataApi.inviteToFriends(partnerUser, generatedUser);
+                    userdataApi.submitFriends(generatedUser, partnerUser);
+                }
             }
-        }
 
-        for (WithPhoto photoAnnotation : annotation.photos()) {
-            partnerUser.addPhoto(createPhoto(partnerUser.getUsername(), photoAnnotation));
-        }
+            for (WithPhoto photoAnnotation : annotation.photos()) {
+                partnerUser.addPhoto(createPhoto(partnerUser.getUsername(), photoAnnotation));
+            }
+        });
 
         return partnerUser;
     }

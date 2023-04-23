@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.Cookie;
 
+import static io.qameta.allure.Allure.step;
+
 public class ApiLoginExtension extends BaseJUnitExtension implements BeforeEachCallback, AfterTestExecutionCallback {
 
     @Override
@@ -37,16 +39,18 @@ public class ApiLoginExtension extends BaseJUnitExtension implements BeforeEachC
             password = annotation.password();
         }
 
-        apiLogin(username, password);
-        Selenide.open(AppProperties.APP_BASE_URL);
-        SessionStorage sessionStorage = Selenide.sessionStorage();
-        sessionStorage.setItem("codeChallenge", SessionStorageHolder.getInstance().getCodeChallenge());
-        sessionStorage.setItem("id_token", SessionStorageHolder.getInstance().getToken());
-        sessionStorage.setItem("codeVerifier", SessionStorageHolder.getInstance().getCodeVerifier());
+        step("Api login with creds: username = " + username + ", password = " + password, () -> {
+            apiLogin(username, password);
+            Selenide.open(AppProperties.APP_BASE_URL);
+            SessionStorage sessionStorage = Selenide.sessionStorage();
+            sessionStorage.setItem("codeChallenge", SessionStorageHolder.getInstance().getCodeChallenge());
+            sessionStorage.setItem("id_token", SessionStorageHolder.getInstance().getToken());
+            sessionStorage.setItem("codeVerifier", SessionStorageHolder.getInstance().getCodeVerifier());
 
-        WebDriverRunner.getWebDriver().manage()
-                .addCookie(new Cookie("JSESSIONID", CookieHolder.getInstance().getCookieValueByPart("JSESSIONID")));
-        Selenide.refresh();
+            WebDriverRunner.getWebDriver().manage()
+                    .addCookie(new Cookie("JSESSIONID", CookieHolder.getInstance().getCookieValueByPart("JSESSIONID")));
+            Selenide.refresh();
+        });
     }
 
     @Override
