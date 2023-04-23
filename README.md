@@ -86,12 +86,24 @@ alx.krw@Aleksandrs-MacBook-Pro rangiffler % bash docker-compose.sh
 ```
 #### 2. Проверить, что сервисы корректно запустились. Ошибки отсутствуют
 
+# Запуск тестов локально
+
+#### 1. Запустить приложение одним из способов (см. пункты **Запуск приложения локально в IDE** и **Запуск приложения в Docker**)
+
+#### 2. Запустить все тесты (сначала будут запущены тесты, после чего - загрузится страница allure-отчета)
+```posh
+alx.krw@Aleksandrs-MacBook-Pro rangiffler % bash run-tests-local.sh 
+``` 
+
+# Пример тестового отчета
+#### 1. Общая сводка
+![Общая сводка](images/report/overview.png)
+
+![Общая сводка](images/report/overview.png)
+
+![Общая сводка](images/report/overview.png)
+
+![Общая сводка](images/report/overview.png)
 
 
-
-
-
-Запуск тестов
-
-Пример отчета
 
