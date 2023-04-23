@@ -96,14 +96,7 @@ alx.krw@Aleksandrs-MacBook-Pro rangiffler % bash run-tests-local.sh
 ``` 
 
 # Пример тестового отчета
-#### 1. Общая сводка
 ![Общая сводка](images/report/overview.png)
-
-![Общая сводка](images/report/overview.png)
-
-![Общая сводка](images/report/overview.png)
-
-![Общая сводка](images/report/overview.png)
-
-
-
+![Общая сводка](images/report/behaviors.png)
+![Общая сводка](images/report/suites.png)
+![Общая сводка](images/report/timelines.png)
