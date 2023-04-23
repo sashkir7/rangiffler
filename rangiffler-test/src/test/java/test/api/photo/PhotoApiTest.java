@@ -3,7 +3,7 @@ package test.api.photo;
 import allure.AllureEpic;
 import allure.AllureFeature;
 import allure.AllureTag;
-import data.HibernatePhotoRepository;
+import data.repository.hibernate.HibernatePhotoRepository;
 import data.repository.PhotoRepository;
 import helper.DataHelper;
 import io.qameta.allure.Epic;

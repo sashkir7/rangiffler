@@ -1,5 +1,6 @@
-package data;
+package data.repository.hibernate;
 
+import data.DataBase;
 import data.entity.PhotoEntity;
 import data.jpa.EmfContext;
 import data.jpa.JpaService;

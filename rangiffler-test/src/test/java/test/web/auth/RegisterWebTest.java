@@ -3,7 +3,7 @@ package test.web.auth;
 import allure.AllureEpic;
 import allure.AllureFeature;
 import allure.AllureTag;
-import data.HibernateUserdataRepository;
+import data.repository.hibernate.HibernateUserdataRepository;
 import data.repository.UserdataRepository;
 import helper.DataHelper;
 import io.qameta.allure.Epic;

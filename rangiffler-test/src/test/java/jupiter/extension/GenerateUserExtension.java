@@ -1,6 +1,6 @@
 package jupiter.extension;
 
-import data.HibernateUserdataRepository;
+import data.repository.hibernate.HibernateUserdataRepository;
 import data.repository.UserdataRepository;
 import jupiter.annotation.*;
 import model.UserModel;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import sashkir7.grpc.*;
 
-import java.io.IOException;
 import java.util.Collection;
 
 import static com.codeborne.selenide.Selenide.sleep;

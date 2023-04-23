@@ -1,5 +1,6 @@
-package data;
+package data.repository.hibernate;
 
+import data.DataBase;
 import data.entity.UserEntity;
 import data.jpa.EmfContext;
 import data.jpa.JpaService;
