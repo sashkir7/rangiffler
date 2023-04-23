@@ -18,8 +18,25 @@ Rangiffler - современное, модное и молодежное при
 
 ![Архитектура приложения](images/architecture.png)
 
+# Используемые технологии
 
-Список технологий, которые применялись туть
+- [Spring Authorization Server](https://spring.io/projects/spring-authorization-server)
+- [Spring OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html)
+- [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
+- [Spring Web](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#spring-web)
+- [Spring Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
+- [Spring gRPC](https://yidongnan.github.io/grpc-spring-boot-starter/en/server/getting-started.html)
+- [Docker](https://www.docker.com/resources/what-container/)
+- [Docker-compose](https://docs.docker.com/compose/)
+- [Postgres](https://www.postgresql.org/about/)
+- [React](https://ru.reactjs.org/docs/getting-started.html)
+- [JUnit 5 (Extensions, Resolvers, etc)](https://junit.org/junit5/docs/current/user-guide/)
+- [Allure](https://docs.qameta.io/allure/)
+- [Selenide](https://selenide.org/)
+- [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+- [Gradle 7.5.1](https://docs.gradle.org/7.5/release-notes.html)
+- И многое другое!
+
 
 Таблица с портами сервисов
 Auth service:
