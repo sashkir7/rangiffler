@@ -14,8 +14,10 @@ import sashkir7.grpc.User;
 import sashkir7.grpc.Users;
 import test.web.BaseWebTest;
 
+import java.util.List;
 import java.util.Map;
 
+import static io.qameta.allure.Allure.step;
 import static model.PartnerStatus.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -40,8 +42,10 @@ class PeopleAroundWebTest extends BaseWebTest {
             @WithPartner(status = FRIEND)}))
     void getAllUsersTest(@Inject UserModel user) {
         for (PartnerStatus status : user.getPartners().keySet()) {
-            user.getPartners().get(status).forEach(
-                    partner -> peopleAroundPage.verifyPartnerInformation(partner, status));
+            step("Verify partners by status " + status, () -> {
+                List<UserModel> partners = user.getPartners().get(status);
+                partners.forEach(partner -> peopleAroundPage.verifyPartnerInformation(partner, status));;
+            });
         }
     }
 
@@ -50,10 +54,12 @@ class PeopleAroundWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser(partners = @WithPartner(status = NOT_FRIEND)))
     void inviteToFriendTest(@Inject UserModel user) {
         UserModel partner = findPartnerFromUserPartners(user, NOT_FRIEND);
-        peopleAroundPage.inviteToFriends(partner.getUsername());
-
-        assertNotNull(getAllUsersAndFindPartner(user, partner, INVITATION_SENT));
-        assertNotNull(getAllUsersAndFindPartner(partner, user, INVITATION_RECEIVED));
+        step("Invite to friend", () ->
+                peopleAroundPage.inviteToFriends(partner.getUsername()));
+        step("Verify partner statuses from user and partner", () -> {
+            assertNotNull(getAllUsersAndFindPartner(user, partner, INVITATION_SENT));
+            assertNotNull(getAllUsersAndFindPartner(partner, user, INVITATION_RECEIVED));
+        });
     }
 
     @Test
@@ -61,10 +67,12 @@ class PeopleAroundWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser(partners = @WithPartner(status = INVITATION_RECEIVED)))
     void submitFriendTest(@Inject UserModel user) {
         UserModel partner = findPartnerFromUserPartners(user, INVITATION_RECEIVED);
-        peopleAroundPage.submitFriend(partner.getUsername());
-
-        assertNotNull(getAllUsersAndFindPartner(user, partner, FRIEND));
-        assertNotNull(getAllUsersAndFindPartner(partner, user, FRIEND));
+        step("Submit friend", () ->
+                peopleAroundPage.submitFriend(partner.getUsername()));
+        step("Verify partner statuses from user and partner", () -> {
+            assertNotNull(getAllUsersAndFindPartner(user, partner, FRIEND));
+            assertNotNull(getAllUsersAndFindPartner(partner, user, FRIEND));
+        });
     }
 
     @Test
@@ -72,10 +80,12 @@ class PeopleAroundWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser(partners = @WithPartner(status = INVITATION_RECEIVED)))
     void declineFriendTest(@Inject UserModel user) {
         UserModel partner = findPartnerFromUserPartners(user, INVITATION_RECEIVED);
-        peopleAroundPage.declineFriend(partner.getUsername());
-
-        assertNotNull(getAllUsersAndFindPartner(user, partner, NOT_FRIEND));
-        assertNotNull(getAllUsersAndFindPartner(partner, user, NOT_FRIEND));
+        step("Decline friend", () ->
+                peopleAroundPage.declineFriend(partner.getUsername()));
+        step("Verify partner statuses from user and partner", () -> {
+            assertNotNull(getAllUsersAndFindPartner(user, partner, NOT_FRIEND));
+            assertNotNull(getAllUsersAndFindPartner(partner, user, NOT_FRIEND));
+        });
     }
 
     @Test
@@ -83,10 +93,12 @@ class PeopleAroundWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser(partners = @WithPartner(status = FRIEND)))
     void removeFriendTest(@Inject UserModel user) {
         UserModel partner = findPartnerFromUserPartners(user, FRIEND);
-        peopleAroundPage.removeFriend(partner.getUsername());
-
-        assertNotNull(getAllUsersAndFindPartner(user, partner, NOT_FRIEND));
-        assertNotNull(getAllUsersAndFindPartner(partner, user, NOT_FRIEND));
+        step("Remove friend", () ->
+                peopleAroundPage.removeFriend(partner.getUsername()));
+        step("Verify partner statuses from user and partner", () -> {
+            assertNotNull(getAllUsersAndFindPartner(user, partner, NOT_FRIEND));
+            assertNotNull(getAllUsersAndFindPartner(partner, user, NOT_FRIEND));
+        });
     }
 
     private UserModel findPartnerFromUserPartners(UserModel user, PartnerStatus status) {

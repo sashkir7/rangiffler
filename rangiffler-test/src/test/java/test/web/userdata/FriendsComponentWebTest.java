@@ -8,6 +8,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import jupiter.annotation.*;
 import model.UserModel;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Story("Friends component")
 class FriendsComponentWebTest extends BaseWebTest {
 
+    @BeforeEach
+    void openFriendsModalWindow() {
+        headerComponent.openFriendsModalWindow();
+    }
+
     @Test
     @DisplayName("Get user friends")
     @ApiLogin(user = @GenerateUser(partners = {
@@ -31,9 +37,10 @@ class FriendsComponentWebTest extends BaseWebTest {
             @WithPartner(status = INVITATION_SENT),
             @WithPartner(status = INVITATION_RECEIVED)}))
     void getUserFriendsTest(@Inject UserModel user) {
-        headerComponent.verifyFriendsCount(user.getFriends().size())
-                .openFriendsModalWindow();
-        user.getFriends().forEach(friendsComponent::verifyFriendInformation);
+        step("Verify friends information in header", () ->
+                headerComponent.verifyFriendsCount(user.getFriends().size()));
+        step("Verify friends information in friends modal window", () ->
+                user.getFriends().forEach(friendsComponent::verifyFriendInformation));
     }
 
     @Test
@@ -41,13 +48,11 @@ class FriendsComponentWebTest extends BaseWebTest {
     @ApiLogin(user = @GenerateUser(partners = {@WithPartner, @WithPartner}))
     void removeFriendTest(@Inject UserModel user) {
         int friendsCount = user.getFriends().size();
-
-        headerComponent.verifyFriendsCount(friendsCount)
-                .openFriendsModalWindow();
-        friendsComponent.removeFriend(findFirstFriend(user).getUsername());
-        headerComponent.verifyFriendsCount(friendsCount - 1);
-
-        step("Verify that friend has been deleted via api", () -> {
+        step("Remove friend", () ->
+                friendsComponent.removeFriend(findFirstFriend(user).getUsername()));
+        step("Verify that friend has been deleted (UI)", () ->
+                headerComponent.verifyFriendsCount(friendsCount - 1));
+        step("Verify that friend has been deleted (API)", () -> {
             Users actualFriends = userdataApi.getFriends(user.getUsername());
             assertEquals(friendsCount - 1, actualFriends.getUsersList().size());
         });
