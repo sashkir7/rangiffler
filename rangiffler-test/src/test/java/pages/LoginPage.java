@@ -3,6 +3,7 @@ package pages;
 import com.codeborne.selenide.Selenide;
 import config.AppProperties;
 import io.qameta.allure.Step;
+import model.UserModel;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -20,6 +21,10 @@ public class LoginPage extends BasePage<LoginPage> {
         $("#username").setValue(username);
         $("#password").setValue(password);
         return this;
+    }
+
+    public LoginPage fillForm(UserModel user) {
+        return fillForm(user.getUsername(), user.getPassword());
     }
 
     @Step("Click on [Sign In] button in LoginPage")
